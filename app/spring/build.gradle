@@ -1,0 +1,63 @@
+buildscript {
+    ext {
+        springBootVersion = "3.4.1"
+    }
+}
+
+plugins {
+    id "crossword-solver-api.java-conventions"
+    id "org.springframework.boot" version "${springBootVersion}"
+    id "com.gorylenko.gradle-git-properties" version "2.5.3"
+}
+
+ext {
+    testContainersVersion = "1.20.4"
+}
+ext["junit-jupiter.version"] = "${junitVersion}"
+
+configurations {
+    runtimeOnly.exclude module: "slf4j-simple"
+    integrationTestRuntimeOnly.exclude module: "slf4j-simple"
+}
+
+dependencies {
+    runtimeOnly "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
+    implementation project(":entities")
+    implementation project(":use-cases")
+    implementation project(":api")
+    implementation project(":repository")
+    implementation project(":hackathon-api-client")
+    implementation project(":solver-client")
+    implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    //implementation "org.springframework.boot:spring-boot-starter-security"
+    //implementation "org.springframework.boot:spring-boot-starter-jdbc"
+    //implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    //implementation "org.postgresql:postgresql:${postgresqlVersion}"
+    //implementation "org.flywaydb:flyway-core:${flywayVersion}"
+    implementation "com.github.michaelruocco:json-adapter:${jsonAdapterVersion}"
+    implementation "com.openai:openai-java:${openAiVersion}"
+    implementation "software.amazon.awssdk:bedrockruntime:${bedrockVersion}"
+
+    integrationTestImplementation testFixtures(project(":api"))
+    integrationTestImplementation project(":rest-client")
+    integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:4.1.0"
+    integrationTestImplementation "org.awaitility:awaitility:${awaitilityVersion}"
+
+    testFixturesImplementation project(":api")
+    testFixturesImplementation project(":rest-client")
+    testFixturesImplementation "org.springframework.boot:spring-boot:${springBootVersion}"
+    testFixturesImplementation "org.awaitility:awaitility:${awaitilityVersion}"
+    testFixturesImplementation "org.testcontainers:postgresql:${testContainersVersion}"
+    testFixturesImplementation "org.testcontainers:mockserver:${testContainersVersion}"
+    testFixturesImplementation "org.postgresql:postgresql:${postgresqlVersion}"
+}
+
+springBoot {
+    buildInfo()
+}
+
+bootRun {
+    systemProperties = System.properties
+}

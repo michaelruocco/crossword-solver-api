@@ -1,2 +1,27 @@
-rootProject.name = 'library-template'
+rootProject.name = 'crossword-solver-api'
 
+include "entities"
+project(":entities").projectDir = file("domain/entities")
+
+include "use-cases"
+project(":use-cases").projectDir = file("domain/use-cases")
+
+include "api"
+project(":api").projectDir = file("adapters/api")
+
+include "repository"
+project(":repository").projectDir = file("adapters/repository")
+
+include "rest-client"
+project(":rest-client").projectDir = file("adapters/rest-client")
+
+include "hackathon-api-client"
+project(":hackathon-api-client").projectDir = file("adapters/hackathon-api-client")
+
+include "solver-client"
+project(":solver-client").projectDir = file("adapters/solver-client")
+
+include "crossword-solver-api-spring-app"
+project(":crossword-solver-api-spring-app").projectDir = file("app/spring")
+
+include "code-coverage-report"

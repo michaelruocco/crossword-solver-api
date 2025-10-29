@@ -3,7 +3,7 @@ name: pipeline
 on:
   push:
     branches-ignore:
-      - 'library-template-*'
+      - 'crossword-solver-api-*'
 
 permissions:
   checks: write

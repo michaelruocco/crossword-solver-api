@@ -1,0 +1,120 @@
+package uk.co.mruoc.cws.app.config;
+
+import java.time.Duration;
+import java.util.Collection;
+import java.util.concurrent.Executor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.task.ThreadPoolTaskExecutorBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import uk.co.mruoc.cws.usecase.AnswerDeleter;
+import uk.co.mruoc.cws.usecase.AnswerFinder;
+import uk.co.mruoc.cws.usecase.ClueExtractor;
+import uk.co.mruoc.cws.usecase.CompositeAnswerFinder;
+import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
+import uk.co.mruoc.cws.usecase.DefaultWaiter;
+import uk.co.mruoc.cws.usecase.PatternFactory;
+import uk.co.mruoc.cws.usecase.WordExtractor;
+import uk.co.mruoc.cws.usecase.attempt.AttemptCreator;
+import uk.co.mruoc.cws.usecase.attempt.AttemptFinder;
+import uk.co.mruoc.cws.usecase.attempt.AttemptRepository;
+import uk.co.mruoc.cws.usecase.attempt.AttemptService;
+import uk.co.mruoc.cws.usecase.attempt.AttemptSolver;
+import uk.co.mruoc.cws.usecase.attempt.AttemptUpdater;
+import uk.co.mruoc.cws.usecase.puzzle.PuzzleCreator;
+import uk.co.mruoc.cws.usecase.puzzle.PuzzleFinder;
+import uk.co.mruoc.cws.usecase.puzzle.PuzzleRepository;
+import uk.co.mruoc.cws.usecase.puzzle.PuzzleService;
+
+@Configuration
+@Slf4j
+public class AppConfig {
+
+  @Bean
+  public CrosswordSolverFacade facade(
+      PuzzleService puzzleService, AttemptService attemptService, AnswerDeleter answerDeleter) {
+    return CrosswordSolverFacade.builder()
+        .puzzleService(puzzleService)
+        .attemptService(attemptService)
+        .answerDeleter(answerDeleter)
+        .build();
+  }
+
+  @Bean
+  public PuzzleService puzzleService(PuzzleCreator creator, PuzzleFinder finder) {
+    return PuzzleService.builder().creator(creator).finder(finder).build();
+  }
+
+  @Bean
+  public PuzzleCreator puzzleCreator(
+      ClueExtractor clueExtractor, WordExtractor wordExtractor, PuzzleRepository repository) {
+    return PuzzleCreator.builder()
+        .clueExtractor(clueExtractor)
+        .wordExtractor(wordExtractor)
+        .repository(repository)
+        .build();
+  }
+
+  @Bean
+  public PuzzleFinder puzzleFinder(PuzzleRepository repository) {
+    return new PuzzleFinder(repository);
+  }
+
+  @Bean
+  public AttemptService attemptService(
+      AttemptCreator creator, AttemptFinder finder, AttemptUpdater updater, AttemptSolver solver) {
+    return AttemptService.builder()
+        .creator(creator)
+        .finder(finder)
+        .updater(updater)
+        .solver(solver)
+        .build();
+  }
+
+  @Bean
+  public AttemptCreator attemptCreator(PuzzleFinder finder, AttemptRepository repository) {
+    return AttemptCreator.builder().puzzleFinder(finder).repository(repository).build();
+  }
+
+  @Bean
+  public AttemptUpdater attemptUpdater(AttemptFinder finder, AttemptRepository repository) {
+    return AttemptUpdater.builder().finder(finder).repository(repository).build();
+  }
+
+  @Bean
+  public AttemptFinder attemptFinder(AttemptRepository repository) {
+    return new AttemptFinder(repository);
+  }
+
+  @Bean
+  public AttemptSolver attemptSolver(
+      AnswerFinder answerFinder, AttemptRepository repository, Executor executor) {
+    return AttemptSolver.builder()
+        .answerFinder(answerFinder)
+        .repository(repository)
+        .patternFactory(new PatternFactory())
+        .executor(executor)
+        .waiter(new DefaultWaiter())
+        .delay(Duration.ofSeconds(5))
+        .build();
+  }
+
+  @Bean
+  public ThreadPoolTaskExecutor executorService(ThreadPoolTaskExecutorBuilder builder) {
+    return builder.corePoolSize(5).maxPoolSize(10).queueCapacity(20).build();
+  }
+
+  @Bean
+  public AnswerDeleter answerDeleter(AttemptFinder finder, AttemptRepository repository) {
+    return AnswerDeleter.builder().finder(finder).repository(repository).build();
+  }
+
+  @Primary
+  @Bean
+  public AnswerFinder compositeAnswerFinder(Collection<AnswerFinder> finders) {
+    log.info("creating composite answer finder with child finders {}", finders);
+    return new CompositeAnswerFinder(finders);
+  }
+}

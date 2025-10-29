@@ -1,43 +1,37 @@
 plugins {
-    id "java-library"
-    id "jacoco"
-    id "maven-publish"
-    id "signing"
-    id "io.github.gradle-nexus.publish-plugin" version "2.0.0"
-    id "com.diffplug.spotless" version "7.2.1"
-    id "com.github.ben-manes.versions" version "0.52.0"
-    id "pl.allegro.tech.build.axion-release" version "1.19.1"
-    id "org.sonarqube" version "6.2.0.5505"
-    id "com.adarshr.test-logger" version "4.0.0"
-    id "nebula.lint" version "21.0.0"
-    id "tech.yanand.maven-central-publish" version "1.3.0"
+    id "com.diffplug.spotless" version "7.0.2"
+    id "com.github.ben-manes.versions" version "0.51.0"
+    id "nebula.lint" version "20.5.5"
+    id "org.sonarqube" version "6.0.1.5171"
 }
 
-group "com.github.michaelruocco"
+subprojects {
+    group "com.github.michaelruocco"
 
-ext {
-    slf4jVersion = "2.0.17"
-    lombokVersion = "1.18.38"
-
-    junitPlatformVersion = "1.13.4"
-    junitVersion = "5.13.4"
-    mockitoVersion = "5.18.0"
-}
-
-scmVersion {
-    versionCreator "versionWithBranch"
-    tag {
-        prefix = "${name}-"
+    tasks.withType(Javadoc).configureEach {
+        options.addStringOption('Xdoclint:none', '-quiet')
     }
-}
-project.version = scmVersion.version
 
-configurations {
-    mockitoAgent
-}
+    ext {
+        slf4jVersion = "2.0.16"
+        lombokVersion = "1.18.42"
+        postgresqlVersion = "42.7.5"
+        flywayVersion = "11.2.0"
+        jsonAdapterVersion = "1.0.5"
+        springKafkaVersion = "3.1.0"
+        springVersion = "6.2.2"
+        jacksonVersion = "2.18.2"
+        cognitoVersion = "2.30.1"
+        commonsCollectionsVersion = "4.5.0"
+        commonsIoVersion = "2.18.0"
+        commonsText = "1.13.0"
+        resilience4jVersion = "2.3.0"
+        openAiVersion = "3.5.3"
+        awaitilityVersion = "4.2.2"
+        bedrockVersion = "2.35.11"
 
-repositories {
-    mavenCentral()
+        junitVersion = "5.11.4"
+    }
 }
 
 gradleLint {
@@ -45,120 +39,12 @@ gradleLint {
     alwaysRun = false
 }
 
-dependencies {
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-
-    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
-
-    testRuntimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
-    testRuntimeOnly "org.junit.platform:junit-platform-launcher:${junitPlatformVersion}"
-    testRuntimeOnly "org.junit.platform:junit-platform-engine:${junitPlatformVersion}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter:${junitVersion}"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
-    testImplementation "org.assertj:assertj-core:3.27.4"
-    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
-
-    mockitoAgent("org.mockito:mockito-core:${mockitoVersion}") {
-        transitive = false
-    }
-}
-
-javadoc.options.addStringOption('Xdoclint:none', '-quiet')
-
-tasks.withType(Test) {
-    useJUnitPlatform()
-    systemProperty "org.slf4j.simpleLogger.defaultLogLevel", "debug"
-    jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
-}
-
-testlogger {
-    theme 'mocha'
-    showStandardStreams true
-}
-
-jacoco {
-    toolVersion = "0.8.13"
-}
-
-jacocoTestReport {
-    dependsOn test
-    sourceSets sourceSets.main
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-    reports {
-        xml.required = true
-        xml.outputLocation = file("${buildDir}/reports/jacoco/report.xml")
-    }
-}
-
-project.tasks["sonar"].dependsOn jacocoTestReport
 sonarqube {
     properties {
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.organization", "michaelruocco"
         property "sonar.projectKey", "michaelruocco_${name}"
-        property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/report.xml"
-    }
-}
-
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
-def gitUrl = "https://github.com/michaelruocco/library-template"
-def pomConfig = {
-    licenses {
-        license {
-            name "MIT License"
-            url "https://opensource.org/licenses/MIT"
-            distribution "repo"
-        }
-    }
-
-    developers {
-        developer {
-            id "mruoc"
-            name "Michael Ruocco"
-            email "michael.ruocco@hotmail.com"
-        }
-    }
-
-    scm {
-        url gitUrl
-    }
-}
-
-publishing {
-    publications {
-        lib(MavenPublication) {
-            from components.java
-            pom.withXml {
-                def root = asNode()
-                root.appendNode("description", "Template repo to speed up creating new library projects")
-                root.appendNode("name", project.name)
-                root.appendNode("url", gitUrl)
-                root.children().last() + pomConfig
-            }
-        }
-    }
-}
-
-mavenCentral {
-    authToken = "${System.getenv("OSSRH_USERNAME")}:${System.getenv("OSSRH_PASSWORD")}".bytes.encodeBase64().toString()
-}
-
-signing {
-    def signingKey = System.getenv("OSSRH_PGP_SECRET_KEY")
-    def signingPassword = System.getenv("OSSRH_PGP_SECRET_KEY_PASSWORD")
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign publishing.publications.lib
-}
-signLibPublication.enabled = gradle.startParameter.taskNames.contains("publishToMavenCentralPortal")
-
-spotless {
-    java {
-        palantirJavaFormat("2.50.0")
+        property "sonar.coverage.jacoco.xmlReportPaths", "${project.rootDir}/code-coverage-report/build/reports/jacoco/unitCoverage/unitCoverage.xml,${project.rootDir}/code-coverage-report/build/reports/jacoco/integrationCoverage/integrationCoverage.xml"
     }
 }
 

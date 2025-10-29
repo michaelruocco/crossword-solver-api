@@ -1,0 +1,82 @@
+package uk.co.mruoc.cws.entity;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Slf4j
+@ToString
+@Data
+public class Words {
+
+  private final Collection<Word> words;
+  private final Collection<Intersection> intersections;
+
+  public Words(Word... words) {
+    this(List.of(words));
+  }
+
+  public Collection<Word> getIntersectingWords(Id id) {
+    var word = findById(id);
+    return getIntersectingWords(word);
+  }
+
+  public Coordinates getCoordinates(int id) {
+    return findById(id).getCoordinates();
+  }
+
+  public Words(Collection<Word> words) {
+    this(words, buildIntersections(words));
+  }
+
+  public Words populateDirectionAndLength(Clues clues) {
+    return new Words(clues.stream().map(this::populateDirectionAndLength).toList());
+  }
+
+  private Word populateDirectionAndLength(Clue clue) {
+    var word = findById(clue.numericId());
+    return word.toBuilder().id(clue.id()).length(clue.getTotalLength()).build();
+  }
+
+  private Word findById(int id) {
+    return words.stream().filter(word -> word.getNumericId() == id).findFirst().orElseThrow();
+  }
+
+  public Collection<Word> getIntersectingWords(Word word) {
+    return getIntersections(word).stream()
+        .map(intersection -> intersection.getOtherWord(word))
+        .toList();
+  }
+
+  public Collection<Intersection> getIntersections(Word word) {
+    return intersections.stream().filter(intersection -> intersection.contains(word)).toList();
+  }
+
+  public Word findById(Id id) {
+    return words.stream().filter(word -> word.hasId(id)).findFirst().orElseThrow();
+  }
+
+  private static Collection<Intersection> buildIntersections(Collection<Word> words) {
+    var intersections = new HashSet<Intersection>();
+    for (var word : words) {
+      var otherWords = toOtherWords(word, words);
+      for (var otherWord : otherWords) {
+        word.findIntersectionBetween(otherWord).ifPresent(intersections::add);
+      }
+    }
+    return Collections.unmodifiableCollection(intersections);
+  }
+
+  private static Collection<Word> toOtherWords(Word word, Collection<Word> words) {
+    var copy = new ArrayList<>(words);
+    copy.remove(word);
+    return Collections.unmodifiableCollection(copy);
+  }
+}

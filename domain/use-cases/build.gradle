@@ -1,0 +1,10 @@
+plugins {
+    id "crossword-solver-api.java-conventions"
+}
+
+dependencies {
+    implementation project(":entities")
+    implementation "org.awaitility:awaitility:${awaitilityVersion}"
+
+    testImplementation testFixtures(project(":entities"))
+}

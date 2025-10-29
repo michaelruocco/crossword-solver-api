@@ -1,0 +1,23 @@
+plugins {
+    id 'base'
+    id 'jacoco-report-aggregation'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    jacocoAggregation project(':crossword-solver-api-spring-app')
+}
+
+reporting {
+    reports {
+        unitCoverage(JacocoCoverageReport) {
+            testSuiteName = "test"
+        }
+        integrationCoverage(JacocoCoverageReport) {
+            testSuiteName = "integrationTest"
+        }
+    }
+}

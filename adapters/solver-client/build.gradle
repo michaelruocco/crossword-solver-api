@@ -1,0 +1,17 @@
+plugins {
+    id "crossword-solver-api.java-conventions"
+}
+
+dependencies {
+    implementation project(":entities")
+    implementation project(":use-cases")
+    implementation "org.apache.commons:commons-text:${commonsText}"
+    implementation "org.seleniumhq.selenium:selenium-java:4.35.0"
+    implementation "com.openai:openai-java:${openAiVersion}"
+    implementation "com.github.michaelruocco:json-adapter:1.0.5"
+    implementation "com.github.michaelruocco:file-loader:7.0.4"
+    implementation "io.github.resilience4j:resilience4j-retry:${resilience4jVersion}"
+    implementation "software.amazon.awssdk:bedrockruntime:${bedrockVersion}"
+    implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
+    //implementation "org.json:json:20250517"
+}

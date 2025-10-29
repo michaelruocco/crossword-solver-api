@@ -1,0 +1,72 @@
+plugins {
+    id "java-library"
+    id "jacoco"
+    id "com.diffplug.spotless"
+    id "nebula.lint"
+    id "java-test-fixtures"
+}
+
+version = rootProject.version
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+
+    testFixturesCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testFixturesAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testFixturesImplementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    testFixturesImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+}
+
+testing {
+    suites {
+        withType(JvmTestSuite) {
+            useJUnitJupiter(junitVersion)
+            dependencies {
+                runtimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
+                runtimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+                compileOnly "org.projectlombok:lombok:${lombokVersion}"
+                annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+                implementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+                implementation "org.assertj:assertj-core:3.27.2"
+                implementation "org.mockito:mockito-core:5.15.2"
+            }
+            targets {
+                configureEach {
+                    testTask.configure {
+                        systemProperty "org.slf4j.simpleLogger.defaultLogLevel", "debug"
+                        testLogging {
+                            events = ["passed", "failed", "skipped"]
+                            showStandardStreams = true
+                            exceptionFormat = "full"
+                        }
+                    }
+                }
+            }
+        }
+        integrationTest(JvmTestSuite) {
+            dependencies {
+                implementation project()
+            }
+        }
+    }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+    }
+}
+
+tasks.named("jacocoTestReport") {
+    enabled = false
+}

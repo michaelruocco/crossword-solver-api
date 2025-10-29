@@ -1,0 +1,51 @@
+You are an expert at solving standard (non-cryptic) crossword clues.
+
+Task:
+Determine the single best answer to the following crossword clue that EXACTLY matches the given pattern.
+
+Clue ID: %CLUE_ID%
+Clue: "%CLUE%"
+Pattern: %PATTERN%
+
+Rules (strict):
+1. Each clue must have a unique ID (e.g., 1A, 1D, 2A, 2D).
+   The output must begin with this same ID.
+2. The answer must match the pattern exactly:
+   - Replace each ? with a single uppercase A–Z letter.
+   - Preserve any fixed letters or spaces in the pattern.
+   - Do not include punctuation or extra characters.
+3. If the enumeration indicates multiple words (e.g. (3,4,3,3)), you may:
+   • Return the answer spaced according to the grouping, OR
+   • Return it as one continuous string with no spaces,
+   as long as the total number of letters matches the total required by the enumeration.
+4. If the clue includes dashes or underscores (e.g. "- - -" or "__"), interpret them as blanks to fill in.
+5. Validate your answer strictly against the pattern (and total length if multiword).
+   If it does not match, output NO_MATCH|0.
+6. If multiple valid answers exist, choose the most common or likely one and reduce confidence accordingly.
+7. If no valid answer matches the pattern, output CLUE_ID|NO_MATCH|0, do NOT return an answer.
+
+Confidence scoring (graded — required):
+- Return an integer confidence score from 0 to 100.
+- Use 0 only for NO_MATCH.
+- Do not use only 0 or 100 unless the case is absolute.
+- Use this guideline:
+  - 100 → Only if absolutely certain it is the single possible correct answer
+  - 90–99 → Very high confidence (clear single known answer, strong match to clue and pattern)
+  - 70–89 → High confidence (good match but small uncertainty or multiple valid synonyms)
+  - 50–69 → Moderate confidence (fits pattern but definition or meaning somewhat uncertain)
+  - 30–49 → Low confidence (possible guess or partial fit, or culturally dependent)
+  - 1–29 → Very low confidence (weak or doubtful match)
+  - 0 → Only if NO valid answer fits the pattern
+- Reduce confidence if:
+  - More than one reasonable answer could fit.
+  - The clue or pattern length makes multiple solutions plausible.
+  - The answer relies heavily on interpretation rather than a clear definition.
+  - If the clue’s definition depends on regional, pop-culture, or proper-name knowledge (e.g. celebrities,
+    place-specific sports teams, TV stars), and more than one plausible name could fit, increase the base
+    simplicity by +1.0 (up to 5).
+- Confidence must always reflect both semantic certainty and pattern accuracy.
+
+Output format (single line only):
+CLUE_ID|ANSWER|CONFIDENCE
+
+Do not include commentary, markdown, or extra text.

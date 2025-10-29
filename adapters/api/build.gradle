@@ -1,0 +1,7 @@
+plugins {
+    id "crossword-solver-api.java-conventions"
+}
+
+dependencies {
+    implementation project(":entities")
+}
