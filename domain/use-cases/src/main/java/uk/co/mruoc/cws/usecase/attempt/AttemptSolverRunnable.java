@@ -8,6 +8,7 @@ import uk.co.mruoc.cws.entity.Answers;
 import uk.co.mruoc.cws.entity.Attempt;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Clues;
+import uk.co.mruoc.cws.entity.ValidAnswerPredicate;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.cws.usecase.PatternFactory;
 
@@ -35,16 +36,64 @@ public class AttemptSolverRunnable implements Runnable {
   }
 
   private Attempt performPass(Attempt attempt, int pass) {
-    var selectedClues = selectClues(attempt);
-    log.info("selected {} clues", selectedClues.size());
-    var answers = getAnswers(selectedClues).confirmAll();
-    log.info("got {} valid best scoring answers", answers.size());
-    logAnswers(answers, selectedClues);
-    var updatedAttempt = attempt.saveAnswers(answers);
+    var updatedAttempt = tryAnswers(attempt);
     repository.save(updatedAttempt);
     log.info("pass {} updated attempt {}", pass, updatedAttempt.id());
     waiter.wait(delay);
     return updatedAttempt;
+  }
+
+  private Attempt tryAnswers(Attempt attempt) {
+    var selectedClues = selectClues(attempt);
+    log.info("selected {} clues", selectedClues.size());
+    var answers = getAnswers(selectedClues).confirmAll();
+    if (answers.isEmpty()) {
+      log.info("unconfirming answers intersecting with clues {}", selectedClues.ids());
+      return retryIntersectingClues(attempt, selectedClues);
+    }
+    log.info("got {} valid best scoring answers", answers.size());
+    logAnswers(answers, selectedClues);
+    return attempt.saveAnswers(answers);
+  }
+
+  private Attempt retryIntersectingClues(Attempt attempt, Clues clues) {
+    for (var clue : clues) {
+      var intersectingIds = attempt.getIntersectingIds(clue.id());
+      if (intersectingIds.isEmpty()) {
+        throw new RuntimeException(
+            String.format("no intersecting ids to retry for clue %s", clue.id().toString()));
+      } else if (intersectingIds.size() == 1) {
+        log.info("one intersecting id found {}", intersectingIds);
+        var intersectingId = intersectingIds.stream().findFirst().orElseThrow();
+        var updatedClue =
+            clue.withPattern(patternFactory.build(clue, attempt.unconfirmAnswer(intersectingId)));
+        var updatedAnswer = getAnswer(updatedClue);
+        return attempt.saveAnswer(updatedAnswer.confirm());
+      } else {
+        for (var intersectingId : intersectingIds) {
+          var candidateAttempt = attempt.unconfirmAnswer(intersectingId);
+          var updatedClue = clue.withPattern(patternFactory.build(clue, candidateAttempt));
+          var updatedAnswer = getAnswer(updatedClue);
+          log.info("got updated answer {} from updated clue {}", updatedAnswer, updatedClue);
+          candidateAttempt = candidateAttempt.saveAnswer(updatedAnswer.confirm());
+          var intersectingClue = candidateAttempt.getClue(intersectingId).orElseThrow();
+          var updatedIntersectingClue =
+              intersectingClue.withPattern(
+                  patternFactory.build(intersectingClue, candidateAttempt));
+          var updatedIntersectingAnswer = getAnswer(updatedIntersectingClue);
+          log.info(
+              "got updated intersecting answer {} from updated intersecting clue {}",
+              updatedIntersectingAnswer,
+              updatedIntersectingClue);
+          if (new ValidAnswerPredicate(updatedIntersectingClue).test(updatedIntersectingAnswer)) {
+            return candidateAttempt.saveAnswer(updatedIntersectingAnswer.confirm());
+          }
+        }
+        throw new RuntimeException(
+            String.format("no more intersecting ids to retry for clue %s", clue.id().toString()));
+      }
+    }
+    throw new RuntimeException("no clues to retry");
   }
 
   private Answers getAnswers(Clues selectedClues) {
@@ -52,7 +101,11 @@ public class AttemptSolverRunnable implements Runnable {
         .findAnswers(selectedClues)
         .getValidAnswers(selectedClues)
         .sortByScore()
-        .getTop(3);
+        .getTop(1);
+  }
+
+  private Answer getAnswer(Clue clue) {
+    return answerFinder.findAnswer(clue);
   }
 
   private void logAnswers(Answers answers, Clues clues) {

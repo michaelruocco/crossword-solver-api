@@ -49,6 +49,10 @@ public class Intersection {
     return across.hasId(word) || down.hasId(word);
   }
 
+  public boolean contains(Id id) {
+    return across.hasId(id) || down.hasId(id);
+  }
+
   public Id getId(Direction direction) {
     if (direction == Direction.ACROSS) {
       return down.getId();
@@ -62,7 +66,11 @@ public class Intersection {
     }
 
     public boolean hasId(Word otherWord) {
-      return word.getId().equals(otherWord.getId());
+      return hasId(otherWord.getId());
+    }
+
+    public boolean hasId(Id id) {
+      return word.getId().equals(id);
     }
   }
 }

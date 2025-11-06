@@ -3,7 +3,8 @@ package uk.co.mruoc.cws.app.config;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.co.mruoc.cws.solver.stub.Puzzle1StubAnswerFinder;
+import uk.co.mruoc.cws.solver.stub.FakeAnswerFinder;
+import uk.co.mruoc.cws.solver.stub.Puzzle1FakeAnswers;
 import uk.co.mruoc.cws.solver.stub.Puzzle1StubCrosswordSolver;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.cws.usecase.CrosswordSolver;
@@ -20,7 +21,7 @@ public class StubSolverClientConfig {
 
   @Bean
   @ConditionalOnMissingBean
-  public AnswerFinder batchAnswerFinder() {
-    return new Puzzle1StubAnswerFinder();
+  public AnswerFinder stubAnswerFinder() {
+    return new FakeAnswerFinder(new Puzzle1FakeAnswers());
   }
 }

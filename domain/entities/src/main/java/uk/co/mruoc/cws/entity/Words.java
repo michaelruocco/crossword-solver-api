@@ -28,6 +28,10 @@ public class Words {
     return getIntersectingWords(word);
   }
 
+  public Collection<Id> getIntersectingIds(Id id) {
+    return getIntersectingWords(findById(id)).stream().map(Word::getId).toList();
+  }
+
   public Coordinates getCoordinates(int id) {
     return findById(id).getCoordinates();
   }
@@ -57,6 +61,10 @@ public class Words {
 
   public Collection<Intersection> getIntersections(Word word) {
     return intersections.stream().filter(intersection -> intersection.contains(word)).toList();
+  }
+
+  public Collection<Intersection> getIntersections(Id id) {
+    return intersections.stream().filter(intersection -> intersection.contains(id)).toList();
   }
 
   public Word findById(Id id) {

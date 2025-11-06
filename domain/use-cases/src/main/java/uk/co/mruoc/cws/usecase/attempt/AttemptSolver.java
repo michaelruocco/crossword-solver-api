@@ -29,7 +29,7 @@ public class AttemptSolver {
             .waiter(waiter)
             .delay(delay)
             .attemptId(attempt.id())
-            .maxPasses(25)
+            .maxPasses(40)
             .build();
     executor.execute(runnable);
   }

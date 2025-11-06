@@ -97,7 +97,7 @@ public class AppConfig {
         .patternFactory(new PatternFactory())
         .executor(executor)
         .waiter(new DefaultWaiter())
-        .delay(Duration.ofSeconds(5))
+        .delay(Duration.ofSeconds(1))
         .build();
   }
 

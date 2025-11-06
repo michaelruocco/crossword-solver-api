@@ -110,6 +110,18 @@ public class Answers implements Iterable<Answer> {
     return values.keySet();
   }
 
+  public Answers unconfirmAnswers(Collection<Id> ids) {
+    var updatedValues = copyValues();
+    ids.forEach(id -> updatedValues.computeIfPresent(id, (_, answer) -> answer.unconfirm()));
+    return new Answers(updatedValues);
+  }
+
+  public Answers unconfirmAnswer(Id id) {
+    var updatedValues = copyValues();
+    updatedValues.computeIfPresent(id, (_, answer) -> answer.unconfirm());
+    return new Answers(updatedValues);
+  }
+
   public Answers removeDifferent(Answers newAnswers) {
     var updatedAnswers = new ArrayList<Answer>();
     for (Answer newAnswer : newAnswers) {
@@ -119,6 +131,10 @@ public class Answers implements Iterable<Answer> {
       }
     }
     return new Answers(updatedAnswers);
+  }
+
+  public boolean isEmpty() {
+    return values.isEmpty();
   }
 
   private Answers filter(Predicate<Answer> predicate) {

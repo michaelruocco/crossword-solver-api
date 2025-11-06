@@ -35,6 +35,10 @@ public class Clues implements Iterable<Clue> {
     return values.values().iterator();
   }
 
+  public Collection<Id> ids() {
+    return values.keySet();
+  }
+
   public boolean hasClue(Id id) {
     return findClue(id).isPresent();
   }

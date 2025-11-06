@@ -8,9 +8,14 @@ public class ValidAnswerPredicate implements Predicate<Answer> {
 
   private final Clues clues;
 
+  public ValidAnswerPredicate(Clue clue) {
+    this(new Clues(clue));
+  }
+
   @Override
   public boolean test(Answer answer) {
-    return clues.findClue(answer.id()).filter(value -> isValid(value, answer)).isPresent();
+    var clue = clues.findClue(answer.id()).orElseThrow();
+    return isValid(clue, answer);
   }
 
   private boolean isValid(Clue clue, Answer answer) {

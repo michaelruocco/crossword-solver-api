@@ -10,6 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public record Answer(@With Id id, @With String value, int confidenceScore, boolean confirmed) {
 
+  public Answer(String id, String value, int confidenceScore) {
+    this(new Id(id), value, confidenceScore, false);
+  }
+
   public static Answer noMatch(Clue clue) {
     return noMatchBuilder().id(clue.id()).build();
   }
@@ -38,6 +42,7 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
   }
 
   public Answer unconfirm() {
+    log.info("unconfirming answer {} {}", id, value);
     return new Answer(id, value, confidenceScore, false);
   }
 
