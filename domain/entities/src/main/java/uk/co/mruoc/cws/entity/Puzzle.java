@@ -1,7 +1,6 @@
 package uk.co.mruoc.cws.entity;
 
 import java.util.Collection;
-import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,12 +16,8 @@ public class Puzzle {
     return clues.hasClue(id);
   }
 
-  public Clues getClues(Collection<Id> ids) {
-    return new Clues(ids.stream().map(this::getClue).flatMap(Optional::stream).toList());
-  }
-
-  public Optional<Clue> getClue(Id id) {
-    return clues.findClue(id);
+  public Clue getClue(Id id) {
+    return clues.forceFind(id);
   }
 
   public Collection<Id> getIntersectingIds(Id id) {

@@ -40,10 +40,14 @@ public class Clues implements Iterable<Clue> {
   }
 
   public boolean hasClue(Id id) {
-    return findClue(id).isPresent();
+    return find(id).isPresent();
   }
 
-  public Optional<Clue> findClue(Id id) {
+  public Clue forceFind(Id id) {
+    return find(id).orElseThrow(() -> new ClueNotFoundForIdException(id));
+  }
+
+  public Optional<Clue> find(Id id) {
     log.debug("finding text for id {}", id);
     var clue = Optional.ofNullable(values.get(id));
     log.debug("found text {} for id {}", clue, id);
@@ -59,7 +63,7 @@ public class Clues implements Iterable<Clue> {
   }
 
   public Clues addPattern(Id id, String pattern) {
-    var clue = findClue(id).orElseThrow();
+    var clue = forceFind(id);
     var updatedClues = copyValues();
     updatedClues.put(clue.id(), clue.withPattern(pattern));
     return new Clues(updatedClues);

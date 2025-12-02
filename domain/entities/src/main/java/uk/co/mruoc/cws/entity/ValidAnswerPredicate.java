@@ -14,7 +14,7 @@ public class ValidAnswerPredicate implements Predicate<Answer> {
 
   @Override
   public boolean test(Answer answer) {
-    var clue = clues.findClue(answer.id()).orElseThrow();
+    var clue = clues.forceFind(answer.id());
     return isValid(clue, answer);
   }
 

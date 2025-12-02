@@ -2,6 +2,7 @@ package uk.co.mruoc.cws.solver.wordplays;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -13,6 +14,7 @@ import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Answers;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Clues;
+import uk.co.mruoc.cws.entity.ValidAnswerPredicate;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.cws.usecase.DefaultWaiter;
 import uk.co.mruoc.cws.usecase.attempt.Waiter;
@@ -53,29 +55,41 @@ public class WordPlaysAnswerFinder implements AnswerFinder {
       log.debug(e.getMessage(), e);
     }
 
-    var pattern = driver.findElement(By.name("pattern"));
-    wait.until(d -> pattern.isDisplayed());
-    pattern.sendKeys(clue.pattern());
-
-    driver.findElement(By.id("cwsfrm")).submit();
     var wordLists = driver.findElement(By.id("wordlists"));
-    var bestWord = toBestAnswer(wordLists);
-    if (bestWord.length() != clue.getTotalLength()) {
-      log.debug("answer {} is not correct length {}, rejecting", bestWord, clue.getTotalLength());
-      return Answer.noMatch(clue);
+    return toAnswer(clue, wordLists);
+  }
+
+  private Answer toAnswer(Clue clue, WebElement words) {
+    var allRows = words.findElements(By.tagName("tr"));
+    var rowIndex = 0;
+    var isValid = new ValidAnswerPredicate(clue);
+    for (var row : allRows) {
+      if (rowIndex > 1) {
+        var cells = row.findElements(By.tagName("td"));
+        if (cells.size() == 3) {
+          var answer = toAnswer(clue, cells);
+          if (isValid.test(answer)) {
+            return answer;
+          }
+        }
+      }
+      rowIndex++;
     }
-    var confidenceScore = toConfidenceScore(wordLists);
-    log.info("best word {} confidence score {}", bestWord, confidenceScore);
-    return new Answer(clue.id(), bestWord, confidenceScore, false);
+    return Answer.noMatch(clue);
   }
 
-  private String toBestAnswer(WebElement wordLists) {
-    return wordLists.findElement(By.xpath("//tbody/tr[2]/td[2]/a")).getText();
+  private Answer toAnswer(Clue clue, List<WebElement> cells) {
+    return Answer.builder()
+        .id(clue.id())
+        .value(cells.get(1).getText())
+        .confidenceScore(toConfidenceScore(cells.get(0)))
+        .confirmed(false)
+        .build();
   }
 
-  private int toConfidenceScore(WebElement wordLists) {
-    var stars = wordLists.findElements(By.xpath("//tbody/tr[2]/td[1]/child::*")).size();
-    return (int) ((stars / 6d) * 100);
+  private int toConfidenceScore(WebElement cell) {
+    var stars = cell.findElements(By.xpath("child::*[1]/child::*")).size();
+    return (int) ((stars / 5d) * 100);
   }
 
   private String toUrl(Clue clue) {

@@ -34,7 +34,7 @@ public class CompositeAnswerFinder implements AnswerFinder {
 
   private Answers doFind(AnswerFinder finder, Clues clues) {
     var answers = finder.findAnswers(clues);
-    log.info("finder {} returned {} answers", finder, answers.size());
+    log.debug("finder {} returned {} answers", finder, answers.size());
     answers.forEach(a -> log.debug("{} {} {}", a.id(), a.value(), a.confidenceScore()));
     return answers;
   }

@@ -106,16 +106,6 @@ public class Answers implements Iterable<Answer> {
     return values.containsKey(id);
   }
 
-  public Collection<Id> ids() {
-    return values.keySet();
-  }
-
-  public Answers unconfirmAnswers(Collection<Id> ids) {
-    var updatedValues = copyValues();
-    ids.forEach(id -> updatedValues.computeIfPresent(id, (_, answer) -> answer.unconfirm()));
-    return new Answers(updatedValues);
-  }
-
   public Answers unconfirmAnswer(Id id) {
     var updatedValues = copyValues();
     updatedValues.computeIfPresent(id, (_, answer) -> answer.unconfirm());

@@ -92,8 +92,8 @@ public class Word {
   }
 
   private Intersection toIntersection(Word other, Coordinates coordinates) {
-    Word across = findDirection(this, other, ACROSS);
-    Word down = findDirection(this, other, DOWN);
+    var across = findDirection(this, other, ACROSS);
+    var down = findDirection(this, other, DOWN);
     return new Intersection(across, down, coordinates);
   }
 

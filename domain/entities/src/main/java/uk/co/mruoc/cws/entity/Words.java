@@ -23,17 +23,12 @@ public class Words {
     this(List.of(words));
   }
 
-  public Collection<Word> getIntersectingWords(Id id) {
-    var word = findById(id);
-    return getIntersectingWords(word);
-  }
-
   public Collection<Id> getIntersectingIds(Id id) {
     return getIntersectingWords(findById(id)).stream().map(Word::getId).toList();
   }
 
   public Coordinates getCoordinates(int id) {
-    return findById(id).getCoordinates();
+    return findByNumericId(id).getCoordinates();
   }
 
   public Words(Collection<Word> words) {
@@ -45,12 +40,22 @@ public class Words {
   }
 
   private Word populateDirectionAndLength(Clue clue) {
-    var word = findById(clue.numericId());
+    var word = findByNumericId(clue.numericId());
     return word.toBuilder().id(clue.id()).length(clue.getTotalLength()).build();
   }
 
-  private Word findById(int id) {
-    return words.stream().filter(word -> word.getNumericId() == id).findFirst().orElseThrow();
+  private Word findByNumericId(int id) {
+    return words.stream()
+        .filter(word -> word.getNumericId() == id)
+        .findFirst()
+        .orElseThrow(() -> new WordNotFoundForNumericIdException(id));
+  }
+
+  public Word findById(Id id) {
+    return words.stream()
+        .filter(word -> word.hasId(id))
+        .findFirst()
+        .orElseThrow(() -> new WordNotFoundForIdException(id));
   }
 
   public Collection<Word> getIntersectingWords(Word word) {
@@ -65,10 +70,6 @@ public class Words {
 
   public Collection<Intersection> getIntersections(Id id) {
     return intersections.stream().filter(intersection -> intersection.contains(id)).toList();
-  }
-
-  public Word findById(Id id) {
-    return words.stream().filter(word -> word.hasId(id)).findFirst().orElseThrow();
   }
 
   private static Collection<Intersection> buildIntersections(Collection<Word> words) {

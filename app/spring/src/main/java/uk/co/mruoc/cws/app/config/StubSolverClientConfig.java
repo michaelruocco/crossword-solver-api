@@ -5,18 +5,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.co.mruoc.cws.solver.stub.FakeAnswerFinder;
 import uk.co.mruoc.cws.solver.stub.Puzzle1FakeAnswers;
-import uk.co.mruoc.cws.solver.stub.Puzzle1StubCrosswordSolver;
+import uk.co.mruoc.cws.solver.stub.StubClueExtractor;
+import uk.co.mruoc.cws.solver.stub.StubWordExtractor;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
-import uk.co.mruoc.cws.usecase.CrosswordSolver;
+import uk.co.mruoc.cws.usecase.ClueExtractor;
+import uk.co.mruoc.cws.usecase.WordExtractor;
 
 @Configuration
 public class StubSolverClientConfig {
 
-  private static final CrosswordSolver SOLVER = new Puzzle1StubCrosswordSolver();
+  @Bean
+  public WordExtractor stubWordExtractor() {
+    return new StubWordExtractor();
+  }
 
   @Bean
-  public CrosswordSolver stubSolver() {
-    return SOLVER;
+  public ClueExtractor stubClueExtractor() {
+    return new StubClueExtractor();
   }
 
   @Bean

@@ -35,6 +35,24 @@ public class WordPlaysAnswerFinderIT {
     }
   }
 
+  @Test
+  void shouldFindTrickyAnswer() {
+    var driver = buildWebDriver();
+    try {
+      var finder = new WordPlaysAnswerFinder(driver);
+      var clue =
+          Clue.builder().id(Id.down(1)).text("Ram (3)").lengths(List.of(3)).pattern("T?P").build();
+
+      var answer = finder.findAnswer(clue);
+
+      assertThat(answer.value()).isEqualTo("TUP");
+      assertThat(answer.confidenceScore()).isEqualTo(100);
+      assertThat(answer.confirmed()).isFalse();
+    } finally {
+      driver.close();
+    }
+  }
+
   private static WebDriver buildWebDriver() {
     var options = new ChromeOptions();
     options.addArguments("--headless=new");

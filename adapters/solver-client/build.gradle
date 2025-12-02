@@ -13,5 +13,14 @@ dependencies {
     implementation "io.github.resilience4j:resilience4j-retry:${resilience4jVersion}"
     implementation "software.amazon.awssdk:bedrockruntime:${bedrockVersion}"
     implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
-    //implementation "org.json:json:20250517"
+
+    implementation "org.openpnp:opencv:4.9.0-0"
+    implementation "net.sourceforge.tess4j:tess4j:5.16.0"
+    implementation "software.amazon.awssdk:textract:2.38.7"
+
+    testFixturesImplementation project(":use-cases")
+    testFixturesImplementation "com.openai:openai-java:${openAiVersion}"
+    testFixturesImplementation "org.apache.commons:commons-text:${commonsText}"
+    testFixturesImplementation "software.amazon.awssdk:bedrockruntime:${bedrockVersion}"
+    testFixturesImplementation "software.amazon.awssdk:textract:2.38.7"
 }

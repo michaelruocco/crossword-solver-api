@@ -20,6 +20,24 @@ public class JsonMapper {
     this(buildMapper());
   }
 
+  public String jsonEscape(String json) {
+    try {
+      return mapper.writeValueAsString(json);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public String extractFirstContentText(String json) {
+    try {
+      var root = mapper.readTree(json);
+      var textNode = root.path("content").get(0).path("text");
+      return textNode.asText();
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public Clues toClues(String json) {
     try {
       return new Clues(mapper.readValue(json, Clue[].class));

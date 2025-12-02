@@ -12,7 +12,7 @@ import uk.co.mruoc.cws.entity.Id;
 public class FindAnswerResponseConverter {
 
   public Answers toAnswers(String answersAndScores) {
-    log.info("got answers and scores {}", answersAndScores);
+    log.debug("got answers and scores {}", answersAndScores);
     return new Answers(toCorrectlyFormattedLines(answersAndScores).map(this::toAnswer).toList());
   }
 

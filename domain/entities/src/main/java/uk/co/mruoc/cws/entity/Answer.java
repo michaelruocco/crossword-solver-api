@@ -1,6 +1,5 @@
 package uk.co.mruoc.cws.entity;
 
-import java.util.Collection;
 import java.util.Optional;
 import lombok.Builder;
 import lombok.With;
@@ -27,14 +26,6 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
     log.debug(
         "answer {} {} same value as {} {} {}", id, value, otherAnswer.id, otherAnswer.value, same);
     return same;
-  }
-
-  public boolean hasIdIn(Collection<Id> otherIds) {
-    return otherIds.stream().anyMatch(this::hasId);
-  }
-
-  public boolean hasId(Id otherId) {
-    return this.id == otherId;
   }
 
   public Answer confirm() {

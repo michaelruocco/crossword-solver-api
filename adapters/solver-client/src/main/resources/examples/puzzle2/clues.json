@@ -1,0 +1,275 @@
+[
+  {
+    "id": 1,
+    "direction": "ACROSS",
+    "text": "Twitch (3)",
+    "lengths": [
+      3
+    ]
+  },
+  {
+    "id": 5,
+    "direction": "ACROSS",
+    "text": "Gang (3)",
+    "lengths": [
+      3
+    ]
+  },
+  {
+    "id": 7,
+    "direction": "ACROSS",
+    "text": "Big (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 9,
+    "direction": "ACROSS",
+    "text": "Artist, - - - Picasso (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 10,
+    "direction": "ACROSS",
+    "text": "Book of maps (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 11,
+    "direction": "ACROSS",
+    "text": "Priti - - -, Tory MP (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 12,
+    "direction": "ACROSS",
+    "text": "Monaco resort, - - - Carlo (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 15,
+    "direction": "ACROSS",
+    "text": "Compassion (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 18,
+    "direction": "ACROSS",
+    "text": "First course (4, 8)",
+    "lengths": [
+      4,
+      8
+    ]
+  },
+  {
+    "id": 19,
+    "direction": "ACROSS",
+    "text": "Move quietly (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 22,
+    "direction": "ACROSS",
+    "text": "Publish (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 24,
+    "direction": "ACROSS",
+    "text": "God, in Islam (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 25,
+    "direction": "ACROSS",
+    "text": "Eye shield (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 26,
+    "direction": "ACROSS",
+    "text": "Seance board (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 28,
+    "direction": "ACROSS",
+    "text": "Got ready to pray (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 29,
+    "direction": "ACROSS",
+    "text": "Excise (3)",
+    "lengths": [
+      3
+    ]
+  },
+  {
+    "id": 30,
+    "direction": "ACROSS",
+    "text": "Play (with) (3)",
+    "lengths": [
+      3
+    ]
+  },
+  {
+    "id": 1,
+    "direction": "DOWN",
+    "text": "Ram (3)",
+    "lengths": [
+      3
+    ]
+  },
+  {
+    "id": 2,
+    "direction": "DOWN",
+    "text": "Native of Havana? (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 3,
+    "direction": "DOWN",
+    "text": "Incline (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 4,
+    "direction": "DOWN",
+    "text": "Domain (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 5,
+    "direction": "DOWN",
+    "text": "Tooth (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 6,
+    "direction": "DOWN",
+    "text": "Public vehicle (3)",
+    "lengths": [
+      3
+    ]
+  },
+  {
+    "id": 8,
+    "direction": "DOWN",
+    "text": "Aubergine and tomato dish (11)",
+    "lengths": [
+      11
+    ]
+  },
+  {
+    "id": 13,
+    "direction": "DOWN",
+    "text": "Alternative (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 14,
+    "direction": "DOWN",
+    "text": "Abrupt (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 16,
+    "direction": "DOWN",
+    "text": "Young eel (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 17,
+    "direction": "DOWN",
+    "text": "Spotless (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 20,
+    "direction": "DOWN",
+    "text": "English county (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 21,
+    "direction": "DOWN",
+    "text": "Warm jacket (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 22,
+    "direction": "DOWN",
+    "text": "Snapshot (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 23,
+    "direction": "DOWN",
+    "text": "Fool (5)",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 25,
+    "direction": "DOWN",
+    "text": "Scrutinise (3)",
+    "lengths": [
+      3
+    ]
+  },
+  {
+    "id": 27,
+    "direction": "DOWN",
+    "text": "Pilot, - - - Johnson (3)",
+    "lengths": [
+      3
+    ]
+  }
+]

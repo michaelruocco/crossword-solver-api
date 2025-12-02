@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.entity;
 
+import java.util.Objects;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,9 @@ public class Id {
 
   @Override
   public String toString() {
+    if (Objects.isNull(direction)) {
+      return Integer.toString(id);
+    }
     return String.format("%d%s", id, direction.getId());
   }
 

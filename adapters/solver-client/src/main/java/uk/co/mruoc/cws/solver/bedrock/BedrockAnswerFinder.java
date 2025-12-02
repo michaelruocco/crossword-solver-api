@@ -50,7 +50,6 @@ public class BedrockAnswerFinder implements AnswerFinder {
             .content(ContentBlock.fromText(promptText))
             .role(ConversationRole.USER)
             .build();
-    // TODO split prompts into user and system
     var request =
         ConverseRequest.builder()
             .modelId(modelId)

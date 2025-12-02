@@ -33,6 +33,7 @@ public class AttemptSolverRunnable implements Runnable {
       attempt = performPass(attempt, pass);
       pass++;
     }
+    log.info("attempt {} completed in {} of max allowed {} passes", attempt.id(), pass, maxPasses);
   }
 
   private Attempt performPass(Attempt attempt, int pass) {
@@ -51,11 +52,12 @@ public class AttemptSolverRunnable implements Runnable {
       log.info("unconfirming answers intersecting with clues {}", selectedClues.ids());
       return retryIntersectingClues(attempt, selectedClues);
     }
-    log.info("got {} valid best scoring answers", answers.size());
+    log.debug("got {} valid best scoring answers", answers.size());
     logAnswers(answers, selectedClues);
     return attempt.saveAnswers(answers);
   }
 
+  // TODO split this into its own class and each branch into its own method
   private Attempt retryIntersectingClues(Attempt attempt, Clues clues) {
     for (var clue : clues) {
       var intersectingIds = attempt.getIntersectingIds(clue.id());
@@ -74,17 +76,14 @@ public class AttemptSolverRunnable implements Runnable {
           var candidateAttempt = attempt.unconfirmAnswer(intersectingId);
           var updatedClue = clue.withPattern(patternFactory.build(clue, candidateAttempt));
           var updatedAnswer = getAnswer(updatedClue);
-          log.info("got updated answer {} from updated clue {}", updatedAnswer, updatedClue);
+          logAnswer(updatedAnswer, updatedClue);
           candidateAttempt = candidateAttempt.saveAnswer(updatedAnswer.confirm());
-          var intersectingClue = candidateAttempt.getClue(intersectingId).orElseThrow();
+          var intersectingClue = candidateAttempt.getClue(intersectingId);
           var updatedIntersectingClue =
               intersectingClue.withPattern(
                   patternFactory.build(intersectingClue, candidateAttempt));
           var updatedIntersectingAnswer = getAnswer(updatedIntersectingClue);
-          log.info(
-              "got updated intersecting answer {} from updated intersecting clue {}",
-              updatedIntersectingAnswer,
-              updatedIntersectingClue);
+          logAnswer(updatedIntersectingAnswer, updatedIntersectingClue);
           if (new ValidAnswerPredicate(updatedIntersectingClue).test(updatedIntersectingAnswer)) {
             return candidateAttempt.saveAnswer(updatedIntersectingAnswer.confirm());
           }
@@ -109,7 +108,7 @@ public class AttemptSolverRunnable implements Runnable {
   }
 
   private void logAnswers(Answers answers, Clues clues) {
-    answers.forEach(answer -> logAnswer(answer, clues.findClue(answer.id()).orElseThrow()));
+    answers.forEach(answer -> logAnswer(answer, clues.find(answer.id()).orElseThrow()));
   }
 
   private void logAnswer(Answer answer, Clue clue) {
@@ -129,19 +128,9 @@ public class AttemptSolverRunnable implements Runnable {
   }
 
   private Clues addPatternsToClues(Clues clues, Attempt attempt) {
-    var confirmedAnswers = attempt.getConfirmedAnswers();
-    var words = attempt.getWords();
-    for (var confirmedAnswer : confirmedAnswers) {
-      var intersectingWords = words.getIntersectingWords(confirmedAnswer.id());
-      for (var intersectingWord : intersectingWords) {
-        if (!confirmedAnswers.contains(intersectingWord.getId())) {
-          var clue = attempt.getClue(intersectingWord.getId()).orElseThrow();
-          var pattern =
-              patternFactory.build(
-                  intersectingWord, words.getIntersections(intersectingWord), confirmedAnswers);
-          clues = clues.addPattern(clue.id(), pattern);
-        }
-      }
+    for (var clue : clues) {
+      var pattern = patternFactory.build(clue, attempt);
+      clues = clues.addPattern(clue.id(), pattern);
     }
     return clues;
   }

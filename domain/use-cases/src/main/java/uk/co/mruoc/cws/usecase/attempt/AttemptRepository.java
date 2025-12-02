@@ -8,7 +8,7 @@ public interface AttemptRepository {
   long getNextId();
 
   default Attempt forceFindById(long id) {
-    return findById(id).orElseThrow();
+    return findById(id).orElseThrow(() -> new AttemptNotFoundByIdException(id));
   }
 
   Optional<Attempt> findById(long id);

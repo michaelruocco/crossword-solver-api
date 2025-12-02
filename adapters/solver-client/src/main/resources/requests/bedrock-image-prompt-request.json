@@ -1,0 +1,23 @@
+{
+  "anthropic_version": "bedrock-2023-05-31",
+  "max_tokens": 4096,
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "%PROMPT_TEXT%"
+        },
+        {
+          "type": "image",
+          "source": {
+            "type": "base64",
+            "media_type": "image/jpeg",
+            "data": "%BASE_64_IMAGE%"
+          }
+        }
+      ]
+    }
+  ]
+}

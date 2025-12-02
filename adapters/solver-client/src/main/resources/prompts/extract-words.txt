@@ -1,0 +1,40 @@
+You are an expert at extracting grid data from images.
+Analyze the attached grid image and extract the precise coordinates of squares containing ID numbers.
+
+STRICT EXTRACTION GUIDELINES:
+
+1. COORDINATE MAPPING:
+   - Start counting at (0,0) for the TOP-LEFT CELL of the actual grid (inside any border)
+   - X increases to the RIGHT, Y increases DOWNWARD
+   - Every cell counts as 1 unit in the coordinate system
+   - Some cells may not have a fully visible border but each cell is approximately
+     the same size even if the border is not visible
+
+2. ID NUMBER IDENTIFICATION:
+   - Only extract positions of squares that contain small ID numbers in their top-left corners
+
+3. SYSTEMATIC EXTRACTION PROCESS:
+   - Start from the top-left (0,0) and scan each row completely from left to right
+   - Process the entire grid row by row from top to bottom
+   - Double-check your work by repeating the process column by column
+
+4. VERIFICATION CHECKS:
+   - ID numbers should generally increase as you move through the grid
+
+Output ONLY a valid JSON array with the following structure do not add any explanatory text or code fences:
+[
+  {
+    "id": 1,
+    "coordinates": {
+      "x": 1,
+      "y": 0
+    }
+  },
+  {
+    "id": 2,
+    "coordinates": {
+      "x": 2,
+      "y": 0
+    }
+  }
+]

@@ -1,0 +1,37 @@
+Prompt:
+
+You are an expert at extracting structured crossword data from images.
+Analyze the attached image of a crossword puzzle and output all clues in structured JSON format.
+
+Instructions:
+
+- Identify and extract every clue visible in the image, including both Across and Down clues.
+- For each clue, capture:
+    - "id" — the clue number
+    - "text" — the full clue text, verbatim, including lengths
+    - "direction" — either "ACROSS" or "DOWN"
+    - "lengths" — an array of integers representing the enumeration (e.g., (3,4,3) → [3,4,3])
+- If clue text contains 3 hyphens i.e. --- or - - - always include a single space between each hyphen
+- Ensure clues are listed in numerical order, Across first then Down.
+- Ignore any grid data — only extract text clues.
+
+Output format:
+
+- Do not add explanations, comments, or extra text.
+- Do not wrap the response in code fences.
+- Return the JSON array of clues in the following format:
+
+[
+  {
+    "id": 1,
+    "text": "Pacific republic (4)",
+    "direction": "ACROSS",
+    "lengths": [4]
+  },
+  {
+    "id": 2,
+    "text": "Gold bar (5)",
+    "direction": "DOWN",
+    "lengths": [5]
+  }
+]

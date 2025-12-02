@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Answer;
+import uk.co.mruoc.cws.entity.AnswerNotFoundForIdException;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.usecase.AnswerRepository;
 
@@ -51,7 +52,7 @@ public class StubAnswerRepository implements AnswerRepository {
 
   @Override
   public Answer forceFind(Id id) {
-    return find(id).orElseThrow();
+    return find(id).orElseThrow(() -> new AnswerNotFoundForIdException(id));
   }
 
   @Override
