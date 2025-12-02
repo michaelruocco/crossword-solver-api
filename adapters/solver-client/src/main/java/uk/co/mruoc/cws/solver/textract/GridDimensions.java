@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.solver.bedrock;
+package uk.co.mruoc.cws.solver.textract;
 
 import java.util.ArrayList;
 import java.util.Collection;

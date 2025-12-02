@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.textract.TextractClient;
+import uk.co.mruoc.cws.solver.textract.TextractWordExtractor;
 import uk.co.mruoc.cws.usecase.StubImageDownloader;
 import uk.co.mruoc.cws.usecase.WordExtractor;
 

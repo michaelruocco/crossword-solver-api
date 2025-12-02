@@ -1,7 +1,7 @@
 package uk.co.mruoc.cws.solver.bedrock;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.co.mruoc.cws.solver.bedrock.BedrockRuntimeClientFactory.buildClueExtractor;
+import static uk.co.mruoc.cws.solver.bedrock.BedrockRuntimeClientFactory.buildClient;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import uk.co.mruoc.junit.EnvVarsPresent;
 @Slf4j
 public class BedrockClueExtractorIT {
 
-  private final ClueExtractor extractor = buildClueExtractor();
+  private final ClueExtractor extractor = new BedrockClueExtractor(buildClient());
 
   @Test
   void shouldExtractCluesFromPuzzleImage() {

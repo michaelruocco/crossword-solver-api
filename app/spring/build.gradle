@@ -1,17 +1,17 @@
 buildscript {
     ext {
-        springBootVersion = "3.4.1"
+        springBootVersion = "4.0.0"
     }
 }
 
 plugins {
     id "crossword-solver-api.java-conventions"
     id "org.springframework.boot" version "${springBootVersion}"
-    id "com.gorylenko.gradle-git-properties" version "2.5.3"
+    id "com.gorylenko.gradle-git-properties" version "2.5.4"
 }
 
 ext {
-    testContainersVersion = "1.20.4"
+    testContainersVersion = "1.21.3"
 }
 ext["junit-jupiter.version"] = "${junitVersion}"
 
@@ -42,7 +42,7 @@ dependencies {
 
     integrationTestImplementation testFixtures(project(":api"))
     integrationTestImplementation project(":rest-client")
-    integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:4.1.0"
+    integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:5.1.0"
     integrationTestImplementation "org.awaitility:awaitility:${awaitilityVersion}"
 
     testFixturesImplementation project(":api")

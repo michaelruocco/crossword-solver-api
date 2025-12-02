@@ -25,6 +25,10 @@ public class BedrockClueExtractor implements ClueExtractor {
   private final ImageCompressor compressor;
   private final JsonMapper mapper;
 
+  public BedrockClueExtractor(BedrockRuntimeClient client) {
+    this(client, ModelId.DEFAULT);
+  }
+
   public BedrockClueExtractor(BedrockRuntimeClient client, String modelId) {
     this(
         client,

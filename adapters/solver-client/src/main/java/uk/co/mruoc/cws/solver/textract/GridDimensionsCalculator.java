@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.solver.bedrock;
+package uk.co.mruoc.cws.solver.textract;
 
 import static org.opencv.imgproc.Imgproc.MORPH_RECT;
 

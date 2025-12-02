@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.solver.bedrock;
+package uk.co.mruoc.cws.solver.textract;
 
 import java.util.Collection;
 import java.util.Comparator;

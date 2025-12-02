@@ -1,6 +1,7 @@
-package uk.co.mruoc.cws.solver.bedrock;
+package uk.co.mruoc.cws.solver.textract;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.co.mruoc.cws.solver.bedrock.TextractClientFactory.buildWordExtractor;
 
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
@@ -8,14 +9,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import uk.co.mruoc.cws.solver.stub.StubWordExtractor;
-import uk.co.mruoc.cws.usecase.StubImageDownloader;
 import uk.co.mruoc.cws.usecase.WordExtractor;
+import uk.co.mruoc.junit.EnvVarsPresent;
 
+@EnvVarsPresent(values = {"AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"})
 @Slf4j
-class TesseractWordExtractorIT {
+class TextractWordExtractorIT {
 
-  private final WordExtractor extractor =
-      new TesseractWordExtractor(new StubImageDownloader(), new TesseractFactory().build());
+  private final WordExtractor extractor = buildWordExtractor();
 
   @ParameterizedTest
   @MethodSource("imageUrls")
@@ -37,7 +38,7 @@ class TesseractWordExtractorIT {
             Arguments.of(toUrl("puzzle9.jpg")),
             Arguments.of(toUrl("puzzle14.jpg")),
             Arguments.of(toUrl("puzzle24.jpg")))
-        .filter(a -> a.get()[0].toString().contains("puzzle2."));
+        .filter(a -> a.get()[0].toString().contains("puzzle3."));
   }
 
   private static String toUrl(String filename) {

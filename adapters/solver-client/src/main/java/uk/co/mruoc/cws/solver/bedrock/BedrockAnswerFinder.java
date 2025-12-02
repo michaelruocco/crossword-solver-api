@@ -23,6 +23,10 @@ public class BedrockAnswerFinder implements AnswerFinder {
   private final FindAnswerPromptTextFactory promptTextFactory;
   private final FindAnswerResponseConverter responseConverter;
 
+  public BedrockAnswerFinder(BedrockRuntimeClient client) {
+    this(client, ModelId.DEFAULT);
+  }
+
   public BedrockAnswerFinder(BedrockRuntimeClient client, String modelId) {
     this(client, modelId, new FindAnswerPromptTextFactory(), new FindAnswerResponseConverter());
   }

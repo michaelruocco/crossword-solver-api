@@ -1,7 +1,7 @@
 package uk.co.mruoc.cws.solver.bedrock;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.co.mruoc.cws.solver.bedrock.BedrockRuntimeClientFactory.buildAnswerFinder;
+import static uk.co.mruoc.cws.solver.bedrock.BedrockRuntimeClientFactory.buildClient;
 
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import uk.co.mruoc.junit.EnvVarsPresent;
 @Slf4j
 public class BedrockAnswerFinderIT {
 
-  private final AnswerFinder finder = buildAnswerFinder();
+  private final AnswerFinder finder = new BedrockAnswerFinder(buildClient());
 
   @Test
   void shouldExtractCluesFromPuzzleImage() {

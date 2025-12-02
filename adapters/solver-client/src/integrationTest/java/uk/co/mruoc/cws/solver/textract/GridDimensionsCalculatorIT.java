@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.solver.bedrock;
+package uk.co.mruoc.cws.solver.textract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -16,9 +16,6 @@ class GridDimensionsCalculatorIT {
   private final ImageProcessor preprocessor = new ImageProcessor();
   private final GridDimensionsCalculator calculator = new GridDimensionsCalculator();
 
-  private final TesseractNumberDetector detector =
-      new TesseractNumberDetector(new TesseractFactory().build());
-
   @ParameterizedTest
   @MethodSource("imageUrlAndExpectedGridSize")
   void shouldCalculateNumberOfRowsAndColumnsInGridImages(
@@ -29,22 +26,6 @@ class GridDimensionsCalculatorIT {
 
     var dimensions = calculator.calculateDimensions(binary).withGrid(grid);
 
-    System.out.println(dimensions.getAverageColumnHeight());
-    System.out.println(dimensions.getAverageColumnWidth());
-
-    dimensions.getProcessedGrid();
-
-    // dimensions.getProcessedCell(9, 11);
-
-    // puzzle 1
-    // detector.toNumberIfPresent(dimensions.getCell(8, 2)).ifPresent(System.out::println);
-    // detector.toNumberIfPresent(dimensions.getCell(11, 4)).ifPresent(System.out::println);
-    // detector.toNumberIfPresent(dimensions.getCell(4, 8)).ifPresent(System.out::println);
-
-    // puzzle 2
-    // detector.toNumberIfPresent(dimensions.getProcessedCell(12,
-    // 0)).ifPresent(System.out::println);
-
     assertAll(
         () -> assertThat(dimensions.getNumberOfColumns()).isEqualTo(expectedColumns),
         () -> assertThat(dimensions.getNumberOfRows()).isEqualTo(expectedRows));
@@ -52,15 +33,14 @@ class GridDimensionsCalculatorIT {
 
   private static Stream<Arguments> imageUrlAndExpectedGridSize() {
     return Stream.of(
-            Arguments.of(toUrl("puzzle1.png"), 13, 13),
-            Arguments.of(toUrl("puzzle2.png"), 13, 13),
-            Arguments.of(toUrl("puzzle3.png"), 13, 13),
-            Arguments.of(toUrl("puzzle4.png"), 13, 13),
-            Arguments.of(toUrl("puzzle5.png"), 13, 13),
-            Arguments.of(toUrl("puzzle9.jpg"), 13, 29),
-            Arguments.of(toUrl("puzzle14.jpg"), 11, 23),
-            Arguments.of(toUrl("puzzle24.jpg"), 15, 15))
-        .filter(a -> a.get()[0].toString().contains("puzzle24."));
+        Arguments.of(toUrl("puzzle1.png"), 13, 13),
+        Arguments.of(toUrl("puzzle2.png"), 13, 13),
+        Arguments.of(toUrl("puzzle3.png"), 13, 13),
+        Arguments.of(toUrl("puzzle4.png"), 13, 13),
+        Arguments.of(toUrl("puzzle5.png"), 13, 13),
+        Arguments.of(toUrl("puzzle9.jpg"), 13, 29),
+        Arguments.of(toUrl("puzzle14.jpg"), 11, 23),
+        Arguments.of(toUrl("puzzle24.jpg"), 15, 15));
   }
 
   private static String toUrl(String filename) {

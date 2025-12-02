@@ -6,21 +6,19 @@ dependencies {
     implementation project(":entities")
     implementation project(":use-cases")
     implementation "org.apache.commons:commons-text:${commonsText}"
-    implementation "org.seleniumhq.selenium:selenium-java:4.35.0"
+    implementation "org.seleniumhq.selenium:selenium-java:4.38.0"
     implementation "com.openai:openai-java:${openAiVersion}"
     implementation "com.github.michaelruocco:json-adapter:1.0.5"
     implementation "com.github.michaelruocco:file-loader:7.0.4"
     implementation "io.github.resilience4j:resilience4j-retry:${resilience4jVersion}"
     implementation "software.amazon.awssdk:bedrockruntime:${bedrockVersion}"
     implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
-
     implementation "org.openpnp:opencv:4.9.0-0"
-    implementation "net.sourceforge.tess4j:tess4j:5.16.0"
-    implementation "software.amazon.awssdk:textract:2.38.7"
+    implementation "software.amazon.awssdk:textract:${textractVersion}"
 
     testFixturesImplementation project(":use-cases")
     testFixturesImplementation "com.openai:openai-java:${openAiVersion}"
     testFixturesImplementation "org.apache.commons:commons-text:${commonsText}"
     testFixturesImplementation "software.amazon.awssdk:bedrockruntime:${bedrockVersion}"
-    testFixturesImplementation "software.amazon.awssdk:textract:2.38.7"
+    testFixturesImplementation "software.amazon.awssdk:textract:${textractVersion}"
 }
