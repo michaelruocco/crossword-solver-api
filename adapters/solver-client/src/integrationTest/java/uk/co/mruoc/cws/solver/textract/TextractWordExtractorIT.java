@@ -38,7 +38,7 @@ class TextractWordExtractorIT {
             Arguments.of(toUrl("puzzle9.jpg")),
             Arguments.of(toUrl("puzzle14.jpg")),
             Arguments.of(toUrl("puzzle24.jpg")))
-        .filter(a -> a.get()[0].toString().contains("puzzle3."));
+        .filter(a -> a.get()[0].toString().contains("puzzle4."));
   }
 
   private static String toUrl(String filename) {

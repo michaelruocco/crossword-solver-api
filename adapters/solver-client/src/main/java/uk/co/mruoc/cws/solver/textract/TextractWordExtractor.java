@@ -1,8 +1,8 @@
 package uk.co.mruoc.cws.solver.textract;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.opencv.core.Mat;
@@ -11,7 +11,6 @@ import org.opencv.imgcodecs.Imgcodecs;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.services.textract.TextractClient;
 import software.amazon.awssdk.services.textract.model.AnalyzeDocumentRequest;
-import software.amazon.awssdk.services.textract.model.AnalyzeDocumentResponse;
 import software.amazon.awssdk.services.textract.model.Block;
 import software.amazon.awssdk.services.textract.model.BlockType;
 import software.amazon.awssdk.services.textract.model.Document;
@@ -44,64 +43,69 @@ public class TextractWordExtractor implements WordExtractor {
     var binary = processor.process(image);
     var dimensions = calculator.calculateDimensions(binary).withGrid(grid);
     var processedGrid = dimensions.getProcessedGrid();
+    return toWords(processedGrid);
+  }
 
-    Document document =
-        Document.builder().bytes(SdkBytes.fromByteArray(toBytes(processedGrid, ".png"))).build();
-
-    AnalyzeDocumentRequest request =
+  private Words toWords(Mat grid) {
+    var document = Document.builder().bytes(SdkBytes.fromByteArray(toBytes(grid, ".png"))).build();
+    var request =
         AnalyzeDocumentRequest.builder()
             .document(document)
-            .featureTypes(FeatureType.TABLES) // analyze tables in the grid
+            .featureTypes(FeatureType.TABLES)
             .build();
+    var response = client.analyzeDocument(request);
+    return toWords(response.blocks());
+  }
 
-    AnalyzeDocumentResponse response = client.analyzeDocument(request);
+  private Words toWords(Collection<Block> blocks) {
+    return new Words(
+        blocks.stream()
+            .filter(block -> block.blockType() == BlockType.CELL)
+            .map(block -> toWord(blocks, block))
+            .flatMap(Optional::stream)
+            .toList());
+  }
 
-    List<Block> blocks = response.blocks();
-
-    Collection<Word> words = new ArrayList<>();
-    // Iterate over detected cells in tables
-    for (Block block : blocks) {
-      if (block.blockType() == BlockType.CELL) {
-        String text = "";
-        if (block.relationships() != null) {
-          for (Relationship rel : block.relationships()) {
-            if (rel.type() == RelationshipType.CHILD) {
-              for (String childId : rel.ids()) {
-                Block wordBlock =
-                    blocks.stream().filter(b -> b.id().equals(childId)).findFirst().orElse(null);
-                if (wordBlock != null && wordBlock.blockType() == BlockType.WORD) {
-                  text += wordBlock.text() + " ";
-                }
-              }
-            }
-          }
-        }
-        if (StringUtils.isNotEmpty(text.trim())) {
-          System.out.printf(
-              "Row: %d, Column: %d, Text: %s%n",
-              block.rowIndex(), block.columnIndex(), text.trim());
-          words.add(
-              Word.builder()
-                  .id(new Id(Integer.parseInt(text.trim()), null))
-                  .length(-1)
-                  .coordinates(new Coordinates(block.columnIndex() - 1, block.rowIndex() - 1))
-                  .build());
-        }
-      }
+  private Optional<Word> toWord(Collection<Block> blocks, Block block) {
+    var text = findChildText(blocks, block);
+    if (StringUtils.isEmpty(text)) {
+      return Optional.empty();
     }
-    return new Words(words);
+    return Optional.of(toWord(block, text));
+  }
+
+  private String findChildText(Collection<Block> blocks, Block block) {
+    return block.relationships().stream()
+        .filter(relationship -> relationship.type() == RelationshipType.CHILD)
+        .map(Relationship::ids)
+        .flatMap(Collection::stream)
+        .map(childId -> findChildText(blocks, childId))
+        .filter(StringUtils::isNotEmpty)
+        .collect(Collectors.joining(" "));
+  }
+
+  private String findChildText(Collection<Block> blocks, String childId) {
+    return blocks.stream()
+        .filter(b -> b.id().equals(childId))
+        .filter(b -> b.blockType() == BlockType.WORD)
+        .map(Block::text)
+        .collect(Collectors.joining(" "));
+  }
+
+  private Word toWord(Block block, String text) {
+    return Word.builder()
+        .id(new Id(Integer.parseInt(text), null))
+        .length(-1)
+        .coordinates(new Coordinates(block.columnIndex() - 1, block.rowIndex() - 1))
+        .build();
   }
 
   public byte[] toBytes(Mat mat, String format) {
-    // List to store encoded image
     MatOfByte mob = new MatOfByte();
-
-    // Encode the Mat into the specified format
     boolean success = Imgcodecs.imencode(format, mat, mob);
     if (!success) {
       throw new RuntimeException("Failed to encode Mat to " + format);
     }
-
     return mob.toArray();
   }
 }
