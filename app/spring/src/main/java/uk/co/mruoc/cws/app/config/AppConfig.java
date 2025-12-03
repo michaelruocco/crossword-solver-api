@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import uk.co.mruoc.cws.entity.WordsFactory;
 import uk.co.mruoc.cws.usecase.AnswerDeleter;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.cws.usecase.CellExtractor;
@@ -54,6 +55,7 @@ public class AppConfig {
         .clueExtractor(clueExtractor)
         .cellExtractor(cellExtractor)
         .repository(repository)
+        .wordsFactory(new WordsFactory())
         .build();
   }
 
@@ -97,7 +99,7 @@ public class AppConfig {
         .patternFactory(new PatternFactory())
         .executor(executor)
         .waiter(new DefaultWaiter())
-        .delay(Duration.ofSeconds(1))
+        .delay(Duration.ZERO)
         .build();
   }
 

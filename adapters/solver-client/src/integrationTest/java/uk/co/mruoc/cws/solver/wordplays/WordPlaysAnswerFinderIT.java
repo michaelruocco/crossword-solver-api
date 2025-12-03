@@ -13,7 +13,7 @@ import uk.co.mruoc.cws.entity.Id;
 public class WordPlaysAnswerFinderIT {
 
   @Test
-  void shouldFindSingleAnswer() {
+  void shouldFindAnswerToClue() {
     var driver = buildWebDriver();
     try {
       var finder = new WordPlaysAnswerFinder(driver);
@@ -36,7 +36,7 @@ public class WordPlaysAnswerFinderIT {
   }
 
   @Test
-  void shouldFindTrickyAnswer() {
+  void shouldFindAnswerToTrickyClue() {
     var driver = buildWebDriver();
     try {
       var finder = new WordPlaysAnswerFinder(driver);

@@ -6,10 +6,15 @@ import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.bedrockruntime.BedrockRuntimeClient;
 import uk.co.mruoc.cws.solver.bedrock.BedrockAnswerFinder;
+import uk.co.mruoc.cws.solver.bedrock.BedrockClueExtractor;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
+import uk.co.mruoc.cws.usecase.ClueExtractor;
 
 @Configuration
 public class BedrockSolverClientConfig {
+
+  // TODO make configuration param
+  private final String model = "eu.anthropic.claude-3-7-sonnet-20250219-v1:0";
 
   @Bean
   public BedrockRuntimeClient bedrockRuntimeClient() {
@@ -21,7 +26,11 @@ public class BedrockSolverClientConfig {
 
   @Bean
   public AnswerFinder bedrockAnswerFinder(BedrockRuntimeClient client) {
-    var model = "eu.anthropic.claude-3-7-sonnet-20250219-v1:0";
     return new BedrockAnswerFinder(client, model);
+  }
+
+  @Bean
+  public ClueExtractor bedrockClueExtractor(BedrockRuntimeClient client) {
+    return new BedrockClueExtractor(client, model);
   }
 }

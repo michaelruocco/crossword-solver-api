@@ -33,6 +33,7 @@ public class PuzzleController {
 
   @PostMapping
   public ApiPuzzle<ApiClue> createPuzzle(@RequestBody ApiCreatePuzzleRequest request) {
+    System.out.println("request " + request);
     var puzzleId = facade.createPuzzle(request.getImageUrl());
     var puzzle = facade.findPuzzleById(puzzleId);
     return converter.toApiPuzzle(puzzle);

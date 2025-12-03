@@ -19,7 +19,7 @@ public class BedrockAnswerFinderIT {
   private final AnswerFinder finder = new BedrockAnswerFinder(buildClient());
 
   @Test
-  void shouldExtractCluesFromPuzzleImage() {
+  void shouldFindAnswerToClue() {
     var clue =
         Clue.builder()
             .id(new Id("8D"))
@@ -36,7 +36,7 @@ public class BedrockAnswerFinderIT {
 
   @Disabled
   @Test
-  void shouldSolveTrickyClue() {
+  void shouldFindAnswerToTrickyClue() {
     var clue =
         Clue.builder().id(new Id("1D")).text("Ram (3)").lengths(List.of(3)).pattern("T?P").build();
 

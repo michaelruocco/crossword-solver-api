@@ -12,7 +12,7 @@ import uk.co.mruoc.cws.usecase.StubImageDownloader;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TextractClientFactory {
 
-  public static CellExtractor buildWordExtractor() {
+  public static CellExtractor buildCellExtractor() {
     return new TextractCellExtractor(new StubImageDownloader(), buildClient());
   }
 

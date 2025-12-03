@@ -21,6 +21,7 @@ import software.amazon.awssdk.services.textract.model.RelationshipType;
 import uk.co.mruoc.cws.entity.Cell;
 import uk.co.mruoc.cws.entity.Cells;
 import uk.co.mruoc.cws.entity.Coordinates;
+import uk.co.mruoc.cws.image.DefaultImageDownloader;
 import uk.co.mruoc.cws.usecase.CellExtractor;
 import uk.co.mruoc.cws.usecase.ImageDownloader;
 
@@ -32,8 +33,12 @@ public class TextractCellExtractor implements CellExtractor {
   private final GridDimensionsCalculator calculator;
   private final TextractClient client;
 
-  public TextractCellExtractor(ImageDownloader downloader, TextractClient client) {
-    this(downloader, new ImageProcessor(), new GridDimensionsCalculator(), client);
+  public TextractCellExtractor(TextractClient client) {
+    this(new DefaultImageDownloader(), client);
+  }
+
+  public TextractCellExtractor(ImageDownloader imageDownloader, TextractClient client) {
+    this(imageDownloader, new ImageProcessor(), new GridDimensionsCalculator(), client);
   }
 
   @Override

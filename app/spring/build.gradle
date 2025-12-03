@@ -39,6 +39,7 @@ dependencies {
     implementation "com.github.michaelruocco:json-adapter:${jsonAdapterVersion}"
     implementation "com.openai:openai-java:${openAiVersion}"
     implementation "software.amazon.awssdk:bedrockruntime:${bedrockVersion}"
+    implementation "software.amazon.awssdk:textract:${textractVersion}"
 
     integrationTestImplementation testFixtures(project(":api"))
     integrationTestImplementation project(":rest-client")

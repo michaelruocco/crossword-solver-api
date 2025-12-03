@@ -1,7 +1,7 @@
 package uk.co.mruoc.cws.solver.textract;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.co.mruoc.cws.solver.bedrock.TextractClientFactory.buildWordExtractor;
+import static uk.co.mruoc.cws.solver.bedrock.TextractClientFactory.buildCellExtractor;
 
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import uk.co.mruoc.junit.EnvVarsPresent;
 @Slf4j
 class TextractCellExtractorIT {
 
-  private final CellExtractor extractor = buildWordExtractor();
+  private final CellExtractor extractor = buildCellExtractor();
 
   @ParameterizedTest
   @MethodSource("imageUrls")
