@@ -35,6 +35,10 @@ public class ChatGptAnswerFinder implements AnswerFinder {
   private final FindAnswerResponseConverter responseConverter;
   private final Retry retry;
 
+  public ChatGptAnswerFinder(OpenAIClient client) {
+    this(client, ChatModel.GPT_3_5_TURBO);
+  }
+
   public ChatGptAnswerFinder(OpenAIClient client, ChatModel chatModel) {
     this(
         client,

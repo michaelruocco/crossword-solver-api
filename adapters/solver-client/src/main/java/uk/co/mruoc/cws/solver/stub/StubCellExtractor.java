@@ -1,25 +1,25 @@
 package uk.co.mruoc.cws.solver.stub;
 
 import lombok.RequiredArgsConstructor;
-import uk.co.mruoc.cws.entity.Words;
+import uk.co.mruoc.cws.entity.Cells;
 import uk.co.mruoc.cws.solver.JsonMapper;
-import uk.co.mruoc.cws.usecase.WordExtractor;
+import uk.co.mruoc.cws.usecase.CellExtractor;
 import uk.co.mruoc.file.FileLoader;
 
 @RequiredArgsConstructor
-public class StubWordExtractor implements WordExtractor {
+public class StubCellExtractor implements CellExtractor {
 
   private final StubJsonPathFactory cluePathFactory;
   private final JsonMapper mapper;
 
-  public StubWordExtractor() {
+  public StubCellExtractor() {
     this(new StubJsonPathFactory(), new JsonMapper());
   }
 
   @Override
-  public Words extractWords(String imageUrl) {
+  public Cells extractCells(String imageUrl) {
     var path = cluePathFactory.toWordJsonPath(imageUrl);
     var json = FileLoader.loadContentFromClasspath(path);
-    return mapper.toWords(json);
+    return mapper.toCells(json);
   }
 }

@@ -7,11 +7,11 @@ import uk.co.mruoc.cws.usecase.UrlConverter;
 public class StubJsonPathFactory {
 
   private final String cluesPathTemplate;
-  private final String wordsPathTemplate;
+  private final String cellsPathTemplate;
   private final UrlConverter urlConverter;
 
   public StubJsonPathFactory() {
-    this("examples/%s/clues.json", "examples/%s/words.json", new UrlConverter());
+    this("examples/%s/clues.json", "examples/%s/cells.json", new UrlConverter());
   }
 
   public String toClueJsonPath(String imageUrl) {
@@ -19,7 +19,7 @@ public class StubJsonPathFactory {
   }
 
   public String toWordJsonPath(String imageUrl) {
-    return toJsonPath(wordsPathTemplate, imageUrl);
+    return toJsonPath(cellsPathTemplate, imageUrl);
   }
 
   private String toJsonPath(String template, String imageUrl) {

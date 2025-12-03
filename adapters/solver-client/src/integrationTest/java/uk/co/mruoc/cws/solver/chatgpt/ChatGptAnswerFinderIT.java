@@ -1,6 +1,7 @@
 package uk.co.mruoc.cws.solver.chatgpt;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.co.mruoc.cws.solver.chatgpt.ChatGptClientFactory.buildClient;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ import uk.co.mruoc.junit.EnvVarsPresent;
 public class ChatGptAnswerFinderIT {
 
   private final ClueExtractor clueExtractor = new StubClueExtractor();
-  private final AnswerFinder finder = ChatGptClientFactory.buildAnswerFinder();
+  private final AnswerFinder finder = new ChatGptAnswerFinder(buildClient());
 
   @EnvVarsPresent(values = {"OPEN_AI_API_KEY"})
   @Test

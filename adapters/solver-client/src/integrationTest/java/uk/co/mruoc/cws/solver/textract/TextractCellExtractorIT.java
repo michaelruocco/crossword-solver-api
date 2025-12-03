@@ -8,24 +8,24 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import uk.co.mruoc.cws.solver.stub.StubWordExtractor;
-import uk.co.mruoc.cws.usecase.WordExtractor;
+import uk.co.mruoc.cws.solver.stub.StubCellExtractor;
+import uk.co.mruoc.cws.usecase.CellExtractor;
 import uk.co.mruoc.junit.EnvVarsPresent;
 
 @EnvVarsPresent(values = {"AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"})
 @Slf4j
-class TextractWordExtractorIT {
+class TextractCellExtractorIT {
 
-  private final WordExtractor extractor = buildWordExtractor();
+  private final CellExtractor extractor = buildWordExtractor();
 
   @ParameterizedTest
   @MethodSource("imageUrls")
-  void shouldExtractWordsFromImage(String imageUrl) {
-    var words = extractor.extractWords(imageUrl);
+  void shouldExtractCellsFromImage(String imageUrl) {
+    var cells = extractor.extractCells(imageUrl);
 
-    words.getWords().forEach(word -> log.info(word.toString()));
-    var expectedWords = new StubWordExtractor().extractWords(imageUrl);
-    assertThat(words.getWords()).containsExactlyElementsOf(expectedWords.getWords());
+    cells.forEach(word -> log.info(word.toString()));
+    var expectedCells = new StubCellExtractor().extractCells(imageUrl);
+    assertThat(cells).containsExactlyElementsOf(expectedCells);
   }
 
   private static Stream<Arguments> imageUrls() {

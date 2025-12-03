@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Answers;
+import uk.co.mruoc.cws.entity.Cell;
+import uk.co.mruoc.cws.entity.Cells;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Clues;
-import uk.co.mruoc.cws.entity.Word;
-import uk.co.mruoc.cws.entity.Words;
 
 @RequiredArgsConstructor
 public class JsonMapper {
@@ -46,9 +46,9 @@ public class JsonMapper {
     }
   }
 
-  public Words toWords(String json) {
+  public Cells toCells(String json) {
     try {
-      return new Words(mapper.readValue(json, Word[].class));
+      return new Cells(mapper.readValue(json, Cell[].class));
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }

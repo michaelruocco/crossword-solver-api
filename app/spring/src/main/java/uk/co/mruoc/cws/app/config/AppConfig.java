@@ -11,12 +11,12 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import uk.co.mruoc.cws.usecase.AnswerDeleter;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
+import uk.co.mruoc.cws.usecase.CellExtractor;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
 import uk.co.mruoc.cws.usecase.CompositeAnswerFinder;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
 import uk.co.mruoc.cws.usecase.DefaultWaiter;
 import uk.co.mruoc.cws.usecase.PatternFactory;
-import uk.co.mruoc.cws.usecase.WordExtractor;
 import uk.co.mruoc.cws.usecase.attempt.AttemptCreator;
 import uk.co.mruoc.cws.usecase.attempt.AttemptFinder;
 import uk.co.mruoc.cws.usecase.attempt.AttemptRepository;
@@ -49,10 +49,10 @@ public class AppConfig {
 
   @Bean
   public PuzzleCreator puzzleCreator(
-      ClueExtractor clueExtractor, WordExtractor wordExtractor, PuzzleRepository repository) {
+      ClueExtractor clueExtractor, CellExtractor cellExtractor, PuzzleRepository repository) {
     return PuzzleCreator.builder()
         .clueExtractor(clueExtractor)
-        .wordExtractor(wordExtractor)
+        .cellExtractor(cellExtractor)
         .repository(repository)
         .build();
   }

@@ -18,40 +18,39 @@ import software.amazon.awssdk.services.textract.model.Document;
 import software.amazon.awssdk.services.textract.model.FeatureType;
 import software.amazon.awssdk.services.textract.model.Relationship;
 import software.amazon.awssdk.services.textract.model.RelationshipType;
+import uk.co.mruoc.cws.entity.Cell;
+import uk.co.mruoc.cws.entity.Cells;
 import uk.co.mruoc.cws.entity.Coordinates;
-import uk.co.mruoc.cws.entity.Id;
-import uk.co.mruoc.cws.entity.Word;
-import uk.co.mruoc.cws.entity.Words;
+import uk.co.mruoc.cws.usecase.CellExtractor;
 import uk.co.mruoc.cws.usecase.ImageDownloader;
-import uk.co.mruoc.cws.usecase.WordExtractor;
 
 @RequiredArgsConstructor
-public class TextractWordExtractor implements WordExtractor {
+public class TextractCellExtractor implements CellExtractor {
 
   private final ImageDownloader downloader;
   private final ImageProcessor processor;
   private final GridDimensionsCalculator calculator;
   private final TextractClient client;
 
-  public TextractWordExtractor(ImageDownloader downloader, TextractClient client) {
+  public TextractCellExtractor(ImageDownloader downloader, TextractClient client) {
     this(downloader, new ImageProcessor(), new GridDimensionsCalculator(), client);
   }
 
   @Override
-  public Words extractWords(String imageUrl) {
+  public Cells extractCells(String imageUrl) {
     var image = downloader.downloadImage(imageUrl);
-    return extractWords(image);
+    return extractCells(image);
   }
 
-  private Words extractWords(BufferedImage image) {
+  private Cells extractCells(BufferedImage image) {
     var grid = processor.extractGrid(image);
     var binary = processor.process(image);
     var dimensions = calculator.calculateDimensions(binary).withGrid(grid);
     var processedGrid = dimensions.getProcessedGrid();
-    return toWords(processedGrid);
+    return toCells(processedGrid);
   }
 
-  private Words toWords(Mat grid) {
+  private Cells toCells(Mat grid) {
     var document = Document.builder().bytes(SdkBytes.fromByteArray(toBytes(grid, ".png"))).build();
     var request =
         AnalyzeDocumentRequest.builder()
@@ -59,24 +58,24 @@ public class TextractWordExtractor implements WordExtractor {
             .featureTypes(FeatureType.TABLES)
             .build();
     var response = client.analyzeDocument(request);
-    return toWords(response.blocks());
+    return toCells(response.blocks());
   }
 
-  private Words toWords(Collection<Block> blocks) {
-    return new Words(
+  private Cells toCells(Collection<Block> blocks) {
+    return new Cells(
         blocks.stream()
             .filter(block -> block.blockType() == BlockType.CELL)
-            .map(block -> toWord(blocks, block))
+            .map(block -> toCell(blocks, block))
             .flatMap(Optional::stream)
             .toList());
   }
 
-  private Optional<Word> toWord(Collection<Block> blocks, Block block) {
+  private Optional<Cell> toCell(Collection<Block> blocks, Block block) {
     var text = findChildText(blocks, block);
     if (StringUtils.isEmpty(text)) {
       return Optional.empty();
     }
-    return Optional.of(toWord(block, text));
+    return Optional.of(toCell(block, text));
   }
 
   private String findChildText(Collection<Block> blocks, Block block) {
@@ -97,12 +96,10 @@ public class TextractWordExtractor implements WordExtractor {
         .collect(Collectors.joining(" "));
   }
 
-  private Word toWord(Block block, String text) {
-    return Word.builder()
-        .id(new Id(Integer.parseInt(text), null))
-        .length(-1)
-        .coordinates(new Coordinates(block.columnIndex() - 1, block.rowIndex() - 1))
-        .build();
+  private Cell toCell(Block block, String text) {
+    var coordinates = new Coordinates(block.columnIndex() - 1, block.rowIndex() - 1);
+    var id = Integer.parseInt(text);
+    return new Cell(id, coordinates);
   }
 
   public byte[] toBytes(Mat mat, String format) {
