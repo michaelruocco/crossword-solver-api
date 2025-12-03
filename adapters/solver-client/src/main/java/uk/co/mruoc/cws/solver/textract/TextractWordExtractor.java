@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.solver.textract;
 
+import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,6 +40,10 @@ public class TextractWordExtractor implements WordExtractor {
   @Override
   public Words extractWords(String imageUrl) {
     var image = downloader.downloadImage(imageUrl);
+    return extractWords(image);
+  }
+
+  private Words extractWords(BufferedImage image) {
     var grid = processor.extractGrid(image);
     var binary = processor.process(image);
     var dimensions = calculator.calculateDimensions(binary).withGrid(grid);

@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.solver.bedrock;
 
+import java.awt.image.BufferedImage;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,14 +43,17 @@ public class BedrockClueExtractor implements ClueExtractor {
 
   @Override
   public Clues extractClues(String imageUrl) {
-    // TODO move this outside client, have application get image and store compressed bytes
-    // somewhere so it
-    // can be done once and reused for extracting clues and words and whenever puzzle is attempted
-    // more
-    // than once image bytes can be passed as the argument instead of the image url
     var image = downloader.downloadImage(imageUrl);
-    var compressedImageBytes = compressor.compressAndResize(image);
-    var requestBody = requestBodyFactory.toInvokeModelRequestBody(compressedImageBytes);
+    return extractClues(image);
+  }
+
+  private Clues extractClues(BufferedImage image) {
+    var bytes = compressor.compressAndResize(image);
+    return extractClues(bytes);
+  }
+
+  private Clues extractClues(byte[] bytes) {
+    var requestBody = requestBodyFactory.toInvokeModelRequestBody(bytes);
     var request =
         InvokeModelRequest.builder()
             .modelId(modelId)
