@@ -12,6 +12,9 @@ project(":api").projectDir = file("adapters/api")
 include "repository"
 project(":repository").projectDir = file("adapters/repository")
 
+include "image-utils"
+project(":image-utils").projectDir = file("adapters/image-utils")
+
 include "rest-client"
 project(":rest-client").projectDir = file("adapters/rest-client")
 

@@ -5,6 +5,7 @@ plugins {
 dependencies {
     implementation project(":entities")
     implementation project(":use-cases")
+    implementation project(":image-utils")
     implementation "org.apache.commons:commons-text:${commonsText}"
     implementation "org.seleniumhq.selenium:selenium-java:4.38.0"
     implementation "com.openai:openai-java:${openAiVersion}"

@@ -8,9 +8,10 @@ import software.amazon.awssdk.services.bedrockruntime.BedrockRuntimeClient;
 import software.amazon.awssdk.services.bedrockruntime.model.InvokeModelRequest;
 import software.amazon.awssdk.services.bedrockruntime.model.InvokeModelResponse;
 import uk.co.mruoc.cws.entity.Clues;
+import uk.co.mruoc.cws.image.DefaultImageCompressor;
+import uk.co.mruoc.cws.image.DefaultImageDownloader;
 import uk.co.mruoc.cws.solver.JsonMapper;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
-import uk.co.mruoc.cws.usecase.DefaultImageDownloader;
 import uk.co.mruoc.cws.usecase.ImageCompressor;
 import uk.co.mruoc.cws.usecase.ImageDownloader;
 
@@ -35,7 +36,7 @@ public class BedrockClueExtractor implements ClueExtractor {
         modelId,
         new ClueExtractorRequestBodyFactory(),
         new DefaultImageDownloader(),
-        new ImageCompressor(),
+        new DefaultImageCompressor(),
         new JsonMapper());
   }
 
