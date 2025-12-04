@@ -71,9 +71,7 @@ public class GridDimensions {
             .mapToObj(x -> getProcessedCell(x, y))
             .map(cell -> resize(cell, width, height))
             .toList();
-    var row = horizontalConcat(cells, 0);
-    // Imgcodecs.imwrite(String.format("9-row-%d.png", y), row);
-    return row;
+    return horizontalConcat(cells, 0);
   }
 
   public Mat getProcessedCell(int x, int y) {
@@ -131,9 +129,9 @@ public class GridDimensions {
   private Mat process(Mat mat) {
     Scalar white = new Scalar(255, 255, 255);
     Scalar black = new Scalar(0, 0, 0);
-    Mat background = new Mat(mat.height() * 2, mat.width() * 2, CvType.CV_8UC3, white);
+    Mat background = new Mat(mat.height() * 4, mat.width() * 4, CvType.CV_8UC3, white);
     Mat newCell = new Mat();
-    Core.copyMakeBorder(background, newCell, 2, 2, 2, 2, Core.BORDER_CONSTANT, black);
+    Core.copyMakeBorder(background, newCell, 7, 7, 7, 7, Core.BORDER_CONSTANT, black);
     if (isMostlyDark(mat)) {
       Imgcodecs.imwrite("7g-new-cell.png", newCell);
       return newCell;
@@ -146,7 +144,6 @@ public class GridDimensions {
     Mat binary = new Mat();
     Imgproc.adaptiveThreshold(
         gray, binary, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY_INV, 51, 10);
-    // Imgproc.threshold(gray, binary, 0, 255, Imgproc.THRESH_BINARY_INV | Imgproc.THRESH_OTSU);
     Imgcodecs.imwrite("7b-binary-cell.png", binary);
 
     List<MatOfPoint> contours = new ArrayList<>();
@@ -182,18 +179,14 @@ public class GridDimensions {
             Imgcodecs.imwrite(String.format("7c-digit-%d.png", contoursDrawn), digit);
 
             Mat scaled = new Mat();
-            // Imgproc.resize(digit, scaled, new Size(), 3, 3, Imgproc.INTER_LINEAR);
-            // Imgproc.GaussianBlur(scaled, scaled, new Size(3,3), 0);
-            Imgproc.resize(digit, scaled, new Size(), 3, 3, Imgproc.INTER_NEAREST);
+            Imgproc.resize(digit, scaled, new Size(), 6, 6, Imgproc.INTER_NEAREST);
             Imgcodecs.imwrite(String.format("7d-scaled-digit-%d.png", contoursDrawn), scaled);
-            // Imgproc.cvtColor(scaled, scaled, Imgproc.COLOR_GRAY2BGR);
 
             Mat invertedDigit = new Mat();
             Core.bitwise_not(scaled, invertedDigit);
             Imgproc.cvtColor(invertedDigit, invertedDigit, Imgproc.COLOR_GRAY2BGR);
             Imgcodecs.imwrite(
                 String.format("7f-inverted-digit-%d.png", contoursDrawn), invertedDigit);
-            // System.out.println("inverted digit height " + invertedDigit.height());
             digits.add(invertedDigit);
           }
         }
@@ -204,7 +197,7 @@ public class GridDimensions {
 
     // System.out.println("new cell " + newCell.width() + " " + newCell.height());
     if (!digits.isEmpty()) {
-      Mat digit = horizontalConcat(digits, 30);
+      Mat digit = horizontalConcat(digits, 25);
 
       // System.out.println("digit " + digit.width() + " " + digit.height());
       int x = (newCell.width() - digit.width()) / 2;
@@ -262,17 +255,12 @@ public class GridDimensions {
 
   private Mat horizontalConcat(List<Mat> mats, int spacing) {
     var targetHeight = mats.stream().mapToInt(Mat::height).max().orElseThrow();
-    // var black =  new Scalar(0, 0, 0);
     var white = new Scalar(255, 255, 255);
 
     List<Mat> processedDigits = new ArrayList<>();
     for (Mat mat : mats) {
       Mat copy = mat.clone();
-      // 2. Ensure 3 channels match (optional, remove if grayscale)
-      // if (digitCopy.channels() == 1) { Imgproc.cvtColor(digitCopy, digitCopy,
-      // Imgproc.COLOR_GRAY2BGR); }
 
-      // 3. Compute top/bottom padding to center vertically
       int topPad = (targetHeight - copy.rows()) / 2;
       int bottomPad = targetHeight - copy.rows() - topPad;
       Mat padded = new Mat();
@@ -280,21 +268,17 @@ public class GridDimensions {
 
       processedDigits.add(padded);
 
-      // 4. Add spacing if requested
       if (spacing > 0) {
         Mat spacer = Mat.ones(targetHeight, spacing, padded.type());
-        // spacer.setTo(black);
         spacer.setTo(white);
         processedDigits.add(spacer);
       }
     }
 
-    // Remove last spacer if it exists
     if (spacing > 0 && !processedDigits.isEmpty()) {
       processedDigits.removeLast();
     }
 
-    // 5. Concatenate horizontally
     Mat combined = new Mat();
     Core.hconcat(processedDigits, combined);
     return combined;
@@ -302,17 +286,12 @@ public class GridDimensions {
 
   private Mat verticalConcat(List<Mat> mats, int spacing) {
     var targetWidth = mats.stream().mapToInt(Mat::width).max().orElseThrow();
-    // var black =  new Scalar(0, 0, 0);
     var white = new Scalar(255, 255, 255);
 
     List<Mat> processedDigits = new ArrayList<>();
     for (Mat mat : mats) {
       Mat copy = mat.clone();
-      // 2. Ensure 3 channels match (optional, remove if grayscale)
-      // if (digitCopy.channels() == 1) { Imgproc.cvtColor(digitCopy, digitCopy,
-      // Imgproc.COLOR_GRAY2BGR); }
 
-      // 3. Compute top/bottom padding to center vertically
       int leftPad = (targetWidth - copy.cols()) / 2;
       int rightPad = targetWidth - copy.cols() - leftPad;
       Mat padded = new Mat();
@@ -320,21 +299,17 @@ public class GridDimensions {
 
       processedDigits.add(padded);
 
-      // 4. Add spacing if requested
       if (spacing > 0) {
         Mat spacer = Mat.ones(targetWidth, spacing, padded.type());
-        // spacer.setTo(black);
         spacer.setTo(white);
         processedDigits.add(spacer);
       }
     }
 
-    // Remove last spacer if it exists
     if (spacing > 0 && !processedDigits.isEmpty()) {
       processedDigits.removeLast();
     }
 
-    // 5. Concatenate horizontally
     Mat combined = new Mat();
     Core.vconcat(processedDigits, combined);
     return combined;

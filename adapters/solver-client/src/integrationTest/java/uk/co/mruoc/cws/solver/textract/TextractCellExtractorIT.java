@@ -37,8 +37,7 @@ class TextractCellExtractorIT {
             Arguments.of(toUrl("puzzle5.png")),
             Arguments.of(toUrl("puzzle9.jpg")),
             Arguments.of(toUrl("puzzle14.jpg")),
-            Arguments.of(toUrl("puzzle24.jpg")))
-        .filter(a -> a.get()[0].toString().contains("puzzle5."));
+            Arguments.of(toUrl("puzzle24.jpg")));
   }
 
   private static String toUrl(String filename) {
