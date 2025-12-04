@@ -1,6 +1,7 @@
 package uk.co.mruoc.cws.usecase.attempt;
 
 import java.time.Duration;
+import java.util.Optional;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Answer;
@@ -70,26 +71,31 @@ public class AttemptSolverRunnable implements Runnable {
         var updatedClue =
             clue.withPattern(patternFactory.build(clue, attempt.unconfirmAnswer(intersectingId)));
         var updatedAnswer = getAnswer(updatedClue);
-        return attempt.saveAnswer(updatedAnswer.confirm());
+        if (updatedAnswer.isPresent()) {
+          return attempt.saveAnswer(updatedAnswer.get().confirm());
+        }
+        return attempt;
       } else {
+        var candidateAttempt = attempt;
         for (var intersectingId : intersectingIds) {
-          var candidateAttempt = attempt.unconfirmAnswer(intersectingId);
+          candidateAttempt = candidateAttempt.unconfirmAnswer(intersectingId);
           var updatedClue = clue.withPattern(patternFactory.build(clue, candidateAttempt));
           var updatedAnswer = getAnswer(updatedClue);
-          logAnswer(updatedAnswer, updatedClue);
-          candidateAttempt = candidateAttempt.saveAnswer(updatedAnswer.confirm());
-          var intersectingClue = candidateAttempt.getClue(intersectingId);
-          var updatedIntersectingClue =
-              intersectingClue.withPattern(
-                  patternFactory.build(intersectingClue, candidateAttempt));
-          var updatedIntersectingAnswer = getAnswer(updatedIntersectingClue);
-          logAnswer(updatedIntersectingAnswer, updatedIntersectingClue);
-          if (new ValidAnswerPredicate(updatedIntersectingClue).test(updatedIntersectingAnswer)) {
-            return candidateAttempt.saveAnswer(updatedIntersectingAnswer.confirm());
+          if (updatedAnswer.isPresent()) {
+            logAnswer(updatedAnswer.get(), updatedClue);
+            candidateAttempt = candidateAttempt.saveAnswer(updatedAnswer.get().confirm());
+            var intersectingClue = candidateAttempt.getClue(intersectingId);
+            var updatedIntersectingClue =
+                intersectingClue.withPattern(
+                    patternFactory.build(intersectingClue, candidateAttempt));
+            var updatedIntersectingAnswer = getAnswer(updatedIntersectingClue);
+            if (updatedIntersectingAnswer.isPresent()) {
+              logAnswer(updatedIntersectingAnswer.get(), updatedIntersectingClue);
+              return candidateAttempt.saveAnswer(updatedIntersectingAnswer.get().confirm());
+            }
           }
         }
-        throw new RuntimeException(
-            String.format("no more intersecting ids to retry for clue %s", clue.id().toString()));
+        return candidateAttempt;
       }
     }
     throw new RuntimeException("no clues to retry");
@@ -103,8 +109,12 @@ public class AttemptSolverRunnable implements Runnable {
         .getTop(1);
   }
 
-  private Answer getAnswer(Clue clue) {
-    return answerFinder.findAnswer(clue);
+  private Optional<Answer> getAnswer(Clue clue) {
+    var answer = answerFinder.findAnswer(clue);
+    if (new ValidAnswerPredicate(clue).test(answer)) {
+      return Optional.of(answer);
+    }
+    return Optional.empty();
   }
 
   private void logAnswers(Answers answers, Clues clues) {
