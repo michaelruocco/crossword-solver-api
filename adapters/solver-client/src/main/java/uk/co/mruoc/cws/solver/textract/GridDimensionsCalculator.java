@@ -13,29 +13,67 @@ import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import uk.co.mruoc.cws.image.ImageConverter;
 
 @RequiredArgsConstructor
 @Slf4j
 public class GridDimensionsCalculator {
 
-  private final ImageProcessor processor;
+  private final ImageConverter imageConverter;
+  private final GridExtractor gridExtractor;
 
   public GridDimensionsCalculator() {
-    this(new ImageProcessor());
+    this(new ImageConverter(), new GridExtractor());
   }
 
   public GridDimensions calculateDimensions(BufferedImage image) {
-    var grid = processor.extractGrid(image);
-    var binary = processor.process(image);
-    return calculateDimensions(binary).withGrid(grid);
+    var binary = process(image);
+    return calculateDimensions(binary);
   }
 
-  public GridDimensions calculateDimensions(Mat grid) {
+  private Mat process(BufferedImage image) {
+    return process(imageConverter.toBytes(image));
+  }
+
+  private Mat process(byte[] bytes) {
+    var grid = extractGrid(bytes);
+    var gray = toGrayscale(grid);
+    return toBinary(gray);
+  }
+
+  private Mat extractGrid(byte[] bytes) {
+    var original = toOriginal(bytes);
+    return gridExtractor.extractGrid(original);
+  }
+
+  private Mat toOriginal(byte[] bytes) {
+    var original = Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.IMREAD_COLOR);
+    Imgcodecs.imwrite("1-original.png", original);
+    return original;
+  }
+
+  private Mat toGrayscale(Mat input) {
+    Mat gray = new Mat();
+    Imgproc.cvtColor(input, gray, Imgproc.COLOR_BGR2GRAY);
+    Imgcodecs.imwrite("3-gray.png", gray);
+    return gray;
+  }
+
+  private Mat toBinary(Mat input) {
+    Mat binary = new Mat();
+    Imgproc.adaptiveThreshold(
+            input, binary, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY_INV, 51, 10);
+    Imgcodecs.imwrite("4-binary.png", binary);
+    return binary;
+  }
+
+  private GridDimensions calculateDimensions(Mat grid) {
     var cleaned = clean(grid);
     var horizontalLines = toHorizontalGridLines(cleaned);
     var verticalLines = toVerticalGridLines(cleaned);
@@ -48,7 +86,7 @@ public class GridDimensionsCalculator {
     log.debug("rows {}", rows);
     List<Integer> columns = Arrays.stream(lines[1]).boxed().toList();
     log.debug("columns {}", columns);
-    return GridDimensions.builder().grid(grid).columns(columns).rows(rows).build();
+    return GridDimensions.builder().columns(columns).rows(rows).build();
   }
 
   private int[][] detectGridLines(Mat horizontalLines, Mat verticalLines) {
