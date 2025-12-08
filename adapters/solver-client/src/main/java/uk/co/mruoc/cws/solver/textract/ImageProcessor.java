@@ -1,47 +1,36 @@
 package uk.co.mruoc.cws.solver.textract;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import nu.pattern.OpenCV;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import uk.co.mruoc.cws.image.ImageConverter;
 
 @RequiredArgsConstructor
 public class ImageProcessor {
 
+  private final ImageConverter imageConverter;
   private final GridExtractor gridExtractor;
 
   public ImageProcessor() {
-    this(new GridExtractor());
+    this(new ImageConverter(), new GridExtractor());
     OpenCV.loadLocally();
   }
 
   public Mat process(BufferedImage image) {
-    return process(toBytes(image));
+    return process(imageConverter.toBytes(image));
   }
 
   public Mat extractGrid(BufferedImage image) {
-    return extractGrid(toBytes(image));
+    return extractGrid(imageConverter.toBytes(image));
   }
 
   private Mat extractGrid(byte[] bytes) {
     var original = toOriginal(bytes);
     return gridExtractor.extractGrid(original);
-  }
-
-  private byte[] toBytes(BufferedImage image) {
-    try (var output = new ByteArrayOutputStream()) {
-      ImageIO.write(image, "png", output);
-      return output.toByteArray();
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
   }
 
   private Mat process(byte[] bytes) {

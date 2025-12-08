@@ -13,9 +13,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.imgcodecs.Imgcodecs;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.services.textract.TextractClient;
 import software.amazon.awssdk.services.textract.model.AnalyzeDocumentRequest;
@@ -38,8 +35,7 @@ import uk.co.mruoc.cws.usecase.ImageDownloader;
 public class TextractCellExtractor implements CellExtractor {
 
     private final ImageDownloader downloader;
-    private final ImageProcessor processor;
-    private final GridDimensionsCalculator calculator;
+    private final ProcessedGridImageFactory gridImageFactory;
     private final TextractClient client;
 
     public TextractCellExtractor(TextractClient client) {
@@ -47,7 +43,7 @@ public class TextractCellExtractor implements CellExtractor {
     }
 
     public TextractCellExtractor(ImageDownloader imageDownloader, TextractClient client) {
-        this(imageDownloader, new ImageProcessor(), new GridDimensionsCalculator(), client);
+        this(imageDownloader, new ProcessedGridImageFactory(), client);
     }
 
     @Override
@@ -57,15 +53,12 @@ public class TextractCellExtractor implements CellExtractor {
     }
 
     private Cells extractCells(BufferedImage image) {
-        var grid = processor.extractGrid(image);
-        var binary = processor.process(image);
-        var dimensions = calculator.calculateDimensions(binary).withGrid(grid);
-        var processedGrid = dimensions.getProcessedGrid();
-        return toCells(processedGrid);
+        var bytes = gridImageFactory.toProcessedGridImageBytes(image);
+        return toCells(bytes);
     }
 
-    private Cells toCells(Mat grid) {
-        var document = Document.builder().bytes(SdkBytes.fromByteArray(toPngBytes(grid))).build();
+    private Cells toCells(byte[] bytes) {
+        var document = Document.builder().bytes(SdkBytes.fromByteArray(bytes)).build();
         var request =
                 AnalyzeDocumentRequest.builder()
                         .document(document)
@@ -73,16 +66,6 @@ public class TextractCellExtractor implements CellExtractor {
                         .build();
         var response = client.analyzeDocument(request);
         return toCells(response.blocks());
-    }
-
-    private byte[] toPngBytes(Mat input) {
-        var format = ".png";
-        var output = new MatOfByte();
-        boolean success = Imgcodecs.imencode(format, input, output);
-        if (!success) {
-            throw new RuntimeException("Failed to encode Mat to " + format);
-        }
-        return output.toArray();
     }
 
     private Cells toCells(Collection<Block> blocks) {
@@ -182,6 +165,4 @@ public class TextractCellExtractor implements CellExtractor {
 
         return result;
     }
-
-
 }
