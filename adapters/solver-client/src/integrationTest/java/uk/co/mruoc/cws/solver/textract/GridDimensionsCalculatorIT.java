@@ -13,7 +13,6 @@ import uk.co.mruoc.cws.usecase.StubImageDownloader;
 class GridDimensionsCalculatorIT {
 
   private final ImageDownloader downloader = new StubImageDownloader();
-  private final ImageProcessor preprocessor = new ImageProcessor();
   private final GridDimensionsCalculator calculator = new GridDimensionsCalculator();
 
   @ParameterizedTest
@@ -21,10 +20,8 @@ class GridDimensionsCalculatorIT {
   void shouldCalculateNumberOfRowsAndColumnsInGridImages(
       String imageUrl, int expectedColumns, int expectedRows) {
     var image = downloader.downloadImage(imageUrl);
-    var grid = preprocessor.extractGrid(image);
-    var binary = preprocessor.process(image);
 
-    var dimensions = calculator.calculateDimensions(binary).withGrid(grid);
+    var dimensions = calculator.calculateDimensions(image);
 
     assertAll(
         () -> assertThat(dimensions.getNumberOfColumns()).isEqualTo(expectedColumns),

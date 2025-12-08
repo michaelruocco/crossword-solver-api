@@ -8,12 +8,11 @@ import java.awt.image.BufferedImage;
 @RequiredArgsConstructor
 public class ProcessedGridImageFactory {
 
-    private final ImageProcessor processor;
     private final GridDimensionsCalculator calculator;
     private final MatConverter matConverter;
 
     public ProcessedGridImageFactory() {
-        this(new ImageProcessor(), new GridDimensionsCalculator(), new MatConverter());
+        this(new GridDimensionsCalculator(), new MatConverter());
     }
 
     public BufferedImage toProcessedGridImage(BufferedImage input) {
@@ -22,9 +21,7 @@ public class ProcessedGridImageFactory {
     }
 
     public byte[] toProcessedGridImageBytes(BufferedImage input) {
-        var grid = processor.extractGrid(input);
-        var binary = processor.process(input);
-        var dimensions = calculator.calculateDimensions(binary).withGrid(grid);
+        var dimensions = calculator.calculateDimensions(input);
         var processedGrid = dimensions.getProcessedGrid();
         return matConverter.toPngBytes(processedGrid);
     }

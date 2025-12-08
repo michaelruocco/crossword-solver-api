@@ -2,10 +2,13 @@ package uk.co.mruoc.cws.solver.textract;
 
 import static org.opencv.imgproc.Imgproc.MORPH_RECT;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -16,8 +19,21 @@ import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
+@RequiredArgsConstructor
 @Slf4j
 public class GridDimensionsCalculator {
+
+  private final ImageProcessor processor;
+
+  public GridDimensionsCalculator() {
+    this(new ImageProcessor());
+  }
+
+  public GridDimensions calculateDimensions(BufferedImage image) {
+    var grid = processor.extractGrid(image);
+    var binary = processor.process(image);
+    return calculateDimensions(binary).withGrid(grid);
+  }
 
   public GridDimensions calculateDimensions(Mat grid) {
     var cleaned = clean(grid);
