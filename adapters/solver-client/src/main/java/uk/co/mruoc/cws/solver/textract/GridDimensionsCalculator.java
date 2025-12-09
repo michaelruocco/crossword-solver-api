@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Core;
@@ -27,6 +26,10 @@ public class GridDimensionsCalculator {
 
   private final ImageConverter imageConverter;
   private final GridExtractor gridExtractor;
+
+  static {
+    OpenCvInitializer.init();
+  }
 
   public GridDimensionsCalculator() {
     this(new ImageConverter(), new GridExtractor());
@@ -68,7 +71,7 @@ public class GridDimensionsCalculator {
   private Mat toBinary(Mat input) {
     Mat binary = new Mat();
     Imgproc.adaptiveThreshold(
-            input, binary, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY_INV, 51, 10);
+        input, binary, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY_INV, 51, 10);
     Imgcodecs.imwrite("4-binary.png", binary);
     return binary;
   }

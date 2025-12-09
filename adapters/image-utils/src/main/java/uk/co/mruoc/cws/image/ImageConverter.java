@@ -1,7 +1,5 @@
 package uk.co.mruoc.cws.image;
 
-import javax.imageio.ImageIO;
-
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
 import java.awt.AlphaComposite;
@@ -9,6 +7,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class ImageConverter {
 

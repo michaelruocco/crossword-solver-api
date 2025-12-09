@@ -17,6 +17,8 @@ dependencies {
     implementation "org.openpnp:opencv:4.9.0-0"
     implementation "software.amazon.awssdk:textract:${textractVersion}"
 
+    integrationTestImplementation "commons-io:commons-io:2.21.0"
+
     testFixturesImplementation project(":use-cases")
     testFixturesImplementation "com.openai:openai-java:${openAiVersion}"
     testFixturesImplementation "org.apache.commons:commons-text:${commonsText}"

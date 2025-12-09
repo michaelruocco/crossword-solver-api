@@ -30,14 +30,14 @@ class TextractCellExtractorIT {
 
   private static Stream<Arguments> imageUrls() {
     return Stream.of(
-            Arguments.of(toUrl("puzzle1.png")),
-            Arguments.of(toUrl("puzzle2.png")),
-            Arguments.of(toUrl("puzzle3.png")),
-            Arguments.of(toUrl("puzzle4.png")),
-            Arguments.of(toUrl("puzzle5.png")),
-            Arguments.of(toUrl("puzzle9.jpg")),
-            Arguments.of(toUrl("puzzle14.jpg")),
-            Arguments.of(toUrl("puzzle24.jpg")));
+        Arguments.of(toUrl("puzzle1.png")),
+        Arguments.of(toUrl("puzzle2.png")),
+        Arguments.of(toUrl("puzzle3.png")),
+        Arguments.of(toUrl("puzzle4.png")),
+        Arguments.of(toUrl("puzzle5.png")),
+        Arguments.of(toUrl("puzzle9.jpg")),
+        Arguments.of(toUrl("puzzle14.jpg")),
+        Arguments.of(toUrl("puzzle24.jpg")));
   }
 
   private static String toUrl(String filename) {

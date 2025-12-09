@@ -1,9 +1,11 @@
 package uk.co.mruoc.cws.solver.textract;
 
+import static org.opencv.core.Core.BORDER_REPLICATE;
+import static org.opencv.imgproc.Imgproc.INTER_LINEAR;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.IntStream;
-
 import lombok.Builder;
 import lombok.Data;
 import org.opencv.core.Mat;
@@ -11,9 +13,6 @@ import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-
-import static org.opencv.core.Core.BORDER_REPLICATE;
-import static org.opencv.imgproc.Imgproc.INTER_LINEAR;
 
 @Builder
 @Data
@@ -59,18 +58,18 @@ public class GridDimensions {
     int top = rows.get(y);
     int bottom = rows.get(y + 1);
     return new MatOfPoint2f(
-            new Point(left, top),
-            new Point(right, top),
-            new Point(right, bottom),
-            new Point(left, bottom));
+        new Point(left, top),
+        new Point(right, top),
+        new Point(right, bottom),
+        new Point(left, bottom));
   }
 
   private MatOfPoint2f getDestinationPoints(int width, int height) {
     return new MatOfPoint2f(
-                    new Point(0, 0),
-                    new Point(width - 1, 0),
-                    new Point(width - 1, height - 1),
-                    new Point(0, height - 1));
+        new Point(0, 0),
+        new Point(width - 1, 0),
+        new Point(width - 1, height - 1),
+        new Point(0, height - 1));
   }
 
   private List<Integer> getColumnWidths() {
