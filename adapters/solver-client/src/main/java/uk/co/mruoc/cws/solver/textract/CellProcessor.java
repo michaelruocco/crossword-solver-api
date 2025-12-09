@@ -54,13 +54,12 @@ public class CellProcessor {
     }
 
     var number = horizontalConcat(digits, 25);
-    var x = (newCell.width() - number.width()) / 2;
-    var y = (newCell.height() - number.height()) / 2;
-    var roi = newCell.submat(new Rect(x, y, number.width(), number.height()));
-    number.copyTo(roi);
-    return newCell;
+    return centerNumberInCell(newCell, number);
   }
 
+
+
+  //TODO extract contact methods into their own class
   public Mat horizontalConcat(Collection<Mat> mats, int spacing) {
     var targetHeight = mats.stream().mapToInt(Mat::height).max().orElseThrow();
     var white = new Scalar(255, 255, 255);
@@ -239,5 +238,13 @@ public class CellProcessor {
     Core.bitwise_not(scaled, inverted);
     Imgproc.cvtColor(inverted, inverted, COLOR_GRAY2BGR);
     return inverted;
+  }
+
+  private Mat centerNumberInCell(Mat cell, Mat number) {
+    var x = (cell.width() - number.width()) / 2;
+    var y = (cell.height() - number.height()) / 2;
+    var roi = cell.submat(new Rect(x, y, number.width(), number.height()));
+    number.copyTo(roi);
+    return cell;
   }
 }
