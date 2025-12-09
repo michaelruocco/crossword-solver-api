@@ -1,11 +1,22 @@
 package uk.co.mruoc.cws.solver.textract;
 
+import static org.opencv.core.Core.BORDER_CONSTANT;
+import static org.opencv.core.CvType.CV_8UC3;
+import static org.opencv.imgproc.Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C;
+import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
+import static org.opencv.imgproc.Imgproc.COLOR_BGR2GRAY;
+import static org.opencv.imgproc.Imgproc.COLOR_GRAY2BGR;
+import static org.opencv.imgproc.Imgproc.INTER_NEAREST;
+import static org.opencv.imgproc.Imgproc.RETR_EXTERNAL;
+import static org.opencv.imgproc.Imgproc.THRESH_BINARY_INV;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -18,88 +29,39 @@ import org.opencv.imgproc.Imgproc;
 @RequiredArgsConstructor
 public class CellProcessor {
 
-  public Mat process(Mat mat) {
-    Scalar white = new Scalar(255, 255, 255);
-    Scalar black = new Scalar(0, 0, 0);
-    Mat background = new Mat(mat.height() * 4, mat.width() * 4, CvType.CV_8UC3, white);
-    Mat newCell = new Mat();
-    Core.copyMakeBorder(background, newCell, 7, 7, 7, 7, Core.BORDER_CONSTANT, black);
-    if (isMostlyDark(mat)) {
-      Imgcodecs.imwrite("7g-new-cell.png", newCell);
+  private static final Scalar WHITE = new Scalar(255, 255, 255);
+  private static final Scalar BLACK = new Scalar(0, 0, 0);
+
+  private final Scalar backgroundColor;
+  private final Scalar foregroundColor;
+  private final int cellScale;
+  private final int borderSize;
+  private final int digitScale;
+
+  public CellProcessor() {
+    this(WHITE, BLACK, 4, 7, 6);
+  }
+
+  public Mat process(Mat input) {
+    var newCell = buildNewCell(input);
+    if (isMostlyDark(input)) {
       return newCell;
     }
 
-    Mat gray = new Mat();
-    Imgproc.cvtColor(mat, gray, Imgproc.COLOR_BGR2GRAY);
-    Imgcodecs.imwrite("7a-gray-cell.png", gray);
-
-    Mat binary = new Mat();
-    Imgproc.adaptiveThreshold(
-        gray, binary, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY_INV, 51, 10);
-    Imgcodecs.imwrite("7b-binary-cell.png", binary);
-
-    List<MatOfPoint> contours = new ArrayList<>();
-    Imgproc.findContours(
-        binary, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-    contours = contours.stream().sorted(Comparator.comparingInt(this::getLeftmost)).toList();
-
-    var totalArea = mat.rows() * mat.cols();
-
-    Mat contourOutput = mat.clone();
-    Scalar red = new Scalar(0, 0, 255);
-    List<Mat> digits = new ArrayList<>();
-    int contoursDrawn = 0;
-    for (MatOfPoint c : contours) {
-      double contourArea = Imgproc.contourArea(c);
-      if (contourArea > 0) {
-        double percentageOfTotal = (contourArea / totalArea) * 100;
-        if (percentageOfTotal > 0.75 && percentageOfTotal < 8) {
-          System.out.println(contourArea + " " + percentageOfTotal + " of " + totalArea);
-          Imgproc.drawContours(contourOutput, List.of(c), 0, red, 1);
-          contoursDrawn++;
-
-          Rect box = Imgproc.boundingRect(c);
-          System.out.println("box x " + box.x + " y" + box.y);
-          double percentageOfHeight = ((double) box.height / binary.height()) * 100;
-          System.out.println("percentage of height " + percentageOfHeight);
-          double percentageOfWidth = ((double) box.width / binary.width()) * 100;
-          System.out.println("percentage of width " + percentageOfWidth);
-
-          if ((percentageOfHeight < 45 && percentageOfWidth < 45) && (box.x != 0 && box.y != 0)) {
-            Mat digit = binary.submat(box);
-            Imgcodecs.imwrite(String.format("7c-digit-%d.png", contoursDrawn), digit);
-
-            Mat scaled = new Mat();
-            Imgproc.resize(digit, scaled, new Size(), 6, 6, Imgproc.INTER_NEAREST);
-            Imgcodecs.imwrite(String.format("7d-scaled-digit-%d.png", contoursDrawn), scaled);
-
-            Mat invertedDigit = new Mat();
-            Core.bitwise_not(scaled, invertedDigit);
-            Imgproc.cvtColor(invertedDigit, invertedDigit, Imgproc.COLOR_GRAY2BGR);
-            Imgcodecs.imwrite(
-                String.format("7f-inverted-digit-%d.png", contoursDrawn), invertedDigit);
-            digits.add(invertedDigit);
-          }
-        }
-      }
-    }
-    Imgcodecs.imwrite("7f-cell-with-contours.png", contourOutput);
-    if (!digits.isEmpty()) {
-      Mat digit = horizontalConcat(digits, 25);
-
-      int x = (newCell.width() - digit.width()) / 2;
-      int y = (newCell.height() - digit.height()) / 2;
-      if ((x >= 0 && x <= newCell.width()) && (y >= 0 && y <= newCell.height())) {
-        Mat roi = newCell.submat(new Rect(x, y, digit.width(), digit.height()));
-        digit.copyTo(roi);
-      }
+    var digits = findDigits(input);
+    if (digits.isEmpty()) {
+      return newCell;
     }
 
-    Imgcodecs.imwrite("7g-new-cell.png", newCell);
+    var number = horizontalConcat(digits, 25);
+    var x = (newCell.width() - number.width()) / 2;
+    var y = (newCell.height() - number.height()) / 2;
+    var roi = newCell.submat(new Rect(x, y, number.width(), number.height()));
+    number.copyTo(roi);
     return newCell;
   }
 
-  public Mat horizontalConcat(List<Mat> mats, int spacing) {
+  public Mat horizontalConcat(Collection<Mat> mats, int spacing) {
     var targetHeight = mats.stream().mapToInt(Mat::height).max().orElseThrow();
     var white = new Scalar(255, 255, 255);
 
@@ -110,7 +72,7 @@ public class CellProcessor {
       int topPad = (targetHeight - copy.rows()) / 2;
       int bottomPad = targetHeight - copy.rows() - topPad;
       Mat padded = new Mat();
-      Core.copyMakeBorder(copy, padded, topPad, bottomPad, 0, 0, Core.BORDER_CONSTANT, white);
+      Core.copyMakeBorder(copy, padded, topPad, bottomPad, 0, 0, BORDER_CONSTANT, white);
 
       processedDigits.add(padded);
 
@@ -141,7 +103,7 @@ public class CellProcessor {
       int leftPad = (targetWidth - copy.cols()) / 2;
       int rightPad = targetWidth - copy.cols() - leftPad;
       Mat padded = new Mat();
-      Core.copyMakeBorder(copy, padded, 0, 0, leftPad, rightPad, Core.BORDER_CONSTANT, white);
+      Core.copyMakeBorder(copy, padded, 0, 0, leftPad, rightPad, BORDER_CONSTANT, white);
 
       processedDigits.add(padded);
 
@@ -161,35 +123,121 @@ public class CellProcessor {
     return combined;
   }
 
-  private boolean isMostlyDark(Mat cellMat) {
-    Mat gray = new Mat();
-    if (cellMat.channels() > 1) {
-      Imgproc.cvtColor(cellMat, gray, Imgproc.COLOR_BGR2GRAY);
-    } else {
-      gray = cellMat.clone();
-    }
-    int darkPixels = 0;
-    int totalPixels = gray.rows() * gray.cols();
-    for (int row = 0; row < gray.rows(); row++) {
-      for (int col = 0; col < gray.cols(); col++) {
-        double intensity = gray.get(row, col)[0];
+  private Mat buildNewCell(Mat input) {
+    var height = input.height() * cellScale;
+    var width = input.width() * cellScale;
+    var background = new Mat(height, width, CV_8UC3, backgroundColor);
+    var newCell = new Mat();
+    Core.copyMakeBorder(
+        background,
+        newCell,
+        borderSize,
+        borderSize,
+        borderSize,
+        borderSize,
+        BORDER_CONSTANT,
+        foregroundColor);
+    return newCell;
+  }
+
+  private boolean isMostlyDark(Mat input) {
+    var gray = toGrayscale(input);
+    var totalPixels = gray.rows() * gray.cols();
+    var darkPixels = countDarkPixels(gray);
+    return darkPixels > totalPixels / 2;
+  }
+
+  private int countDarkPixels(Mat input) {
+    var darkPixels = 0;
+    for (var r = 0; r < input.rows(); r++) {
+      for (var c = 0; c < input.cols(); c++) {
+        var intensity = input.get(r, c)[0];
         if (intensity < 67) {
           darkPixels++;
         }
       }
     }
-    return darkPixels > totalPixels / 2;
+    return darkPixels;
   }
 
   private int getLeftmost(MatOfPoint contour) {
     int minX = Integer.MAX_VALUE;
-
     for (Point p : contour.toArray()) {
       if (p.x < minX) {
         minX = (int) p.x;
       }
     }
-
     return minX;
+  }
+
+  private Collection<Mat> findDigits(Mat input) {
+    var binary = toBinary(input);
+    var contours = toContours(binary);
+    return toDigits(binary, contours);
+  }
+
+  private Mat toBinary(Mat input) {
+    var gray = toGrayscale(input);
+    var binary = new Mat();
+    Imgproc.adaptiveThreshold(
+        gray, binary, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 51, 10);
+    Imgcodecs.imwrite("7b-binary-cell.png", binary);
+    return binary;
+  }
+
+  private Mat toGrayscale(Mat input) {
+    var gray = new Mat();
+    Imgproc.cvtColor(input, gray, COLOR_BGR2GRAY);
+    return gray;
+  }
+
+  private Collection<MatOfPoint> toContours(Mat binary) {
+    List<MatOfPoint> contours = new ArrayList<>();
+    Imgproc.findContours(binary, contours, new Mat(), RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+    return contours.stream().sorted(Comparator.comparingInt(this::getLeftmost)).toList();
+  }
+
+  private Collection<Mat> toDigits(Mat binary, Collection<MatOfPoint> contours) {
+    return contours.stream()
+        .map(contour -> extractLikelyDigit(binary, contour))
+        .flatMap(Optional::stream)
+        .map(this::scaleAndInvertDigit)
+        .toList();
+  }
+
+  private Optional<Mat> extractLikelyDigit(Mat binary, MatOfPoint contour) {
+    var contourArea = Imgproc.contourArea(contour);
+    if (contourArea <= 0) {
+      return Optional.empty();
+    }
+
+    var box = Imgproc.boundingRect(contour);
+    if (box.x == 0 && box.y == 0) {
+      return Optional.empty();
+    }
+
+    var totalArea = binary.rows() * binary.cols();
+    var percentageOfArea = (contourArea / totalArea) * 100;
+    if (percentageOfArea <= 0.75 || percentageOfArea >= 8) {
+      return Optional.empty();
+    }
+
+    var percentageOfHeight = ((double) box.height / binary.height()) * 100;
+    var percentageOfWidth = ((double) box.width / binary.width()) * 100;
+    if (percentageOfHeight >= 45 || percentageOfWidth >= 45) {
+      return Optional.empty();
+    }
+
+    return Optional.of(binary.submat(box));
+  }
+
+  private Mat scaleAndInvertDigit(Mat digit) {
+    var scaled = new Mat();
+    Imgproc.resize(digit, scaled, new Size(), digitScale, digitScale, INTER_NEAREST);
+
+    var inverted = new Mat();
+    Core.bitwise_not(scaled, inverted);
+    Imgproc.cvtColor(inverted, inverted, COLOR_GRAY2BGR);
+    return inverted;
   }
 }
