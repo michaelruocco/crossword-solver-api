@@ -19,10 +19,6 @@ import org.opencv.imgproc.Imgproc;
 @Data
 public class GridDimensions {
 
-  static {
-    OpenCvInitializer.init();
-  }
-
   private final List<Integer> rows;
   private final List<Integer> columns;
 
@@ -50,8 +46,8 @@ public class GridDimensions {
     int height = getRowHeight(y);
     var destination = getDestinationPoints(width, height);
 
-    Mat transform = Imgproc.getPerspectiveTransform(source, destination);
-    Mat cell = new Mat();
+    var transform = Imgproc.getPerspectiveTransform(source, destination);
+    var cell = new Mat();
     var size = new Size(width, height);
     Imgproc.warpPerspective(grid, cell, transform, size, INTER_LINEAR, BORDER_REPLICATE);
     return cell;

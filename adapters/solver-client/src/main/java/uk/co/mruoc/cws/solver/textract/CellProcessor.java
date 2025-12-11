@@ -18,10 +18,6 @@ import org.opencv.imgproc.Imgproc;
 @RequiredArgsConstructor
 public class CellProcessor {
 
-  static {
-    OpenCvInitializer.init();
-  }
-
   private static final Scalar WHITE = new Scalar(255, 255, 255);
   private static final Scalar BLACK = new Scalar(0, 0, 0);
 

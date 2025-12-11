@@ -16,20 +16,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.imageio.ImageIO;
+import org.apache.commons.collections4.IterableUtils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import uk.co.mruoc.cws.image.ImageException;
 
 public class MatConverter {
-
-  static {
-    OpenCvInitializer.init();
-  }
 
   public BufferedImage toBufferedImage(Mat input) {
     byte[] bytes = toPngBytes(input);
@@ -54,6 +53,20 @@ public class MatConverter {
     return output.toArray();
   }
 
+  public Corners toCornersOfLargestContour(Mat input) {
+    var gray = toGrayscale(input);
+    var binary = toBinary(gray, 5);
+    var largestContour = toLargestContour(binary);
+    return toCorners(largestContour);
+  }
+
+  public Corners toCorners(MatOfPoint contour) {
+    var corners = new Point[4];
+    var rect = Imgproc.minAreaRect(new MatOfPoint2f(contour.toArray()));
+    rect.points(corners);
+    return orderCorners(corners);
+  }
+
   public Mat toGrayscale(Mat input) {
     var gray = new Mat();
     Imgproc.cvtColor(input, gray, COLOR_BGR2GRAY);
@@ -61,16 +74,14 @@ public class MatConverter {
   }
 
   public Mat toBinary(Mat input) {
-    var binary = new Mat();
-    Imgproc.adaptiveThreshold(
-        input, binary, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 51, 10);
-    return binary;
+    return toBinary(input, 10);
   }
 
-  public Collection<MatOfPoint> toContours(Mat input) {
-    List<MatOfPoint> contours = new ArrayList<>();
-    Imgproc.findContours(input, contours, new Mat(), RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
-    return contours;
+  public Mat toBinary(Mat input, int c) {
+    var binary = new Mat();
+    Imgproc.adaptiveThreshold(
+        input, binary, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 51, c);
+    return binary;
   }
 
   public Mat resize(Mat original, int width, int height) {
@@ -110,5 +121,64 @@ public class MatConverter {
     var openKernel = Imgproc.getStructuringElement(MORPH_RECT, kernelSize);
     Imgproc.morphologyEx(input, cleaned, Imgproc.MORPH_OPEN, openKernel);
     return cleaned;
+  }
+
+  public MatOfPoint toLargestContour(Mat input) {
+    var contours = toContours(input);
+    var largest = IterableUtils.get(contours, 0);
+    double maxArea = 0;
+    for (MatOfPoint c : contours) {
+      double area = Imgproc.contourArea(c);
+      if (area > maxArea) {
+        maxArea = area;
+        largest = c;
+      }
+    }
+    return largest;
+  }
+
+  public Collection<MatOfPoint> toContours(Mat input) {
+    List<MatOfPoint> contours = new ArrayList<>();
+    Imgproc.findContours(input, contours, new Mat(), RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+    return contours;
+  }
+
+  public Corners orderCorners(Point[] points) {
+    Point topLeft = null;
+    Point topRight = null;
+    Point bottomRight = null;
+    Point bottomLeft = null;
+
+    double sumMin = Double.MAX_VALUE;
+    double sumMax = -Double.MAX_VALUE;
+    double diffMin = Double.MAX_VALUE;
+    double diffMax = -Double.MAX_VALUE;
+
+    for (var point : points) {
+      double sum = point.x + point.y;
+      double diff = point.y - point.x;
+      if (sum < sumMin) {
+        sumMin = sum;
+        topLeft = point;
+      }
+      if (sum > sumMax) {
+        sumMax = sum;
+        bottomRight = point;
+      }
+      if (diff < diffMin) {
+        diffMin = diff;
+        topRight = point;
+      }
+      if (diff > diffMax) {
+        diffMax = diff;
+        bottomLeft = point;
+      }
+    }
+    return Corners.builder()
+        .topLeft(topLeft)
+        .topRight(topRight)
+        .bottomRight(bottomRight)
+        .bottomLeft(bottomLeft)
+        .build();
   }
 }

@@ -14,10 +14,6 @@ import org.opencv.core.Scalar;
 @RequiredArgsConstructor
 public class MatConcatenator {
 
-  static {
-    OpenCvInitializer.init();
-  }
-
   private static final Scalar WHITE = new Scalar(255, 255, 255);
 
   private final Scalar backgroundColor;
