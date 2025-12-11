@@ -5,5 +5,4 @@ plugins {
 dependencies {
     implementation project(":use-cases")
     implementation "com.drewnoakes:metadata-extractor:2.19.0"
-    implementation "org.openpnp:opencv:4.9.0-0"
 }

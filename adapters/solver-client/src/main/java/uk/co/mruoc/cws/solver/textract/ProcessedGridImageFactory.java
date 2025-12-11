@@ -4,21 +4,19 @@ import java.awt.image.BufferedImage;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.opencv.core.Mat;
-import uk.co.mruoc.cws.image.MatConcatenator;
-import uk.co.mruoc.cws.image.MatConverter;
 
 @RequiredArgsConstructor
 public class ProcessedGridImageFactory {
+
+  static {
+    OpenCvInitializer.init();
+  }
 
   private final MatConverter matConverter;
   private final GridExtractor gridExtractor;
   private final GridDimensionsCalculator calculator;
   private final MatConcatenator matConcatenator;
   private final CellProcessor cellProcessor;
-
-  static {
-    OpenCvInitializer.init();
-  }
 
   public ProcessedGridImageFactory() {
     this(

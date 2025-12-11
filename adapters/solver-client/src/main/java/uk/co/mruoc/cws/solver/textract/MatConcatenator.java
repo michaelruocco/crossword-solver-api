@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.image;
+package uk.co.mruoc.cws.solver.textract;
 
 import static org.opencv.core.Core.BORDER_CONSTANT;
 
@@ -14,6 +14,10 @@ import org.opencv.core.Scalar;
 @RequiredArgsConstructor
 public class MatConcatenator {
 
+  static {
+    OpenCvInitializer.init();
+  }
+
   private static final Scalar WHITE = new Scalar(255, 255, 255);
 
   private final Scalar backgroundColor;
@@ -25,37 +29,6 @@ public class MatConcatenator {
   public Mat horizontalConcat(Collection<Mat> mats) {
     return horizontalConcat(mats, 0);
   }
-
-  /*public Mat horizontalConcat(Collection<Mat> mats, int spacing) {
-      var targetHeight = mats.stream().mapToInt(Mat::height).max().orElseThrow();
-      var white = new Scalar(255, 255, 255);
-
-      List<Mat> processedDigits = new ArrayList<>();
-      for (Mat mat : mats) {
-          Mat copy = mat.clone();
-          int topPad = (targetHeight - copy.rows()) / 2;
-          int bottomPad = targetHeight - copy.rows() - topPad;
-          Mat padded = new Mat();
-          Core.copyMakeBorder(copy, padded, topPad, bottomPad, 0, 0, BORDER_CONSTANT, white);
-
-          processedDigits.add(padded);
-
-          if (spacing > 0) {
-                System.out.println("type " + padded.type());
-              Mat spacer = Mat.ones(targetHeight, spacing, padded.type());
-              spacer.setTo(white);
-              processedDigits.add(spacer);
-          }
-      }
-
-      if (spacing > 0 && !processedDigits.isEmpty()) {
-          processedDigits.removeLast();
-      }
-
-      Mat combined = new Mat();
-      Core.hconcat(processedDigits, combined);
-      return combined;
-  }*/
 
   public Mat horizontalConcat(Collection<Mat> mats, int spacing) {
     var targetHeight = findMax(mats, Mat::height);

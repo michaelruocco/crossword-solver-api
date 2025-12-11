@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.image;
+package uk.co.mruoc.cws.solver.textract;
 
 import static org.opencv.imgproc.Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
@@ -22,8 +22,13 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import uk.co.mruoc.cws.image.ImageException;
 
 public class MatConverter {
+
+  static {
+    OpenCvInitializer.init();
+  }
 
   public BufferedImage toBufferedImage(Mat input) {
     byte[] bytes = toPngBytes(input);

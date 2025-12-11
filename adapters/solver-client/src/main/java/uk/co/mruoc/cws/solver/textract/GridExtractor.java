@@ -22,6 +22,10 @@ import uk.co.mruoc.cws.image.ImageConverter;
 @Slf4j
 public class GridExtractor {
 
+  static {
+    OpenCvInitializer.init();
+  }
+
   private final ImageConverter imageConverter;
 
   public GridExtractor() {

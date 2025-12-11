@@ -14,11 +14,13 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-import uk.co.mruoc.cws.image.MatConcatenator;
-import uk.co.mruoc.cws.image.MatConverter;
 
 @RequiredArgsConstructor
 public class CellProcessor {
+
+  static {
+    OpenCvInitializer.init();
+  }
 
   private static final Scalar WHITE = new Scalar(255, 255, 255);
   private static final Scalar BLACK = new Scalar(0, 0, 0);

@@ -24,12 +24,12 @@ import uk.co.mruoc.cws.image.ImageConverter;
 @Slf4j
 public class GridDimensionsCalculator {
 
-  private final ImageConverter imageConverter;
-  private final GridExtractor gridExtractor;
-
   static {
     OpenCvInitializer.init();
   }
+
+  private final ImageConverter imageConverter;
+  private final GridExtractor gridExtractor;
 
   public GridDimensionsCalculator() {
     this(new ImageConverter(), new GridExtractor());

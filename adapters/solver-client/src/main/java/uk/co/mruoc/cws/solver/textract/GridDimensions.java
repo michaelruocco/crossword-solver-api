@@ -18,6 +18,10 @@ import org.opencv.imgproc.Imgproc;
 @Data
 public class GridDimensions {
 
+  static {
+    OpenCvInitializer.init();
+  }
+
   private final List<Integer> rows;
   private final List<Integer> columns;
 
