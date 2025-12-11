@@ -27,7 +27,7 @@ class ProcessedGridImageFactoryIT {
   private final UrlConverter urlConverter = new UrlConverter();
 
   @BeforeAll
-  @AfterAll
+  //@AfterAll
   static void clearOutputDirectory() throws IOException {
     FileUtils.deleteDirectory(new File(OUTPUT_PATH));
   }
