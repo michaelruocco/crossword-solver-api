@@ -61,10 +61,6 @@ public class GridExtractor {
     Imgproc.findContours(
         bw, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
-    if (contours.isEmpty()) {
-      throw new RuntimeException("No grid contours found!");
-    }
-
     MatOfPoint largest = contours.getFirst();
     double maxArea = 0;
     for (MatOfPoint c : contours) {

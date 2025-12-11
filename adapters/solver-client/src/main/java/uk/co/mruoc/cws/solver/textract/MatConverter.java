@@ -5,6 +5,7 @@ import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
 import static org.opencv.imgproc.Imgproc.COLOR_BGR2GRAY;
 import static org.opencv.imgproc.Imgproc.COLOR_GRAY2BGR;
 import static org.opencv.imgproc.Imgproc.INTER_NEAREST;
+import static org.opencv.imgproc.Imgproc.MORPH_RECT;
 import static org.opencv.imgproc.Imgproc.RETR_EXTERNAL;
 import static org.opencv.imgproc.Imgproc.THRESH_BINARY_INV;
 
@@ -43,10 +44,20 @@ public class MatConverter {
     }
   }
 
+  public Mat toMat(byte[] bytes) {
+    return Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.IMREAD_COLOR);
+  }
+
   public byte[] toPngBytes(Mat input) {
     var output = new MatOfByte();
     Imgcodecs.imencode(".png", input, output);
     return output.toArray();
+  }
+
+  public Mat toGrayscale(Mat input) {
+    var gray = new Mat();
+    Imgproc.cvtColor(input, gray, COLOR_BGR2GRAY);
+    return gray;
   }
 
   public Mat toBinary(Mat input) {
@@ -56,15 +67,9 @@ public class MatConverter {
     return binary;
   }
 
-  public Mat toGrayscale(Mat input) {
-    var gray = new Mat();
-    Imgproc.cvtColor(input, gray, COLOR_BGR2GRAY);
-    return gray;
-  }
-
-  public Collection<MatOfPoint> toContours(Mat binary) {
+  public Collection<MatOfPoint> toContours(Mat input) {
     List<MatOfPoint> contours = new ArrayList<>();
-    Imgproc.findContours(binary, contours, new Mat(), RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+    Imgproc.findContours(input, contours, new Mat(), RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
     return contours;
   }
 
@@ -90,5 +95,20 @@ public class MatConverter {
     Core.bitwise_not(input, inverted);
     Imgproc.cvtColor(inverted, inverted, COLOR_GRAY2BGR);
     return inverted;
+  }
+
+  public Mat clean(Mat input) {
+    return clean(input, 5);
+  }
+
+  public Mat clean(Mat input, int size) {
+    return clean(input, new Size(size, size));
+  }
+
+  public Mat clean(Mat input, Size kernelSize) {
+    var cleaned = new Mat();
+    var openKernel = Imgproc.getStructuringElement(MORPH_RECT, kernelSize);
+    Imgproc.morphologyEx(input, cleaned, Imgproc.MORPH_OPEN, openKernel);
+    return cleaned;
   }
 }

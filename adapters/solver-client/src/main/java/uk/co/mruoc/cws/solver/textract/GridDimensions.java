@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import lombok.Builder;
 import lombok.Data;
+import org.apache.commons.math3.stat.descriptive.rank.Median;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
@@ -97,11 +98,6 @@ public class GridDimensions {
   }
 
   private int toMedian(Collection<Integer> values) {
-    var sorted = values.stream().sorted().toList();
-    int n = values.size();
-    if (n % 2 == 1) {
-      return sorted.get(n / 2);
-    }
-    return (sorted.get(n / 2 - 1) + sorted.get(n / 2)) / 2;
+    return (int) new Median().evaluate(values.stream().mapToDouble(i -> i).toArray());
   }
 }
