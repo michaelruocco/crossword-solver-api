@@ -2,7 +2,6 @@ package uk.co.mruoc.cws.solver.textract;
 
 import java.awt.image.BufferedImage;
 import java.util.stream.IntStream;
-
 import lombok.RequiredArgsConstructor;
 import org.opencv.core.Mat;
 import uk.co.mruoc.cws.image.MatConcatenator;
@@ -22,7 +21,12 @@ public class ProcessedGridImageFactory {
   }
 
   public ProcessedGridImageFactory() {
-    this(new MatConverter(), new GridExtractor(), new GridDimensionsCalculator(), new MatConcatenator(), new CellProcessor());
+    this(
+        new MatConverter(),
+        new GridExtractor(),
+        new GridDimensionsCalculator(),
+        new MatConcatenator(),
+        new CellProcessor());
   }
 
   public byte[] toProcessedGridImageBytes(BufferedImage input) {
@@ -41,9 +45,9 @@ public class ProcessedGridImageFactory {
 
   public Mat toMat(Mat grid, GridDimensions dimensions) {
     var rows =
-            IntStream.range(0, dimensions.getNumberOfRows())
-                    .mapToObj(y -> toRow(grid, dimensions, y))
-                    .toList();
+        IntStream.range(0, dimensions.getNumberOfRows())
+            .mapToObj(y -> toRow(grid, dimensions, y))
+            .toList();
     return matConcatenator.verticalConcat(rows);
   }
 
@@ -51,10 +55,10 @@ public class ProcessedGridImageFactory {
     var width = dimensions.getAverageColumnWidth();
     var height = dimensions.getAverageRowHeight();
     var cells =
-            IntStream.range(0, dimensions.getNumberOfColumns())
-                    .mapToObj(x -> toProcessedCell(grid, dimensions, x, y))
-                    .map(cell -> matConverter.resize(cell, width, height))
-                    .toList();
+        IntStream.range(0, dimensions.getNumberOfColumns())
+            .mapToObj(x -> toProcessedCell(grid, dimensions, x, y))
+            .map(cell -> matConverter.resize(cell, width, height))
+            .toList();
     return matConcatenator.horizontalConcat(cells);
   }
 

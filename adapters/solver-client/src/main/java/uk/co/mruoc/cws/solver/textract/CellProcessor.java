@@ -92,7 +92,10 @@ public class CellProcessor {
   private Collection<Mat> findDigits(Mat input) {
     var gray = converter.toGrayscale(input);
     var binary = converter.toBinary(gray);
-    var contours = converter.toContours(binary).stream().sorted(Comparator.comparingInt(this::getLeftmostX)).toList();;
+    var contours =
+        converter.toContours(binary).stream()
+            .sorted(Comparator.comparingInt(this::getLeftmostX))
+            .toList();
     return toDigits(binary, contours);
   }
 

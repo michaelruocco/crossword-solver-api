@@ -1,21 +1,5 @@
 package uk.co.mruoc.cws.image;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import javax.imageio.ImageIO;
-
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Size;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
-
 import static org.opencv.imgproc.Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
 import static org.opencv.imgproc.Imgproc.COLOR_BGR2GRAY;
@@ -23,6 +7,21 @@ import static org.opencv.imgproc.Imgproc.COLOR_GRAY2BGR;
 import static org.opencv.imgproc.Imgproc.INTER_NEAREST;
 import static org.opencv.imgproc.Imgproc.RETR_EXTERNAL;
 import static org.opencv.imgproc.Imgproc.THRESH_BINARY_INV;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import javax.imageio.ImageIO;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Size;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 public class MatConverter {
 
@@ -48,7 +47,7 @@ public class MatConverter {
   public Mat toBinary(Mat input) {
     var binary = new Mat();
     Imgproc.adaptiveThreshold(
-            input, binary, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 51, 10);
+        input, binary, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 51, 10);
     return binary;
   }
 
