@@ -10,21 +10,27 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import uk.co.mruoc.cws.solver.stub.StubCellExtractor;
 import uk.co.mruoc.cws.usecase.CellExtractor;
+import uk.co.mruoc.cws.usecase.ImageDownloader;
+import uk.co.mruoc.cws.usecase.StubImageDownloader;
 import uk.co.mruoc.junit.EnvVarsPresent;
 
 @EnvVarsPresent(values = {"AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"})
 @Slf4j
 class TextractCellExtractorIT {
 
+  private final ImageDownloader downloader = new StubImageDownloader();
+
   private final CellExtractor extractor = buildCellExtractor();
 
   @ParameterizedTest
   @MethodSource("imageUrls")
   void shouldExtractCellsFromImage(String imageUrl) {
-    var cells = extractor.extractCells(imageUrl);
+    var image = downloader.downloadImage(imageUrl);
+
+    var cells = extractor.extractCells(image);
 
     cells.forEach(word -> log.info(word.toString()));
-    var expectedCells = new StubCellExtractor().extractCells(imageUrl);
+    var expectedCells = new StubCellExtractor().extractCells(image);
     assertThat(cells).containsExactlyElementsOf(expectedCells);
   }
 

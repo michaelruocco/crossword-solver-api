@@ -4,5 +4,5 @@ import uk.co.mruoc.cws.entity.Clues;
 
 public interface ClueExtractor {
 
-  Clues extractClues(String imageUrl);
+  Clues extractClues(Image image);
 }

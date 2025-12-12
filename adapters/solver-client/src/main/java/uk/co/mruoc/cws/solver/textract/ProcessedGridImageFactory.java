@@ -27,12 +27,19 @@ public class ProcessedGridImageFactory {
         new CellProcessor());
   }
 
-  public byte[] toProcessedGridImageBytes(BufferedImage input) {
-    return matConverter.toPngBytes(toProcessedGrid(input));
+  public byte[] toProcessedGridImageBytes(byte[] bytes) {
+    return matConverter.toPngBytes(toProcessedGrid(bytes));
   }
 
   public BufferedImage toProcessedGridImage(BufferedImage input) {
     return matConverter.toBufferedImage(toProcessedGrid(input));
+  }
+
+  private Mat toProcessedGrid(byte[] bytes) {
+    var input = matConverter.toMat(bytes);
+    var grid = gridExtractor.extractGrid(input);
+    var dimensions = calculator.calculateDimensions(grid);
+    return toMat(grid, dimensions);
   }
 
   private Mat toProcessedGrid(BufferedImage input) {

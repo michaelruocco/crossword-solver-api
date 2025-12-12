@@ -7,13 +7,12 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.textract.TextractClient;
 import uk.co.mruoc.cws.solver.textract.TextractCellExtractor;
 import uk.co.mruoc.cws.usecase.CellExtractor;
-import uk.co.mruoc.cws.usecase.StubImageDownloader;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TextractClientFactory {
 
   public static CellExtractor buildCellExtractor() {
-    return new TextractCellExtractor(new StubImageDownloader(), buildClient());
+    return new TextractCellExtractor(buildClient());
   }
 
   private static TextractClient buildClient() {

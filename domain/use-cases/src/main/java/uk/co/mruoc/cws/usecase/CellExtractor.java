@@ -4,5 +4,5 @@ import uk.co.mruoc.cws.entity.Cells;
 
 public interface CellExtractor {
 
-  Cells extractCells(String imageUrl);
+  Cells extractCells(Image image);
 }

@@ -13,6 +13,7 @@ import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import uk.co.mruoc.cws.image.ImageConverter;
+import uk.co.mruoc.cws.usecase.Image;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -32,19 +33,23 @@ public class GridDimensionsCalculator {
 
   public GridDimensions calculateDimensions(BufferedImage image) {
     var bytes = imageConverter.toBytes(image);
-    var binary = process(bytes);
-    return calculateDimensions(binary);
+    return calculateDimensions(bytes);
   }
 
-  private Mat process(byte[] bytes) {
+  public GridDimensions calculateDimensions(Image image) {
+    return calculateDimensions(image.getBytes());
+  }
+
+  private GridDimensions calculateDimensions(byte[] bytes) {
     var original = matConverter.toMat(bytes);
     var grid = gridExtractor.extractGrid(original);
-    var gray = matConverter.toGrayscale(grid);
-    return matConverter.toBinary(gray);
+    return calculateDimensions(grid);
   }
 
-  private GridDimensions calculateDimensions(Mat grid) {
-    var cleaned = matConverter.clean(grid);
+  public GridDimensions calculateDimensions(Mat input) {
+    var gray = matConverter.toGrayscale(input);
+    var binary = matConverter.toBinary(gray);
+    var cleaned = matConverter.clean(binary);
     return GridDimensions.builder()
         .rows(toHorizontalCoordinates(cleaned))
         .columns(toVerticalCoordinates(cleaned))

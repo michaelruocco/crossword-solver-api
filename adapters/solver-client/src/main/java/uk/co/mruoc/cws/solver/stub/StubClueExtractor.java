@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Clues;
 import uk.co.mruoc.cws.solver.JsonMapper;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
+import uk.co.mruoc.cws.usecase.Image;
 import uk.co.mruoc.file.FileLoader;
 
 @RequiredArgsConstructor
@@ -19,8 +20,8 @@ public class StubClueExtractor implements ClueExtractor {
   }
 
   @Override
-  public Clues extractClues(String imageUrl) {
-    var path = cluePathFactory.toClueJsonPath(imageUrl);
+  public Clues extractClues(Image image) {
+    var path = cluePathFactory.toClueJsonPath(image.getName());
     var json = FileLoader.loadContentFromClasspath(path);
     return mapper.toClues(json);
   }

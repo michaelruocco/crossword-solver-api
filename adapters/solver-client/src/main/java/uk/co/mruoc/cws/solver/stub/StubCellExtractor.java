@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.cws.entity.Cells;
 import uk.co.mruoc.cws.solver.JsonMapper;
 import uk.co.mruoc.cws.usecase.CellExtractor;
+import uk.co.mruoc.cws.usecase.Image;
 import uk.co.mruoc.file.FileLoader;
 
 @RequiredArgsConstructor
@@ -17,8 +18,8 @@ public class StubCellExtractor implements CellExtractor {
   }
 
   @Override
-  public Cells extractCells(String imageUrl) {
-    var path = cluePathFactory.toWordJsonPath(imageUrl);
+  public Cells extractCells(Image image) {
+    var path = cluePathFactory.toCellJsonPath(image.getName());
     var json = FileLoader.loadContentFromClasspath(path);
     return mapper.toCells(json);
   }

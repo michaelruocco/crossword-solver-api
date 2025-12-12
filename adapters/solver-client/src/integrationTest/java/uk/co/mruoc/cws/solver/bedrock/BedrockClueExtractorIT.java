@@ -7,22 +7,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import uk.co.mruoc.cws.solver.stub.StubClueExtractor;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
+import uk.co.mruoc.cws.usecase.ImageDownloader;
+import uk.co.mruoc.cws.usecase.StubImageDownloader;
 import uk.co.mruoc.junit.EnvVarsPresent;
 
 @EnvVarsPresent(values = {"AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"})
 @Slf4j
 public class BedrockClueExtractorIT {
 
+  private final ImageDownloader downloader = new StubImageDownloader();
   private final ClueExtractor extractor = new BedrockClueExtractor(buildClient());
 
   @Test
   void shouldExtractCluesFromPuzzleImage() {
     var imageUrl = "https://hackathon.caci.co.uk/images/puzzle5.png";
+    var image = downloader.downloadImage(imageUrl);
 
-    var clues = extractor.extractClues(imageUrl);
+    var clues = extractor.extractClues(image);
 
     clues.forEach(clue -> log.info(clue.toString()));
-    var expectedClues = new StubClueExtractor().extractClues(imageUrl);
+    var expectedClues = new StubClueExtractor().extractClues(image);
     assertThat(clues).containsExactlyElementsOf(expectedClues);
   }
 }
