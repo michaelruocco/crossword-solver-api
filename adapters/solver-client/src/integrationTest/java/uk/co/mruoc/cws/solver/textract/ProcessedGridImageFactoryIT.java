@@ -3,33 +3,35 @@ package uk.co.mruoc.cws.solver.textract;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.co.mruoc.cws.image.ImageLoader.loadImage;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import uk.co.mruoc.cws.image.ImageWriter;
 import uk.co.mruoc.cws.usecase.UrlConverter;
 
 @Slf4j
 class ProcessedGridImageFactoryIT {
 
-  private static final String OUTPUT_PATH = "integration-test/output-grid";
+  private static final ImageDirectory OUTPUT_DIRECTORY = new ImageDirectory("integration-test-files/output-grid");
 
   private final ProcessedGridImageFactory factory = new ProcessedGridImageFactory();
   private final UrlConverter urlConverter = new UrlConverter();
 
   @BeforeAll
+  static void initOutputDirectory() {
+    OUTPUT_DIRECTORY.init();
+  }
+
   @AfterAll
-  static void clearOutputDirectory() throws IOException {
-    FileUtils.deleteDirectory(new File(OUTPUT_PATH));
+  static void deleteOutputDirectory() {
+    OUTPUT_DIRECTORY.delete();
+    MatLogger.deleteAll();
   }
 
   @ParameterizedTest
@@ -50,8 +52,7 @@ class ProcessedGridImageFactoryIT {
 
     var grid = factory.toProcessedGridImage(puzzle);
 
-    var outputPath = toOutputPngPath(puzzleName);
-    ImageWriter.writeImage(grid, outputPath);
+    var outputPath = OUTPUT_DIRECTORY.writePng(grid, puzzleName);
     var expectedPath = toExpectedGridPath(puzzleName);
     assertThat(areFilesIdentical(outputPath, expectedPath)).isTrue();
   }
@@ -61,12 +62,8 @@ class ProcessedGridImageFactoryIT {
     return urlConverter.toFilenameExcludingExtension(path.getFileName().toString());
   }
 
-  private String toOutputPngPath(String puzzleName) {
-    return String.format("%s/%s.png", OUTPUT_PATH, puzzleName);
-  }
-
   private String toExpectedGridPath(String puzzleName) {
-    return String.format("integration-test/expected-grid/%s.png", puzzleName);
+    return String.format("integration-test-files/expected-grid/%s.png", puzzleName);
   }
 
   private boolean areFilesIdentical(String path1, String path2) {

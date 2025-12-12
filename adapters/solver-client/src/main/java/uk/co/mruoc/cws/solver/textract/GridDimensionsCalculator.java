@@ -70,6 +70,7 @@ public class GridDimensionsCalculator {
 
     var thinned = new Mat();
     Imgproc.erode(bridged, thinned, toKernel(1, 17));
+    MatLogger.debug(thinned, "horizontal-grid-lines");
     return thinned;
   }
 
@@ -96,6 +97,7 @@ public class GridDimensionsCalculator {
 
     var thinned = new Mat();
     Imgproc.erode(bridged, thinned, toKernel(17, 1));
+    MatLogger.debug(thinned, "vertical-grid-lines");
     return thinned;
   }
 
