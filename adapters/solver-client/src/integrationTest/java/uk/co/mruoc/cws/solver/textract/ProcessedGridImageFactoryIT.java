@@ -18,7 +18,8 @@ import uk.co.mruoc.cws.usecase.UrlConverter;
 @Slf4j
 class ProcessedGridImageFactoryIT {
 
-  private static final ImageDirectory OUTPUT_DIRECTORY = new ImageDirectory("integration-test-files/output-grid");
+  private static final ImageDirectory OUTPUT_DIRECTORY =
+      new ImageDirectory("integration-test-files/output-grid");
 
   private final ProcessedGridImageFactory factory = new ProcessedGridImageFactory();
   private final UrlConverter urlConverter = new UrlConverter();

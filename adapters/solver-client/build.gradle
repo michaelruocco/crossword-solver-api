@@ -7,21 +7,21 @@ dependencies {
     implementation project(":use-cases")
     implementation project(":image-utils")
     implementation "org.apache.commons:commons-text:${commonsText}"
-    implementation "org.seleniumhq.selenium:selenium-java:4.38.0"
+    implementation "org.seleniumhq.selenium:selenium-java:4.39.0"
     implementation "com.openai:openai-java:${openAiVersion}"
     implementation "com.github.michaelruocco:json-adapter:1.0.5"
     implementation "com.github.michaelruocco:file-loader:7.0.4"
     implementation "io.github.resilience4j:resilience4j-retry:${resilience4jVersion}"
-    implementation "software.amazon.awssdk:bedrockruntime:${bedrockVersion}"
+    implementation "software.amazon.awssdk:bedrockruntime:${awsSdkVersion}"
     implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
     implementation "org.openpnp:opencv:4.9.0-0"
-    implementation "software.amazon.awssdk:textract:${textractVersion}"
+    implementation "software.amazon.awssdk:textract:${awsSdkVersion}"
     implementation "org.apache.commons:commons-math3:3.6.1"
     implementation "commons-io:commons-io:2.21.0"
 
     testFixturesImplementation project(":use-cases")
     testFixturesImplementation "com.openai:openai-java:${openAiVersion}"
     testFixturesImplementation "org.apache.commons:commons-text:${commonsText}"
-    testFixturesImplementation "software.amazon.awssdk:bedrockruntime:${bedrockVersion}"
-    testFixturesImplementation "software.amazon.awssdk:textract:${textractVersion}"
+    testFixturesImplementation "software.amazon.awssdk:bedrockruntime:${awsSdkVersion}"
+    testFixturesImplementation "software.amazon.awssdk:textract:${awsSdkVersion}"
 }

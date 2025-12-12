@@ -4,9 +4,9 @@ import org.opencv.core.Mat;
 
 public interface IMatLogger {
 
-    void init();
+  void init();
 
-    void debug(Mat mat, String name);
+  void debug(Mat mat, String name);
 
-    void deleteAll();
+  void deleteAll();
 }

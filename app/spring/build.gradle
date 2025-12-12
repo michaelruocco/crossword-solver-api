@@ -38,8 +38,8 @@ dependencies {
     //implementation "org.flywaydb:flyway-core:${flywayVersion}"
     implementation "com.github.michaelruocco:json-adapter:${jsonAdapterVersion}"
     implementation "com.openai:openai-java:${openAiVersion}"
-    implementation "software.amazon.awssdk:bedrockruntime:${bedrockVersion}"
-    implementation "software.amazon.awssdk:textract:${textractVersion}"
+    implementation "software.amazon.awssdk:bedrockruntime:${awsSdkVersion}"
+    implementation "software.amazon.awssdk:textract:${awsSdkVersion}"
 
     integrationTestImplementation testFixtures(project(":api"))
     integrationTestImplementation project(":rest-client")
