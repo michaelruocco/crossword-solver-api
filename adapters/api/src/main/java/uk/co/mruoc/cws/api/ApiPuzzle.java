@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class ApiPuzzle<T> {
   private final long id;
-  private final String imageUrl;
+  private final String name;
+  private final String hash;
   private final Collection<T> clues;
 }

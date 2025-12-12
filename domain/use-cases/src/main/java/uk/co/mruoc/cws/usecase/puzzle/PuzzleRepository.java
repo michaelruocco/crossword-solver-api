@@ -9,7 +9,7 @@ public interface PuzzleRepository {
 
   Optional<Puzzle> findById(long id);
 
-  Optional<Puzzle> findByImageUrl(String imageUrl);
+  Optional<Puzzle> findByHash(String hash);
 
   void save(Puzzle puzzle);
 }

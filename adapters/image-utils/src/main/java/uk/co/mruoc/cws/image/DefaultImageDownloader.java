@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URI;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
+import uk.co.mruoc.cws.usecase.HashFactory;
 import uk.co.mruoc.cws.usecase.Image;
 import uk.co.mruoc.cws.usecase.ImageDownloader;
 import uk.co.mruoc.cws.usecase.UrlConverter;
@@ -13,11 +14,12 @@ import uk.co.mruoc.cws.usecase.UrlConverter;
 public class DefaultImageDownloader implements ImageDownloader {
 
   private final ImageRotator rotator;
-  private final UrlConverter urlConverter;
   private final ImageConverter imageConverter;
+  private final UrlConverter urlConverter;
+  private final HashFactory hashFactory;
 
   public DefaultImageDownloader() {
-    this(new ImageRotator(), new UrlConverter(), new ImageConverter());
+    this(new ImageRotator(), new ImageConverter(), new UrlConverter(), new HashFactory());
   }
 
   @Override
@@ -29,7 +31,7 @@ public class DefaultImageDownloader implements ImageDownloader {
         .format(urlConverter.toExtension(imageUrl))
         .bufferedImage(image)
         .bytes(bytes)
-        .hash("blah") // TODO calculate hash here
+        .hash(hashFactory.toHash(bytes))
         .build();
   }
 

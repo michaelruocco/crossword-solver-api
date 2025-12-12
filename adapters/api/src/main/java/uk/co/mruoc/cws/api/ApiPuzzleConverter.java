@@ -12,7 +12,8 @@ public class ApiPuzzleConverter {
   public ApiPuzzle<ApiClue> toApiPuzzle(Puzzle puzzle) {
     return ApiPuzzle.<ApiClue>builder()
         .id(puzzle.getId())
-        .imageUrl(puzzle.getImageUrl())
+        .name(puzzle.getName())
+        .hash(puzzle.getHash())
         .clues(toApiClues(puzzle))
         .build();
   }
@@ -21,7 +22,8 @@ public class ApiPuzzleConverter {
     var puzzle = attempt.puzzle();
     return ApiPuzzle.<ApiAttemptClue>builder()
         .id(puzzle.getId())
-        .imageUrl(puzzle.getImageUrl())
+        .name(puzzle.getName())
+        .hash(puzzle.getHash())
         .clues(toApiAttemptClues(attempt))
         .build();
   }

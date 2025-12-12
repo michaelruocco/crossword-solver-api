@@ -23,28 +23,21 @@ public class PuzzleCreator {
 
   public long create(String imageUrl) {
     var image = imageDownloader.downloadImage(imageUrl);
-
-    // calculate hash from image bytes and use that
-    // to check if puzzle already exists
-    // instead of storing url against puzzle we can store name and hash to ensure uniqueness
-    // this should fit better with enabling files to be uploaded directly too
-
-    validateDoesNotAlreadyExist(imageUrl);
-
-    // build puzzle using filename and bytes instead of passing download
+    validateDoesNotAlreadyExist(image);
     var puzzle = toPuzzle(image);
     repository.save(puzzle);
     return puzzle.getId();
   }
 
-  private void validateDoesNotAlreadyExist(String imageUrl) {
+  private void validateDoesNotAlreadyExist(Image image) {
+    var hash = image.getHash();
     repository
-        .findByImageUrl(imageUrl)
-        .ifPresent(puzzle -> throwPuzzleAlreadyExistsException(puzzle.getId(), imageUrl));
+        .findByHash(hash)
+        .ifPresent(puzzle -> throwPuzzleAlreadyExistsException(puzzle.getId(), hash));
   }
 
-  private void throwPuzzleAlreadyExistsException(long id, String imageUrl) {
-    throw new PuzzleImageUrlAlreadyExistsException(id, imageUrl);
+  private void throwPuzzleAlreadyExistsException(long id, String hash) {
+    throw new PuzzleImageUrlAlreadyExistsException(id, hash);
   }
 
   private Puzzle toPuzzle(Image image) {

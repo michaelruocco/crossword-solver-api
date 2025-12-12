@@ -10,8 +10,6 @@ public class Puzzle {
   private final Long id;
   private final String name;
   private final String hash;
-  // TODO remove this field later
-  private final String imageUrl;
   private final Clues clues;
   private final Words words;
 

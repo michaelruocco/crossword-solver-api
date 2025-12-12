@@ -13,9 +13,10 @@ import lombok.RequiredArgsConstructor;
 public class StubImageDownloader implements ImageDownloader {
 
   private final UrlConverter urlConverter;
+  private final HashFactory hashFactory;
 
   public StubImageDownloader() {
-    this(new UrlConverter());
+    this(new UrlConverter(), new HashFactory());
   }
 
   @Override
@@ -26,7 +27,7 @@ public class StubImageDownloader implements ImageDownloader {
         .format(urlConverter.toExtension(imageUrl))
         .bufferedImage(toBufferedImage(bytes))
         .bytes(bytes)
-        .hash("blah") // TODO calculate hash
+        .hash(hashFactory.toHash(bytes))
         .build();
   }
 

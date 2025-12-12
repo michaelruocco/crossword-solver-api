@@ -32,8 +32,8 @@ public class StubPuzzleRepository implements PuzzleRepository {
   }
 
   @Override
-  public Optional<Puzzle> findByImageUrl(String imageUrl) {
-    return values.values().stream().filter(p -> p.getImageUrl().equals(imageUrl)).findFirst();
+  public Optional<Puzzle> findByHash(String hash) {
+    return values.values().stream().filter(p -> p.getHash().equals(hash)).findFirst();
   }
 
   @Override

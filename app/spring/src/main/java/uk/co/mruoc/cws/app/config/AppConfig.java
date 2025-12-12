@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import uk.co.mruoc.cws.entity.WordsFactory;
+import uk.co.mruoc.cws.image.DefaultImageDownloader;
 import uk.co.mruoc.cws.usecase.AnswerDeleter;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.cws.usecase.CellExtractor;
@@ -18,6 +19,7 @@ import uk.co.mruoc.cws.usecase.CompositeAnswerFinder;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
 import uk.co.mruoc.cws.usecase.DefaultWaiter;
 import uk.co.mruoc.cws.usecase.PatternFactory;
+import uk.co.mruoc.cws.usecase.UrlConverter;
 import uk.co.mruoc.cws.usecase.attempt.AttemptCreator;
 import uk.co.mruoc.cws.usecase.attempt.AttemptFinder;
 import uk.co.mruoc.cws.usecase.attempt.AttemptRepository;
@@ -52,6 +54,8 @@ public class AppConfig {
   public PuzzleCreator puzzleCreator(
       ClueExtractor clueExtractor, CellExtractor cellExtractor, PuzzleRepository repository) {
     return PuzzleCreator.builder()
+        .urlConverter(new UrlConverter())
+        .imageDownloader(new DefaultImageDownloader())
         .clueExtractor(clueExtractor)
         .cellExtractor(cellExtractor)
         .repository(repository)

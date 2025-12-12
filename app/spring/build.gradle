@@ -26,6 +26,7 @@ dependencies {
     implementation project(":use-cases")
     implementation project(":api")
     implementation project(":repository")
+    implementation project(":image-utils")
     implementation project(":hackathon-api-client")
     implementation project(":solver-client")
     implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
