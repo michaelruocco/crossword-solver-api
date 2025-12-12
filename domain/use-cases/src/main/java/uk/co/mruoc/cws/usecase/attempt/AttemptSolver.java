@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Attempt;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
+import uk.co.mruoc.cws.usecase.ClueRanker;
 import uk.co.mruoc.cws.usecase.PatternFactory;
 
 @Builder
@@ -15,6 +16,7 @@ public class AttemptSolver {
   private final AnswerFinder answerFinder;
   private final AttemptRepository repository;
   private final PatternFactory patternFactory;
+  private final ClueRanker clueRanker;
   private final Waiter waiter;
   private final Duration delay;
 
@@ -26,6 +28,7 @@ public class AttemptSolver {
             .answerFinder(answerFinder)
             .repository(repository)
             .patternFactory(patternFactory)
+            .clueRanker(clueRanker)
             .waiter(waiter)
             .delay(delay)
             .attemptId(attempt.id())

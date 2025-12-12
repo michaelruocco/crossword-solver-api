@@ -13,4 +13,11 @@ Crossword solver API
 // runs tests
 // checks dependencies for vulnerabilities
 ./gradlew clean dependencyUpdates lintGradle spotlessApply build
-```
+
+
+## TODO
+
+* Add cryptic puzzle detection
+* Add endpoint to accept direct file upload
+* Add file size validation on direct file upload
+* Integrate with hackathon apis

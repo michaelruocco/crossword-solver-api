@@ -15,6 +15,7 @@ import uk.co.mruoc.cws.usecase.AnswerDeleter;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.cws.usecase.CellExtractor;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
+import uk.co.mruoc.cws.usecase.ClueRanker;
 import uk.co.mruoc.cws.usecase.CompositeAnswerFinder;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
 import uk.co.mruoc.cws.usecase.DefaultWaiter;
@@ -96,11 +97,15 @@ public class AppConfig {
 
   @Bean
   public AttemptSolver attemptSolver(
-      AnswerFinder answerFinder, AttemptRepository repository, Executor executor) {
+      AnswerFinder answerFinder,
+      AttemptRepository repository,
+      Executor executor,
+      ClueRanker clueRanker) {
     return AttemptSolver.builder()
         .answerFinder(answerFinder)
         .repository(repository)
         .patternFactory(new PatternFactory())
+        .clueRanker(clueRanker)
         .executor(executor)
         .waiter(new DefaultWaiter())
         .delay(Duration.ZERO)

@@ -1,6 +1,7 @@
 package uk.co.mruoc.cws.entity;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -83,6 +84,14 @@ public class Clues implements Iterable<Clue> {
 
   public Clues sortByIds(Collection<Id> ids) {
     return new Clues(ids.stream().map(values::get).toList());
+  }
+
+  public Clues sortByIds() {
+    return new Clues(stream().sorted(Comparator.comparingInt(Clue::numericId)).toList());
+  }
+
+  public Clues getFirst(int n) {
+    return new Clues(stream().limit(n).toList());
   }
 
   private Map<Id, Clue> copyValues() {

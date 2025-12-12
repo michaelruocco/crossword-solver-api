@@ -29,6 +29,7 @@ subprojects {
         openAiVersion = "4.10.0"
         awaitilityVersion = "4.3.0"
         awsSdkVersion = "2.40.7"
+        springBootVersion = "4.0.0"
 
         junitVersion = "6.0.1"
     }

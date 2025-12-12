@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = "4.0.0"
+        springBootVersion = "${springBootVersion}"
     }
 }
 
@@ -21,7 +21,6 @@ configurations {
 }
 
 dependencies {
-    runtimeOnly "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
     implementation project(":entities")
     implementation project(":use-cases")
     implementation project(":api")
@@ -33,14 +32,17 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     //implementation "org.springframework.boot:spring-boot-starter-security"
-    //implementation "org.springframework.boot:spring-boot-starter-jdbc"
-    //implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-    //implementation "org.postgresql:postgresql:${postgresqlVersion}"
-    //implementation "org.flywaydb:flyway-core:${flywayVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-jdbc"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    //implementation "org.flywaydb:flyway-core"
+    implementation "org.springframework.boot:spring-boot-starter-flyway"
     implementation "com.github.michaelruocco:json-adapter:${jsonAdapterVersion}"
     implementation "com.openai:openai-java:${openAiVersion}"
     implementation "software.amazon.awssdk:bedrockruntime:${awsSdkVersion}"
     implementation "software.amazon.awssdk:textract:${awsSdkVersion}"
+    implementation "software.amazon.awssdk:url-connection-client:${awsSdkVersion}"
+    runtimeOnly "org.flywaydb:flyway-database-postgresql"
+    runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
 
     integrationTestImplementation testFixtures(project(":api"))
     integrationTestImplementation project(":rest-client")

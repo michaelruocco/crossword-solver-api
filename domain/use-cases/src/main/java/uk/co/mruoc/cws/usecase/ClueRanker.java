@@ -2,7 +2,7 @@ package uk.co.mruoc.cws.usecase;
 
 import uk.co.mruoc.cws.entity.Clues;
 
-public interface ClueSorter {
+public interface ClueRanker {
 
-  Clues sort(Clues clues);
+  Clues rankByEase(Clues clues);
 }

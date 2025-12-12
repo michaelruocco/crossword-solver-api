@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
+import java.util.stream.Stream;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -19,8 +19,8 @@ public class Words {
   private final Collection<Word> words;
   private final Collection<Intersection> intersections;
 
-  public Words(Word... words) {
-    this(List.of(words));
+  public Stream<Word> stream() {
+    return words.stream();
   }
 
   public Collection<Id> getIntersectingIds(Id id) {
@@ -33,15 +33,6 @@ public class Words {
 
   public Words(Collection<Word> words) {
     this(words, buildIntersections(words));
-  }
-
-  public Words populateDirectionAndLength(Clues clues) {
-    return new Words(clues.stream().map(this::populateDirectionAndLength).toList());
-  }
-
-  private Word populateDirectionAndLength(Clue clue) {
-    var word = findByNumericId(clue.numericId());
-    return word.toBuilder().id(clue.id()).length(clue.getTotalLength()).build();
   }
 
   private Word findByNumericId(int id) {

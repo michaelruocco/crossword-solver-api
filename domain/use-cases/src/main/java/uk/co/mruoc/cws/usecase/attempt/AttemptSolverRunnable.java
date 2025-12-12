@@ -11,6 +11,7 @@ import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Clues;
 import uk.co.mruoc.cws.entity.ValidAnswerPredicate;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
+import uk.co.mruoc.cws.usecase.ClueRanker;
 import uk.co.mruoc.cws.usecase.PatternFactory;
 
 @Builder
@@ -20,6 +21,7 @@ public class AttemptSolverRunnable implements Runnable {
   private final AnswerFinder answerFinder;
   private final AttemptRepository repository;
   private final PatternFactory patternFactory;
+  private final ClueRanker clueRanker;
   private final Waiter waiter;
   private final Duration delay;
 
@@ -134,7 +136,14 @@ public class AttemptSolverRunnable implements Runnable {
 
   private Clues selectClues(Attempt attempt) {
     var unconfirmedClues = attempt.getCluesWithUnconfirmedAnswer();
-    return addPatternsToClues(unconfirmedClues, attempt).getWithLongestPatternIfPossible();
+    var selectedClues =
+        addPatternsToClues(unconfirmedClues, attempt).getWithLongestPatternIfPossible();
+    if (attempt.getClues().size() == selectedClues.size()) {
+      log.info("all clues selected, attempting to select 10 easiest");
+      var rankedClues = clueRanker.rankByEase(selectedClues);
+      return rankedClues.getFirst(10);
+    }
+    return selectedClues;
   }
 
   private Clues addPatternsToClues(Clues clues, Attempt attempt) {

@@ -1,0 +1,44 @@
+DETERMINISTIC CROSSWORD CLUE RANKING PROMPT
+
+Rank the following crossword clues from easiest to hardest based on the structural simplicity of their wording.
+Difficulty refers exclusively to how direct or indirect the clue itself is, not how common the answer is.
+This process must be fully deterministic: identical input → identical output.
+
+Difficulty Definition (Structural Only)
+Base simplicity (1–5):
+
+1. Single-word or two-word direct definition; no idiom, misdirection, or figurative language.
+2. Simple, generally direct wording but could support 1–2 different structural interpretations.
+3. Moderately simple; straightforward but could fit several structural answers or uses mild indirection.
+4. Somewhat complex; figurative, idiomatic, ambiguous, or deliberately vague.
+5. Complex; contains layered structure, wordplay-like misdirection, or strongly indirect phrasing.
+
+Length Penalty (based on enumeration):
+Answer length = total letters (ignore spaces/punctuation):
+* ≤5 letters → +0.0
+* 6–8 letters → +1.0
+* 9–12 letters → +1.5
+* ≥13 letters → +2.0
+
+Multi-word Penalty (based on enumeration)
+If enumeration shows multiple words, add +0.5.
+Adjusted Simplicity
+Adjusted = min(5.0, base simplicity + length penalty + multi-word penalty)
+
+Tie-Breaking Rules
+When two clues have the same adjusted simplicity:
+1. Lower base simplicity = easier
+2. If still tied, sort alphabetically by clue text (case-insensitive)
+
+Special Handling
+* Fill-in-the-blank or partial-letter clues (“- - -”, etc.) are treated as structurally direct unless wording adds indirection.
+* Do not evaluate correctness or likelihood of any particular answer.
+* Respect the given lengths; do not infer any answer.
+
+Output Rules
+* Output only the ranked list: ID: Clue text exactly as provided.
+* No explanations, commentary, or scoring.
+* Order = easiest → hardest.
+
+Now rank the following clues:
+%CLUE_LIST%

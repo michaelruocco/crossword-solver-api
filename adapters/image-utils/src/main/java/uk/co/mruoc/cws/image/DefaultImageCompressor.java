@@ -30,12 +30,12 @@ public class DefaultImageCompressor implements ImageCompressor {
 
   public DefaultImageCompressor() {
     this(
-            new ImageConverter(),
-            DEFAULT_MAX_SIZE_BYTES,
-            DEFAULT_QUALITY,
-            DEFAULT_MIN_SIZE,
-            DEFAULT_MIN_SIZE,
-            DEFAULT_TARGET_FORMAT);
+        new ImageConverter(),
+        DEFAULT_MAX_SIZE_BYTES,
+        DEFAULT_QUALITY,
+        DEFAULT_MIN_SIZE,
+        DEFAULT_MIN_SIZE,
+        DEFAULT_TARGET_FORMAT);
   }
 
   @Override
@@ -53,7 +53,12 @@ public class DefaultImageCompressor implements ImageCompressor {
       height = (int) (height * 0.9);
       image = resize(image, width, height);
       imageData = compressToBytes(image, quality);
-      log.info("compressed to {} bytes using quality {} and size {}x{}", imageData.length, quality, width, height);
+      log.info(
+          "compressed to {} bytes using quality {} and size {}x{}",
+          imageData.length,
+          quality,
+          width,
+          height);
     }
     return imageData;
   }
@@ -77,7 +82,7 @@ public class DefaultImageCompressor implements ImageCompressor {
     var writers = ImageIO.getImageWritersByFormatName(targetFormat);
     if (!writers.hasNext()) {
       throw new ImageException(
-              String.format("No image writers for format name %s found", targetFormat));
+          String.format("No image writers for format name %s found", targetFormat));
     }
     return writers.next();
   }
