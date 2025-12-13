@@ -32,9 +32,8 @@ public class BedrockClueRanker implements ClueRanker {
   @Override
   public Clues rankByEase(Clues clues) {
     var promptText = promptTextFactory.toPromptText(clues);
-    log.info("rank clues prompt {}", promptText);
     var rankedClueList = execute(promptText);
-    log.info("ranked clue list {}", rankedClueList);
+    log.debug("ranked clue list {}", rankedClueList);
     var rankedIds = clueListConverter.toIds(rankedClueList);
     return clues.sortByIds(rankedIds);
   }

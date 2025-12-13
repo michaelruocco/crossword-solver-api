@@ -32,7 +32,7 @@ public class AttemptSolver {
             .waiter(waiter)
             .delay(delay)
             .attemptId(attempt.id())
-            .maxPasses(40)
+            .maxPasses(60)
             .build();
     executor.execute(runnable);
   }
