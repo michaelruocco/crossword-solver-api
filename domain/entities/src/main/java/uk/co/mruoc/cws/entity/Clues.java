@@ -63,10 +63,9 @@ public class Clues implements Iterable<Clue> {
     return values.size();
   }
 
-  public Clues addPattern(Id id, String pattern) {
-    var clue = forceFind(id);
+  public Clues update(Clue clue) {
     var updatedClues = copyValues();
-    updatedClues.put(clue.id(), clue.withPattern(pattern));
+    updatedClues.put(clue.id(), clue);
     return new Clues(updatedClues);
   }
 

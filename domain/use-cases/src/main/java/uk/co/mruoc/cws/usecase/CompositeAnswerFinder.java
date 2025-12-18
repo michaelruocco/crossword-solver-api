@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Answers;
+import uk.co.mruoc.cws.entity.Candidates;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Clues;
 
@@ -13,6 +14,16 @@ import uk.co.mruoc.cws.entity.Clues;
 public class CompositeAnswerFinder implements AnswerFinder {
 
   private final Collection<AnswerFinder> finders;
+
+  @Override
+  public Candidates findCandidates(Clue clue, int numberOfCandidates) {
+    return finders.stream()
+        .map(finder -> finder.findCandidates(clue, numberOfCandidates))
+        .reduce(Candidates::addAll)
+        .map(Candidates::sortByScore)
+        .map(c -> c.getFirst(numberOfCandidates))
+        .orElse(new Candidates());
+  }
 
   @Override
   public Answer findAnswer(Clue clue) {

@@ -1,8 +1,10 @@
 package uk.co.mruoc.cws.entity;
 
 import java.util.Collection;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.With;
 
 @Builder
 @Data
@@ -10,7 +12,10 @@ public class Puzzle {
   private final Long id;
   private final String name;
   private final String hash;
+
+  @With(AccessLevel.PRIVATE)
   private final Clues clues;
+
   private final Words words;
 
   public boolean hasClue(Id id) {
@@ -27,5 +32,13 @@ public class Puzzle {
 
   public Collection<Intersection> getIntersections(Id id) {
     return words.getIntersections(id);
+  }
+
+  public Collection<Intersection> getIntersections() {
+    return words.getIntersections();
+  }
+
+  public Puzzle updateClue(Clue clue) {
+    return withClues(clues.update(clue));
   }
 }

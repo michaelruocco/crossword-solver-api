@@ -28,6 +28,28 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
     return same;
   }
 
+  public boolean conflictsWith(Answer other, Intersection intersection) {
+    int thisIndex = intersection.getIndex(id.getDirection());
+    int otherIndex = intersection.getIntersectingIndex(id.getDirection());
+    var conflicts =
+        letterAt(thisIndex)
+            .flatMap(
+                thisLetter ->
+                    other.letterAt(otherIndex).map(otherLetter -> thisLetter != otherLetter))
+            .orElse(false);
+    if (conflicts) {
+      log.info(
+          "answer {} {} letter {} conflicts with {} {} letter {}",
+          id,
+          value,
+          letterAt(thisIndex),
+          other.id,
+          other.value,
+          other.letterAt(otherIndex));
+    }
+    return conflicts;
+  }
+
   public Answer confirm() {
     return new Answer(id, value, confidenceScore, true);
   }

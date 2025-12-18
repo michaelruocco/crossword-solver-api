@@ -12,6 +12,7 @@ import uk.co.mruoc.cws.solver.bedrock.BedrockAnswerFinder;
 import uk.co.mruoc.cws.solver.bedrock.BedrockClueExtractor;
 import uk.co.mruoc.cws.solver.bedrock.BedrockClueRanker;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
+import uk.co.mruoc.cws.usecase.CachingAnswerFinder;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
 import uk.co.mruoc.cws.usecase.ClueRanker;
 
@@ -40,7 +41,7 @@ public class BedrockSolverClientConfig {
 
   @Bean
   public AnswerFinder bedrockAnswerFinder(BedrockRuntimeClient client) {
-    return new BedrockAnswerFinder(client, model);
+    return new CachingAnswerFinder(new BedrockAnswerFinder(client, model));
   }
 
   @Bean

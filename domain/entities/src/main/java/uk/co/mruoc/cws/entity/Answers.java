@@ -127,6 +127,19 @@ public class Answers implements Iterable<Answer> {
     return values.isEmpty();
   }
 
+  public boolean areConsistentAt(Intersection intersection) {
+    if (!containsAnswers(intersection)) {
+      return true;
+    }
+    var acrossAnswer = findById(intersection.getAcrossId()).orElseThrow();
+    var downAnswer = findById(intersection.getDownId()).orElseThrow();
+    return !acrossAnswer.conflictsWith(downAnswer, intersection);
+  }
+
+  private boolean containsAnswers(Intersection intersection) {
+    return contains(intersection.getAcrossId()) && contains(intersection.getDownId());
+  }
+
   private Answers filter(Predicate<Answer> predicate) {
     return new Answers(values.values().stream().filter(predicate).toList());
   }

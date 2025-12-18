@@ -18,6 +18,12 @@ public record Clue(Id id, String text, Collection<Integer> lengths, @With String
     return id.getDirection();
   }
 
+  public Clue setPatternLetter(int index, char letter) {
+    char[] chars = pattern().toCharArray();
+    chars[index] = letter;
+    return withPattern(new String(chars));
+  }
+
   @Override
   public String pattern() {
     if (StringUtils.isEmpty(pattern)) {

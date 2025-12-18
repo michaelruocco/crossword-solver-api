@@ -1,6 +1,7 @@
 package uk.co.mruoc.cws.entity;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Optional;
 import lombok.Builder;
 import lombok.With;
@@ -12,6 +13,23 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
 
   public long puzzleId() {
     return puzzle.getId();
+  }
+
+  private Optional<Clue> selectNextClue(Attempt attempt) {
+    return attempt.getCluesWithUnconfirmedAnswer().stream()
+        .max(
+            Comparator.comparingInt((Clue c) -> attempt.getIntersectingIds(c.id()).size())
+                .reversed()
+                .thenComparingInt(Clue::getPatternCharCount));
+  }
+
+  public boolean isConsistent() {
+    for (Intersection intersection : puzzle.getIntersections()) {
+      if (!answers.areConsistentAt(intersection)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public Attempt saveAnswers(Answers otherAnswers) {
@@ -34,6 +52,10 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
 
   public Clues getCluesWithUnconfirmedAnswer() {
     return new Clues(getClues().stream().filter(clue -> !answers.isConfirmed(clue.id())).toList());
+  }
+
+  public Answers getConfirmedValidAnswers() {
+    return answers.getConfirmedAnswers().getValidAnswers(puzzle.getClues());
   }
 
   public Answers getConfirmedAnswers() {
@@ -73,5 +95,13 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
 
   public Collection<Intersection> getIntersections(Id id) {
     return puzzle.getIntersections(id);
+  }
+
+  public Attempt updateClue(Clue clue) {
+    return withPuzzle(puzzle.updateClue(clue));
+  }
+
+  public Answer forceGetConfirmedAnswer(Id id) {
+    return getAnswer(id).filter(Answer::confirmed).orElseThrow();
   }
 }

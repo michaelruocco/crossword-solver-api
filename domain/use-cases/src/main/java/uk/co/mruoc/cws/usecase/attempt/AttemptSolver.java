@@ -34,6 +34,12 @@ public class AttemptSolver {
             .attemptId(attempt.id())
             .maxPasses(60)
             .build();
+    /*var runnable =
+    BacktrackingAttemptSolverRunnable.builder()
+        .solver(new BacktrackingAttemptSolver(answerFinder))
+        .repository(repository)
+        .attemptId(attempt.id())
+        .build();*/
     executor.execute(runnable);
   }
 }

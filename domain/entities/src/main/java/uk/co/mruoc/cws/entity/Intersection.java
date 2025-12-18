@@ -16,6 +16,14 @@ public class Intersection {
         new IntersectingWord(down, coordinates.y() - down.y()));
   }
 
+  public Id getAcrossId() {
+    return across.getId();
+  }
+
+  public Id getDownId() {
+    return down.getId();
+  }
+
   public int getIndex(Direction direction) {
     if (direction == Direction.ACROSS) {
       return getAcrossIndex();

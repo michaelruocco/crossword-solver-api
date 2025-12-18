@@ -149,7 +149,7 @@ public class AttemptSolverRunnable implements Runnable {
   private Clues addPatternsToClues(Clues clues, Attempt attempt) {
     for (var clue : clues) {
       var pattern = patternFactory.build(clue, attempt);
-      clues = clues.addPattern(clue.id(), pattern);
+      clues = clues.update(clue.withPattern(pattern));
     }
     return clues;
   }
