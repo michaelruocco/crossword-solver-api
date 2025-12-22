@@ -24,6 +24,7 @@ Rules (strict — follow exactly):
 5. Validate your chosen answer against the pattern (and total length, if multiword).
 6. If multiple possible answers fit, choose the most common or widely recognized one, lowering confidence appropriately.
 7. If no valid answer matches the pattern, output CLUE_ID|NO_MATCH|0, do NOT return an answer.
+8. If no valid answer matches, do not attempt to adjust the answer to fit the pattern by adding extra letters.
 
 Confidence and ranking:
 - Rank all clues in order of confidence from most likely to least likely.

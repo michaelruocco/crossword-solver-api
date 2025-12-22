@@ -16,7 +16,11 @@ public class BacktrackingAttemptSolverRunnable implements Runnable {
     var attempt = repository.forceFindById(attemptId);
     log.info("solving attempt {}", attempt.id());
     var solvedAttempt = solver.solve(attempt);
-    log.info("solved attempt {}", solvedAttempt);
-    solvedAttempt.ifPresent(repository::save);
+    if (solvedAttempt.isPresent()) {
+      log.info("solved attempt {}", solvedAttempt.get().asString());
+      repository.save(solvedAttempt.get());
+      return;
+    }
+    log.info("no solved attempt returned");
   }
 }

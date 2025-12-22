@@ -1,7 +1,6 @@
 package uk.co.mruoc.cws.entity;
 
 import java.util.Collection;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.With;
@@ -13,8 +12,7 @@ public class Puzzle {
   private final String name;
   private final String hash;
 
-  @With(AccessLevel.PRIVATE)
-  private final Clues clues;
+  @With private final Clues clues;
 
   private final Words words;
 

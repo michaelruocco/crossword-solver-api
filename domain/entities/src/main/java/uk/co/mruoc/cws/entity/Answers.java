@@ -136,6 +136,13 @@ public class Answers implements Iterable<Answer> {
     return !acrossAnswer.conflictsWith(downAnswer, intersection);
   }
 
+  public String asString() {
+    return stream()
+        .sorted(Comparator.comparing(Answer::idAsString))
+        .map(Answer::asString)
+        .collect(Collectors.joining(","));
+  }
+
   private boolean containsAnswers(Intersection intersection) {
     return contains(intersection.getAcrossId()) && contains(intersection.getDownId());
   }

@@ -38,7 +38,7 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
                     other.letterAt(otherIndex).map(otherLetter -> thisLetter != otherLetter))
             .orElse(false);
     if (conflicts) {
-      log.info(
+      log.debug(
           "answer {} {} letter {} conflicts with {} {} letter {}",
           id,
           value,
@@ -76,5 +76,13 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
       }
     }
     return true;
+  }
+
+  public String idAsString() {
+    return id.toString();
+  }
+
+  public String asString() {
+    return String.format("%s %s %d", id, value, confidenceScore);
   }
 }

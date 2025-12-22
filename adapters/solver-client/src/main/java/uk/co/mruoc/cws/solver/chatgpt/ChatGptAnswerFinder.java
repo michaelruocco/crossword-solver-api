@@ -61,7 +61,7 @@ public class ChatGptAnswerFinder implements AnswerFinder {
   public Answers doFindAnswers(Clues clues) {
     var request = toBatchFindAnswerRequest(clues);
     var response = client.chat().completions().create(request);
-    return responseConverter.toAnswers(toString(response));
+    return new Answers(responseConverter.toAnswers(toString(response)));
   }
 
   private Answer doFindAnswer(Clue clue) {

@@ -1,8 +1,9 @@
 package uk.co.mruoc.cws.entity;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.With;
 import lombok.extern.slf4j.Slf4j;
@@ -15,21 +16,12 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
     return puzzle.getId();
   }
 
-  private Optional<Clue> selectNextClue(Attempt attempt) {
-    return attempt.getCluesWithUnconfirmedAnswer().stream()
-        .max(
-            Comparator.comparingInt((Clue c) -> attempt.getIntersectingIds(c.id()).size())
-                .reversed()
-                .thenComparingInt(Clue::getPatternCharCount));
+  public int confirmedAnswerCount() {
+    return getConfirmedAnswers().size();
   }
 
-  public boolean isConsistent() {
-    for (Intersection intersection : puzzle.getIntersections()) {
-      if (!answers.areConsistentAt(intersection)) {
-        return false;
-      }
-    }
-    return true;
+  public boolean hasConfirmedAnswers() {
+    return !getConfirmedAnswers().isEmpty();
   }
 
   public Attempt saveAnswers(Answers otherAnswers) {
@@ -103,5 +95,47 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
 
   public Answer forceGetConfirmedAnswer(Id id) {
     return getAnswer(id).filter(Answer::confirmed).orElseThrow();
+  }
+
+  public boolean accepts(Answer answer) {
+    var confirmedAnswers = getConfirmedAnswers();
+    if (confirmedAnswers.isEmpty()) {
+      return true;
+    }
+    var intersections = puzzle.getIntersections(answer.id());
+    log.debug(
+        "found intersections {} for answer {}",
+        intersections.stream().map(i -> i.getIntersectingId(answer.id())).toList(),
+        answer.asString());
+
+    for (var intersection : intersections) {
+      var intersectingId = intersection.getIntersectingId(answer.id());
+      var intersectingAnswer = confirmedAnswers.findById(intersectingId);
+      if (intersectingAnswer.isPresent()) {
+        if (answer.conflictsWith(intersectingAnswer.get(), intersection)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  public boolean hasConfirmedAnswer(Id id) {
+    return getConfirmedAnswers().contains(id);
+  }
+
+  public String asString() {
+    var lines = new ArrayList<String>();
+    lines.add(String.format("attempt %d for puzzle %d", id, puzzleId()));
+    lines.add(String.format("%d clues", getClues().size()));
+    lines.add(String.format("%d confirmed answers", getConfirmedAnswers().size()));
+    getClues().stream().map(this::toLine).forEach(lines::add);
+    return lines.stream().collect(Collectors.joining(System.lineSeparator()));
+  }
+
+  private String toLine(Clue clue) {
+    var answer = getAnswer(clue.id());
+    var answerString = answer.map(Answer::asString).orElse("not answered");
+    return String.format("%s -> %s", clue.asString(), answerString);
   }
 }

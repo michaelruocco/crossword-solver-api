@@ -34,6 +34,38 @@ public class BedrockAnswerFinderIT {
     assertThat(answer.value()).isEqualTo("RATATOUILLE");
   }
 
+  @Test
+  void shouldFindCandidateAnswersForClue1() {
+    var clue =
+        Clue.builder()
+            .id(new Id("28D"))
+            .text("Remnant (6)")
+            .lengths(List.of(6))
+            .pattern("???C?T")
+            .build();
+
+    var candidates = finder.findCandidates(clue, 5);
+
+    log.info(candidates.asString());
+    assertThat(candidates.valuesAsString()).contains("OFFCUT");
+  }
+
+  @Test
+  void shouldFindCandidateAnswersForClue2() {
+    var clue =
+            Clue.builder()
+                    .id(new Id("27D"))
+                    .text("Pilot, - - - Johnson (3)")
+                    .lengths(List.of(3))
+                    .pattern("A??")
+                    .build();
+
+    var candidates = finder.findCandidates(clue, 5);
+
+    log.info(candidates.asString());
+    assertThat(candidates.valuesAsString()).contains("AMY");
+  }
+
   @Disabled
   @Test
   void shouldFindAnswerToTrickyClue() {

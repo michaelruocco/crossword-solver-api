@@ -31,6 +31,13 @@ public class Intersection {
     return getDownIndex();
   }
 
+  public Id getIntersectingId(Id id) {
+    if (across.word.hasId(id)) {
+      return down.word.getId();
+    }
+    return across.word.getId();
+  }
+
   public Word getOtherWord(Word word) {
     if (across.word.hasSameId(word)) {
       return down.word;

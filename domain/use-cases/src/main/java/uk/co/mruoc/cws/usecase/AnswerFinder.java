@@ -9,7 +9,7 @@ import uk.co.mruoc.cws.entity.Clues;
 public interface AnswerFinder {
 
   default Candidates findCandidates(Clue clue, int numberOfCandidates) {
-    return new Candidates(findAnswer(clue));
+    return new Candidates(clue, findAnswer(clue));
   }
 
   Answers findAnswers(Clues clues);

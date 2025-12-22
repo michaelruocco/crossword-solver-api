@@ -2,7 +2,9 @@ package uk.co.mruoc.cws.entity;
 
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ValidAnswerPredicate implements Predicate<Answer> {
 
@@ -15,11 +17,19 @@ public class ValidAnswerPredicate implements Predicate<Answer> {
   @Override
   public boolean test(Answer answer) {
     var clue = clues.forceFind(answer.id());
-    return isValid(clue, answer);
+    var valid = isValid(clue, answer);
+    log.debug(
+        "is answer {} valid {} for clue {} {} with pattern {}",
+        answer.value(),
+        valid,
+        clue.id(),
+        clue.text(),
+        clue.pattern());
+    return valid;
   }
 
   private boolean isValid(Clue clue, Answer answer) {
-    var totalLength = clue.getTotalLength();
+    var totalLength = clue.totalLength();
     if (answer.value().length() != totalLength) {
       return false;
     }

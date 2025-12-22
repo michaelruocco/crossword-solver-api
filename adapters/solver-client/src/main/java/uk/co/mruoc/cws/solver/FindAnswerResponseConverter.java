@@ -2,20 +2,21 @@ package uk.co.mruoc.cws.solver;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import uk.co.mruoc.cws.entity.Answer;
-import uk.co.mruoc.cws.entity.Answers;
-import uk.co.mruoc.cws.entity.Candidates;
 import uk.co.mruoc.cws.entity.Id;
 
 @Slf4j
 public class FindAnswerResponseConverter {
 
-  public Answers toAnswers(String answersAndScores) {
+  public Collection<Answer> toAnswers(String answersAndScores) {
     log.debug("got answers and scores {}", answersAndScores);
-    return new Answers(toCollection(answersAndScores));
+    return toCollection(answersAndScores);
   }
 
   public Answer toAnswer(String answerAndScore) {
@@ -23,13 +24,14 @@ public class FindAnswerResponseConverter {
     return convert(answerAndScore);
   }
 
-  public Candidates toCandidates(String answersAndScores) {
+  public Collection<Answer> toCandidates(String answersAndScores) {
     log.debug("got candidate answers and scores {}", answersAndScores);
-    return new Candidates(toCollection(answersAndScores));
+    return toCollection(answersAndScores);
   }
 
   private Collection<Answer> toCollection(String answersAndScore) {
-    return toCorrectlyFormattedLines(answersAndScore).map(this::toAnswer).toList();
+    return removeDuplicates(
+        toCorrectlyFormattedLines(answersAndScore).map(this::toAnswer).toList());
   }
 
   private Stream<String> toCorrectlyFormattedLines(String input) {
@@ -52,5 +54,18 @@ public class FindAnswerResponseConverter {
       log.debug(e.getMessage(), e);
       return Answer.noMatchBuilder().id(id).build();
     }
+  }
+
+  private Collection<Answer> removeDuplicates(Collection<Answer> answers) {
+    return answers.stream()
+        .collect(
+            Collectors.toMap(
+                Answer::value,
+                Function.identity(),
+                (a1, a2) -> a1.confidenceScore() > a2.confidenceScore() ? a1 : a2))
+        .values()
+        .stream()
+        .sorted(Comparator.comparingInt(Answer::confidenceScore).reversed())
+        .toList();
   }
 }

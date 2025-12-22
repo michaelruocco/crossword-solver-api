@@ -13,6 +13,8 @@ import uk.co.mruoc.cws.entity.WordsFactory;
 import uk.co.mruoc.cws.image.DefaultImageDownloader;
 import uk.co.mruoc.cws.usecase.AnswerDeleter;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
+import uk.co.mruoc.cws.usecase.CandidateLoader;
+import uk.co.mruoc.cws.usecase.CandidateRepository;
 import uk.co.mruoc.cws.usecase.CellExtractor;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
 import uk.co.mruoc.cws.usecase.ClueRanker;
@@ -96,13 +98,25 @@ public class AppConfig {
   }
 
   @Bean
+  public CandidateLoader candidateLoader(
+      CandidateRepository repository, AnswerFinder answerFinder, Executor executor) {
+    return CandidateLoader.builder()
+        .repository(repository)
+        .answerFinder(answerFinder)
+        .executor(executor)
+        .build();
+  }
+
+  @Bean
   public AttemptSolver attemptSolver(
       AnswerFinder answerFinder,
+      CandidateLoader candidateLoader,
       AttemptRepository repository,
       Executor executor,
       ClueRanker clueRanker) {
     return AttemptSolver.builder()
         .answerFinder(answerFinder)
+        .candidateLoader(candidateLoader)
         .repository(repository)
         .patternFactory(new PatternFactory())
         .clueRanker(clueRanker)
@@ -114,7 +128,7 @@ public class AppConfig {
 
   @Bean
   public ThreadPoolTaskExecutor executorService(ThreadPoolTaskExecutorBuilder builder) {
-    return builder.corePoolSize(5).maxPoolSize(10).queueCapacity(20).build();
+    return builder.corePoolSize(20).maxPoolSize(20).queueCapacity(100).build();
   }
 
   @Bean

@@ -16,7 +16,7 @@ public class WordsFactory {
     return Word.builder()
         .id(clue.id())
         .coordinates(cells.forceFindCoordinatesById(clue.numericId()))
-        .length(clue.getTotalLength())
+        .length(clue.totalLength())
         .build();
   }
 }

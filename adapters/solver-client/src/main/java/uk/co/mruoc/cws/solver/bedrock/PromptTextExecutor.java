@@ -27,7 +27,7 @@ public class PromptTextExecutor {
         ConverseRequest.builder()
             .modelId(modelId)
             .messages(message)
-            .inferenceConfig(config -> config.temperature(0.2f).maxTokens(2024))
+            .inferenceConfig(config -> config.temperature(0.0f).maxTokens(2024))
             .build();
     var response = client.converse(request);
     return response.output().message().content().getFirst().text();

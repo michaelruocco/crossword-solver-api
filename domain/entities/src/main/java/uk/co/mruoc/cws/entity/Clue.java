@@ -6,7 +6,12 @@ import lombok.With;
 import org.apache.commons.lang3.StringUtils;
 
 @Builder
-public record Clue(Id id, String text, Collection<Integer> lengths, @With String pattern) {
+public record Clue(
+    @With Id id,
+    String text,
+    Collection<Integer> lengths,
+    @With String pattern,
+    @With Candidates candidates) {
 
   private static final String UNKNOWN = "?";
 
@@ -27,23 +32,30 @@ public record Clue(Id id, String text, Collection<Integer> lengths, @With String
   @Override
   public String pattern() {
     if (StringUtils.isEmpty(pattern)) {
-      return UNKNOWN.repeat(getTotalLength());
+      return UNKNOWN.repeat(totalLength());
     }
     return pattern;
   }
 
-  public int getTotalLength() {
+  public int totalLength() {
     return lengths.stream().mapToInt(Integer::intValue).sum();
   }
 
-  public int getPatternCharCount() {
+  public boolean isConstrainedByAtLeastNChars(int n) {
+    return patternCharCount() >= n;
+  }
+
+  public int patternCharCount() {
     if (StringUtils.isEmpty(pattern)) {
       return 0;
     }
     return pattern.replace(UNKNOWN, "").length();
   }
 
-  public boolean hasPatternChars() {
-    return getPatternCharCount() > 0;
+  public String asString() {
+    if (patternCharCount() > 0) {
+      return String.format("%s %s %s", id, text, pattern);
+    }
+    return String.format("%s %s", id, text);
   }
 }

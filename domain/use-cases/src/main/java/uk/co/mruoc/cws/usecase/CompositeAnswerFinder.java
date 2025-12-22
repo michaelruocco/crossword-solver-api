@@ -22,7 +22,7 @@ public class CompositeAnswerFinder implements AnswerFinder {
         .reduce(Candidates::addAll)
         .map(Candidates::sortByScore)
         .map(c -> c.getFirst(numberOfCandidates))
-        .orElse(new Candidates());
+        .orElse(new Candidates(clue));
   }
 
   @Override

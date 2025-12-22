@@ -1,109 +1,179 @@
 package uk.co.mruoc.cws.usecase.attempt;
 
-import java.time.Duration;
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Queue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Attempt;
 import uk.co.mruoc.cws.entity.Candidates;
 import uk.co.mruoc.cws.entity.Clue;
+import uk.co.mruoc.cws.entity.Clues;
+import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
+import uk.co.mruoc.cws.usecase.CandidateLoader;
 import uk.co.mruoc.cws.usecase.DefaultWaiter;
+import uk.co.mruoc.cws.usecase.PatternFactory;
 
 @RequiredArgsConstructor
 @Slf4j
 public class BacktrackingAttemptSolver {
 
   private final AnswerFinder answerFinder;
+  private final CandidateLoader candidateLoader;
+  private final PatternFactory patternFactory;
   private final SolverConfig config;
-  private final ClueSelector clueSelector;
-  private final ConstraintPropagator constraintPropagator;
   private final Waiter waiter;
+  private final Queue<Id> parked;
 
-  public BacktrackingAttemptSolver(AnswerFinder answerFinder) {
+  public BacktrackingAttemptSolver(AnswerFinder answerFinder, CandidateLoader candidateLoader) {
     this(
         answerFinder,
+        candidateLoader,
+        new PatternFactory(),
         new SolverConfig(),
-        new ClueSelector(),
-        new ConstraintPropagator(),
-        new DefaultWaiter());
+        new DefaultWaiter(),
+        new ArrayDeque<>());
   }
 
-  public Optional<Attempt> solve(Attempt attempt) {
-    log.info("starting backtracking solve for attempt {}", attempt.id());
-    return search(attempt, 0);
-  }
-
-  private Optional<Attempt> search(Attempt attempt, int depth) {
-    if (attempt.isComplete()) {
-      log.info("attempt {} complete", attempt.id());
-      return Optional.of(attempt);
+  public Optional<Attempt> solve(Attempt inputAttempt) {
+    if (inputAttempt.isComplete()) {
+      return Optional.of(inputAttempt);
     }
 
-    if (depth > config.maxDepth()) {
-      log.warn("max depth exceeded for attempt {}", attempt.id());
-      return Optional.empty();
+    var passAttempt = addPatternsToClues(inputAttempt);
+    var allCandidates = candidateLoader.loadCandidates(passAttempt.getClues());
+    var sortedCandidates = sort(allCandidates).stream().filter(c -> !c.isEmpty()).toList();
+
+    var candidates =
+        sortedCandidates.stream()
+            .filter(c -> !passAttempt.hasConfirmedAnswer(c.getId()))
+            .filter(c -> !passAttempt.hasConfirmedAnswers() || c.clue().patternCharCount() > 0)
+            .filter(c -> !parked.contains(c.getId()))
+            .findFirst();
+    if (candidates.isEmpty()) {
+      if (!parked.isEmpty()) {
+        candidates = Optional.of(allCandidates.get(parked.poll()));
+      }
     }
 
-    if (!attempt.isConsistent()) {
-      log.warn("attempt {} is not consistent", attempt.id());
-      return Optional.empty();
+    if (candidates.isEmpty()) {
+      log.info("no more candidates to solve");
+      return Optional.of(inputAttempt);
     }
 
-    Clue clue = clueSelector.selectNextClue(attempt);
-    log.info("depth {} selected clue {} {} {}", depth, clue.id(), clue.text(), clue.pattern());
+    log.info("selected candidates {}", candidates.get().asString());
+    var answers =
+        candidates.get().sortByScore().stream()
+            .filter(passAttempt::accepts)
+            .toList();
 
-    Candidates candidates =
-        answerFinder
-            .findCandidates(clue, config.maxCandidatesPerClue())
-            .getValidAnswers(clue)
-            .withScoreGreaterThanOrEqualTo(60)
-            .sortByScore();
-    log.info(
-        "got candidates {} at depth {} for clue {}",
-        candidates.stream()
-            .map(a -> String.format("%s %d", a.value(), a.confidenceScore()))
-            .collect(Collectors.joining(",")),
-        depth,
-        clue.id());
+    if (shouldPark(answers)) {
+      log.info("parking clue id {}", answers.getFirst().id());
+      parked.add(answers.getFirst().id());
+      return solve(inputAttempt);
+    }
 
-    for (Answer candidate : candidates) {
-      var confirmedAnswer = candidate.confirm();
-      logAnswer(confirmedAnswer, clue, depth);
+    for (Answer answer : answers) {
+      var confirmed = answer.confirm();
+      log.info(
+          "confirmed answer {} for clue {}",
+          confirmed.asString(),
+          candidates.get().clue().asString());
 
-      Attempt next = attempt.saveAnswer(confirmedAnswer);
-
-      Optional<Attempt> propagated = constraintPropagator.propagate(next, clue.id());
-      log.info("propagated answers {}", propagated.map(Attempt::getConfirmedValidAnswers));
-      /*log.info(
-      "propagated clues {}",
-      propagated.map(Attempt::getCluesWithUnconfirmedAnswer).stream()
-          .flatMap(c -> c.stream())
-          .map(c -> String.format("%s %s %s", c.id(), c.text(), c.pattern()))
-          .collect(Collectors.joining(",")));*/
-      waiter.wait(Duration.ofSeconds(5));
-      if (propagated.isPresent()) {
-        Optional<Attempt> solved = search(propagated.get(), depth + 1);
+      var candidateAttempt = addPatternsToClues(passAttempt.saveAnswer(confirmed));
+      var deadEnd = hasDeadEnd(candidateAttempt, allCandidates);
+      if (!deadEnd) {
+        Optional<Attempt> solved = solve(candidateAttempt);
         if (solved.isPresent()) {
           return solved;
         }
       }
+      // log.info(
+      //    "rejecting answer {} for clue {}", answer.asString(),
+      // candidates.get().clue().asString());
+      // rejectedAnswers
+      //    .computeIfAbsent(candidates.get().getId(), k -> new HashSet<>())
+      //    .add(answer.value());
     }
-
-    return Optional.empty();
+    log.info("no valid answers found for candidates {}", candidates.get().asString());
+    return Optional.of(inputAttempt);
   }
 
-  private void logAnswer(Answer answer, Clue clue, int depth) {
+  private boolean shouldPark(List<Answer> answers) {
+    var bestScore = answers.getFirst().confidenceScore();
+    if (bestScore <= 50) {
+      return true;
+    }
+    var worstScore = answers.getLast().confidenceScore();
+    // var difference = bestScore - worstScore;
+    // if (answers.size() > 1 && difference <= 40) {
+    //  return true;
+    // }
+    if (answers.size() > 1 && answers.stream().allMatch(a -> a.confidenceScore() > 80)) {
+      return true;
+    }
+    return answers.size() == 1 && bestScore <= 75;
+  }
+
+  private Attempt addPatternsToClues(Attempt attempt) {
+    return attempt.withPuzzle(
+        attempt.puzzle().withClues(addPatternsToClues(attempt.getClues(), attempt)));
+  }
+
+  private Clues addPatternsToClues(Clues clues, Attempt attempt) {
+    for (var clue : clues) {
+      var pattern = patternFactory.build(clue, attempt);
+      clues = clues.update(clue.withPattern(pattern));
+    }
+    return clues;
+  }
+
+  private Collection<Candidates> sort(Map<Id, Candidates> candidates) {
+    var sorted = candidates.values().stream().sorted(new CandidateComparator()).toList();
+    // sorted.forEach(c -> log.info(c.asString()));
+    return sorted;
+  }
+
+  private boolean matchesAllIntersections(
+      Clue clue, Answer candidateAnswer, Map<Id, Candidates> allCandidates, Attempt attempt) {
+    var intersections = attempt.getIntersections(clue.id());
     log.info(
-        "answer {} confirmed {} with score {} for text {} {} with pattern {} at depth {}",
-        answer.value(),
-        answer.confirmed(),
-        answer.confidenceScore(),
-        answer.id(),
-        clue.text(),
-        clue.pattern(),
-        depth);
+        "found intersections {} for candidate answer {}",
+        intersections.stream().map(i -> i.getIntersectingId(candidateAnswer.id())).toList(),
+        candidateAnswer.asString());
+    for (var intersection : intersections) {
+      var intersectingId = intersection.getIntersectingId(clue.id());
+      var intersectingCandidates = allCandidates.get(intersectingId);
+      if (intersectingCandidates.stream()
+          .allMatch(
+              intersectingAnswer ->
+                  candidateAnswer.conflictsWith(intersectingAnswer, intersection))) {
+        return false;
+      }
+    }
+    log.info("found no conflicts for candidate answer {}", candidateAnswer.asString());
+    return true;
+  }
+
+  private boolean hasDeadEnd(Attempt attempt, Map<Id, Candidates> allCandidates) {
+    for (var candidates : allCandidates.values()) {
+      boolean unconfirmed = !attempt.hasConfirmedAnswer(candidates.getId());
+      var clue = candidates.clue();
+      boolean constrained = clue.isConstrainedByAtLeastNChars(3);
+      if (unconfirmed && constrained) {
+        boolean anyAcceptable =
+            candidates.getValidAnswers(clue).stream().anyMatch(attempt::accepts);
+        if (!anyAcceptable) {
+          log.info("found real dead end at candidates {}", candidates.asString());
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

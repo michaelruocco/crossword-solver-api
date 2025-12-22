@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Attempt;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
+import uk.co.mruoc.cws.usecase.CandidateLoader;
 import uk.co.mruoc.cws.usecase.ClueRanker;
 import uk.co.mruoc.cws.usecase.PatternFactory;
 
@@ -14,32 +15,33 @@ import uk.co.mruoc.cws.usecase.PatternFactory;
 public class AttemptSolver {
 
   private final AnswerFinder answerFinder;
+  private final CandidateLoader candidateLoader;
   private final AttemptRepository repository;
   private final PatternFactory patternFactory;
   private final ClueRanker clueRanker;
   private final Waiter waiter;
   private final Duration delay;
-
   private final Executor executor;
 
   public void solve(Attempt attempt) {
-    var runnable =
-        AttemptSolverRunnable.builder()
-            .answerFinder(answerFinder)
-            .repository(repository)
-            .patternFactory(patternFactory)
-            .clueRanker(clueRanker)
-            .waiter(waiter)
-            .delay(delay)
-            .attemptId(attempt.id())
-            .maxPasses(60)
-            .build();
     /*var runnable =
-    BacktrackingAttemptSolverRunnable.builder()
-        .solver(new BacktrackingAttemptSolver(answerFinder))
+    AttemptSolverRunnable.builder()
+        .answerFinder(answerFinder)
         .repository(repository)
+        .patternFactory(patternFactory)
+        .clueRanker(clueRanker)
+        .waiter(waiter)
+        .delay(delay)
         .attemptId(attempt.id())
+        .maxPasses(60)
         .build();*/
+
+    var runnable =
+        BacktrackingAttemptSolverRunnable.builder()
+            .solver(new BacktrackingAttemptSolver(answerFinder, candidateLoader))
+            .repository(repository)
+            .attemptId(attempt.id())
+            .build();
     executor.execute(runnable);
   }
 }

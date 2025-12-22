@@ -1,9 +1,14 @@
 package uk.co.mruoc.cws.usecase;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class HashFactory {
+
+  public String toHash(String input) {
+    return toHash(input.getBytes(StandardCharsets.UTF_8));
+  }
 
   public String toHash(byte[] bytes) {
     try {

@@ -4,6 +4,8 @@ import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import uk.co.mruoc.cws.repository.PostgresCandidateRepository;
+import uk.co.mruoc.cws.repository.PostgresJpaCandidateRepository;
 import uk.co.mruoc.cws.repository.PostgresJpaPuzzleRepository;
 import uk.co.mruoc.cws.repository.PostgresPuzzleRepository;
 
@@ -16,5 +18,11 @@ public class JpaRepositoryConfig {
   public PostgresPuzzleRepository postgresPuzzleRepository(
       PostgresJpaPuzzleRepository jpaRepository) {
     return new PostgresPuzzleRepository(jpaRepository);
+  }
+
+  @Bean
+  public PostgresCandidateRepository postgresCandidateRepository(
+      PostgresJpaCandidateRepository jpaRepository) {
+    return new PostgresCandidateRepository(jpaRepository);
   }
 }

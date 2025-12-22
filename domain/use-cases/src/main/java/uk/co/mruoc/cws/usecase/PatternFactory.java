@@ -9,7 +9,7 @@ public class PatternFactory {
 
   public String build(Clue clue, Attempt attempt) {
     var pattern = new StringBuilder();
-    pattern.repeat('?', clue.getTotalLength());
+    pattern.repeat('?', clue.totalLength());
     var answers = attempt.answers();
     var intersections = attempt.getIntersections(clue.id());
     for (var intersection : intersections) {
