@@ -67,10 +67,7 @@ public class BacktrackingAttemptSolver {
     }
 
     log.info("selected candidates {}", candidates.get().asString());
-    var answers =
-        candidates.get().sortByScore().stream()
-            .filter(passAttempt::accepts)
-            .toList();
+    var answers = candidates.get().sortByScore().stream().filter(passAttempt::accepts).toList();
 
     if (shouldPark(answers)) {
       log.info("parking clue id {}", answers.getFirst().id());
