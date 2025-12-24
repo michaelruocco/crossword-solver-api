@@ -84,18 +84,17 @@ public class BacktrackingAttemptSolver {
 
       var candidateAttempt = addPatternsToClues(passAttempt.saveAnswer(confirmed));
       var deadEnd = hasDeadEnd(candidateAttempt, allCandidates);
-      if (!deadEnd) {
+      if (deadEnd) {
+        log.info(
+            "dead end for answer {} and clue {}",
+            confirmed.asString(),
+            candidates.get().clue().asString());
+      } else {
         Optional<Attempt> solved = solve(candidateAttempt);
         if (solved.isPresent()) {
           return solved;
         }
       }
-      // log.info(
-      //    "rejecting answer {} for clue {}", answer.asString(),
-      // candidates.get().clue().asString());
-      // rejectedAnswers
-      //    .computeIfAbsent(candidates.get().getId(), k -> new HashSet<>())
-      //    .add(answer.value());
     }
     log.info("no valid answers found for candidates {}", candidates.get().asString());
     return Optional.of(inputAttempt);
@@ -106,7 +105,7 @@ public class BacktrackingAttemptSolver {
     if (bestScore <= 50) {
       return true;
     }
-    var worstScore = answers.getLast().confidenceScore();
+    // var worstScore = answers.getLast().confidenceScore();
     // var difference = bestScore - worstScore;
     // if (answers.size() > 1 && difference <= 40) {
     //  return true;
@@ -166,7 +165,7 @@ public class BacktrackingAttemptSolver {
         boolean anyAcceptable =
             candidates.getValidAnswers(clue).stream().anyMatch(attempt::accepts);
         if (!anyAcceptable) {
-          log.info("found real dead end at candidates {}", candidates.asString());
+          log.info("found real dead end at candidates {} from valid answers {}", candidates.asString(), candidates.getValidAnswers(clue).asString());
           return true;
         }
       }
