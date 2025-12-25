@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.With;
 import org.apache.commons.lang3.StringUtils;
 
-@Builder
+@Builder(toBuilder = true)
 public record Clue(
     @With Id id,
     String text,

@@ -1,6 +1,5 @@
 package uk.co.mruoc.cws.app.config;
 
-import java.time.Duration;
 import java.util.Collection;
 import java.util.concurrent.Executor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,15 +19,17 @@ import uk.co.mruoc.cws.usecase.ClueExtractor;
 import uk.co.mruoc.cws.usecase.ClueRanker;
 import uk.co.mruoc.cws.usecase.CompositeAnswerFinder;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
-import uk.co.mruoc.cws.usecase.DefaultWaiter;
-import uk.co.mruoc.cws.usecase.PatternFactory;
 import uk.co.mruoc.cws.usecase.UrlConverter;
+import uk.co.mruoc.cws.usecase.attempt.AsyncAttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.AttemptCreator;
 import uk.co.mruoc.cws.usecase.attempt.AttemptFinder;
 import uk.co.mruoc.cws.usecase.attempt.AttemptRepository;
 import uk.co.mruoc.cws.usecase.attempt.AttemptService;
 import uk.co.mruoc.cws.usecase.attempt.AttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.AttemptUpdater;
+import uk.co.mruoc.cws.usecase.attempt.BacktrackingAttemptSolver;
+import uk.co.mruoc.cws.usecase.attempt.CompositeAttemptSolver;
+import uk.co.mruoc.cws.usecase.attempt.GreedyAttemptSolver;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleCreator;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleFinder;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleRepository;
@@ -73,7 +74,10 @@ public class AppConfig {
 
   @Bean
   public AttemptService attemptService(
-      AttemptCreator creator, AttemptFinder finder, AttemptUpdater updater, AttemptSolver solver) {
+      AttemptCreator creator,
+      AttemptFinder finder,
+      AttemptUpdater updater,
+      AsyncAttemptSolver solver) {
     return AttemptService.builder()
         .creator(creator)
         .finder(finder)
@@ -108,21 +112,29 @@ public class AppConfig {
   }
 
   @Bean
-  public AttemptSolver attemptSolver(
-      AnswerFinder answerFinder,
-      CandidateLoader candidateLoader,
-      AttemptRepository repository,
-      Executor executor,
-      ClueRanker clueRanker) {
-    return AttemptSolver.builder()
-        .answerFinder(answerFinder)
-        .candidateLoader(candidateLoader)
+  public GreedyAttemptSolver greedyAttemptSolver(AnswerFinder answerFinder, ClueRanker clueRanker) {
+    return new GreedyAttemptSolver(answerFinder, clueRanker);
+  }
+
+  @Bean
+  public BacktrackingAttemptSolver backtrackingAttemptSolver(CandidateLoader candidateLoader) {
+    return new BacktrackingAttemptSolver(candidateLoader);
+  }
+
+  @Primary
+  @Bean
+  public CompositeAttemptSolver compositeAttemptSolver(
+      BacktrackingAttemptSolver backtrackingSolver, GreedyAttemptSolver greedySolver) {
+    return new CompositeAttemptSolver(backtrackingSolver, greedySolver);
+  }
+
+  @Bean
+  public AsyncAttemptSolver asyncAttemptSolver(
+      AttemptSolver attemptSolver, AttemptRepository repository, Executor executor) {
+    return AsyncAttemptSolver.builder()
+        .attemptSolver(attemptSolver)
         .repository(repository)
-        .patternFactory(new PatternFactory())
-        .clueRanker(clueRanker)
         .executor(executor)
-        .waiter(new DefaultWaiter())
-        .delay(Duration.ZERO)
         .build();
   }
 

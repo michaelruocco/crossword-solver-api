@@ -32,6 +32,6 @@ public class PostgresCandidateRepository implements CandidateRepository {
   public Optional<Candidates> get(Clue clue) {
     var id = idFactory.toId(clue);
     var entity = jpaRepository.findById(id);
-    return entity.map(converter::toCandidates).map(candidates -> candidates.withId(clue.id()));
+    return entity.map(converter::toCandidates).map(candidates -> candidates.withClue(clue));
   }
 }

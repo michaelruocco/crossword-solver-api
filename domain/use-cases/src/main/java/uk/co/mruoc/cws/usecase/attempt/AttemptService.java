@@ -10,7 +10,7 @@ public class AttemptService {
   private final AttemptCreator creator;
   private final AttemptFinder finder;
   private final AttemptUpdater updater;
-  private final AttemptSolver solver;
+  private final AsyncAttemptSolver solver;
 
   public long createAttempt(long puzzleId) {
     return creator.create(puzzleId);

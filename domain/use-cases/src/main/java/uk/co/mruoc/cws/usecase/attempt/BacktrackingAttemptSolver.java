@@ -14,56 +14,46 @@ import uk.co.mruoc.cws.entity.Candidates;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Clues;
 import uk.co.mruoc.cws.entity.Id;
-import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.cws.usecase.CandidateLoader;
-import uk.co.mruoc.cws.usecase.DefaultWaiter;
 import uk.co.mruoc.cws.usecase.PatternFactory;
 
 @RequiredArgsConstructor
 @Slf4j
-public class BacktrackingAttemptSolver {
+public class BacktrackingAttemptSolver implements AttemptSolver {
 
-  private final AnswerFinder answerFinder;
   private final CandidateLoader candidateLoader;
   private final PatternFactory patternFactory;
-  private final SolverConfig config;
-  private final Waiter waiter;
   private final Queue<Id> parked;
 
-  public BacktrackingAttemptSolver(AnswerFinder answerFinder, CandidateLoader candidateLoader) {
-    this(
-        answerFinder,
-        candidateLoader,
-        new PatternFactory(),
-        new SolverConfig(),
-        new DefaultWaiter(),
-        new ArrayDeque<>());
+  public BacktrackingAttemptSolver(CandidateLoader candidateLoader) {
+    this(candidateLoader, new PatternFactory(), new ArrayDeque<>());
   }
 
-  public Optional<Attempt> solve(Attempt inputAttempt) {
+  @Override
+  public Attempt solve(Attempt inputAttempt) {
     if (inputAttempt.isComplete()) {
-      return Optional.of(inputAttempt);
+      return inputAttempt;
     }
 
     var passAttempt = addPatternsToClues(inputAttempt);
-    var allCandidates = candidateLoader.loadCandidates(passAttempt.getClues());
-    var sortedCandidates = sort(allCandidates).stream().filter(c -> !c.isEmpty()).toList();
+    var remainingCandidates =
+        candidateLoader.loadCandidates(passAttempt.getCluesWithUnconfirmedAnswer());
+    var sortedCandidates = sort(remainingCandidates).stream().filter(c -> !c.isEmpty()).toList();
 
     var candidates =
         sortedCandidates.stream()
-            .filter(c -> !passAttempt.hasConfirmedAnswer(c.getId()))
             .filter(c -> !passAttempt.hasConfirmedAnswers() || c.clue().patternCharCount() > 0)
             .filter(c -> !parked.contains(c.getId()))
             .findFirst();
     if (candidates.isEmpty()) {
       if (!parked.isEmpty()) {
-        candidates = Optional.of(allCandidates.get(parked.poll()));
+        candidates = Optional.of(remainingCandidates.get(parked.poll()));
       }
     }
 
     if (candidates.isEmpty()) {
       log.info("no more candidates to solve");
-      return Optional.of(inputAttempt);
+      return inputAttempt;
     }
 
     log.info("selected candidates {}", candidates.get().asString());
@@ -83,21 +73,18 @@ public class BacktrackingAttemptSolver {
           candidates.get().clue().asString());
 
       var candidateAttempt = addPatternsToClues(passAttempt.saveAnswer(confirmed));
-      var deadEnd = hasDeadEnd(candidateAttempt, allCandidates);
+      var deadEnd = hasDeadEnd(candidateAttempt, remainingCandidates);
       if (deadEnd) {
         log.info(
             "dead end for answer {} and clue {}",
             confirmed.asString(),
             candidates.get().clue().asString());
       } else {
-        Optional<Attempt> solved = solve(candidateAttempt);
-        if (solved.isPresent()) {
-          return solved;
-        }
+        return solve(candidateAttempt);
       }
     }
     log.info("no valid answers found for candidates {}", candidates.get().asString());
-    return Optional.of(inputAttempt);
+    return inputAttempt;
   }
 
   private boolean shouldPark(List<Answer> answers) {
@@ -130,9 +117,7 @@ public class BacktrackingAttemptSolver {
   }
 
   private Collection<Candidates> sort(Map<Id, Candidates> candidates) {
-    var sorted = candidates.values().stream().sorted(new CandidateComparator()).toList();
-    // sorted.forEach(c -> log.info(c.asString()));
-    return sorted;
+    return candidates.values().stream().sorted(new CandidateComparator()).toList();
   }
 
   private boolean matchesAllIntersections(
@@ -156,16 +141,18 @@ public class BacktrackingAttemptSolver {
     return true;
   }
 
-  private boolean hasDeadEnd(Attempt attempt, Map<Id, Candidates> allCandidates) {
-    for (var candidates : allCandidates.values()) {
-      boolean unconfirmed = !attempt.hasConfirmedAnswer(candidates.getId());
+  private boolean hasDeadEnd(Attempt attempt, Map<Id, Candidates> remainingCandidates) {
+    for (var candidates : remainingCandidates.values()) {
       var clue = candidates.clue();
       boolean constrained = clue.isConstrainedByAtLeastNChars(3);
-      if (unconfirmed && constrained) {
+      if (constrained) {
         boolean anyAcceptable =
             candidates.getValidAnswers(clue).stream().anyMatch(attempt::accepts);
         if (!anyAcceptable) {
-          log.info("found real dead end at candidates {} from valid answers {}", candidates.asString(), candidates.getValidAnswers(clue).asString());
+          log.info(
+              "found real dead end at candidates {} from valid answers {}",
+              candidates.asString(),
+              candidates.getValidAnswers(clue).asString());
           return true;
         }
       }

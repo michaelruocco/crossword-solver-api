@@ -30,17 +30,12 @@ public class CandidateEntityConverter {
     entity.setClueId(id);
     entity.setText(clue.text());
     entity.setPattern(clue.pattern());
-    entity.setLengths(clue.lengths());
     entity.setAnswers(toAnswerEntities(id, candidates));
     return entity;
   }
 
   private Clue toClue(CandidateClueEntity entity) {
-    return Clue.builder()
-        .text(entity.getText())
-        .pattern(entity.getPattern())
-        .lengths(entity.getLengths().stream().toList())
-        .build();
+    return Clue.builder().text(entity.getText()).pattern(entity.getPattern()).build();
   }
 
   private Collection<Answer> toAnswers(Collection<CandidateAnswerEntity> entities) {

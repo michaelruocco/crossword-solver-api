@@ -29,8 +29,8 @@ public class Candidates implements Iterable<Answer> {
     return clue.id();
   }
 
-  public Candidates withId(Id id) {
-    return new Candidates(clue.withId(id), values.stream().map(a -> a.withId(id)).toList());
+  public Candidates withClue(Clue clue) {
+    return new Candidates(clue, values.stream().map(a -> a.withId(clue.id())).toList());
   }
 
   public Clue clue() {
