@@ -138,4 +138,12 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
     var answerString = answer.map(Answer::asString).orElse("not answered");
     return String.format("%s -> %s", clue.asString(), answerString);
   }
+
+  public Attempt withClues(Clues updatedClues) {
+    return withPuzzle(puzzle.withClues(updatedClues));
+  }
+
+  public int getNumberOfClues() {
+    return puzzle.getNumberOfClues();
+  }
 }

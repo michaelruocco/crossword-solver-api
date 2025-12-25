@@ -11,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Attempt;
 import uk.co.mruoc.cws.entity.Candidates;
-import uk.co.mruoc.cws.entity.Clue;
-import uk.co.mruoc.cws.entity.Clues;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.usecase.CandidateLoader;
 import uk.co.mruoc.cws.usecase.PatternFactory;
@@ -35,7 +33,7 @@ public class BacktrackingAttemptSolver implements AttemptSolver {
       return inputAttempt;
     }
 
-    var passAttempt = addPatternsToClues(inputAttempt);
+    var passAttempt = patternFactory.addPatternsToClues(inputAttempt);
     var remainingCandidates =
         candidateLoader.loadCandidates(passAttempt.getCluesWithUnconfirmedAnswer());
     var sortedCandidates = sort(remainingCandidates).stream().filter(c -> !c.isEmpty()).toList();
@@ -72,7 +70,7 @@ public class BacktrackingAttemptSolver implements AttemptSolver {
           confirmed.asString(),
           candidates.get().clue().asString());
 
-      var candidateAttempt = addPatternsToClues(passAttempt.saveAnswer(confirmed));
+      var candidateAttempt = patternFactory.addPatternsToClues(passAttempt.saveAnswer(confirmed));
       var deadEnd = hasDeadEnd(candidateAttempt, remainingCandidates);
       if (deadEnd) {
         log.info(
@@ -92,53 +90,14 @@ public class BacktrackingAttemptSolver implements AttemptSolver {
     if (bestScore <= 50) {
       return true;
     }
-    // var worstScore = answers.getLast().confidenceScore();
-    // var difference = bestScore - worstScore;
-    // if (answers.size() > 1 && difference <= 40) {
-    //  return true;
-    // }
     if (answers.size() > 1 && answers.stream().allMatch(a -> a.confidenceScore() > 80)) {
       return true;
     }
     return answers.size() == 1 && bestScore <= 75;
   }
 
-  private Attempt addPatternsToClues(Attempt attempt) {
-    return attempt.withPuzzle(
-        attempt.puzzle().withClues(addPatternsToClues(attempt.getClues(), attempt)));
-  }
-
-  private Clues addPatternsToClues(Clues clues, Attempt attempt) {
-    for (var clue : clues) {
-      var pattern = patternFactory.build(clue, attempt);
-      clues = clues.update(clue.withPattern(pattern));
-    }
-    return clues;
-  }
-
   private Collection<Candidates> sort(Map<Id, Candidates> candidates) {
     return candidates.values().stream().sorted(new CandidateComparator()).toList();
-  }
-
-  private boolean matchesAllIntersections(
-      Clue clue, Answer candidateAnswer, Map<Id, Candidates> allCandidates, Attempt attempt) {
-    var intersections = attempt.getIntersections(clue.id());
-    log.info(
-        "found intersections {} for candidate answer {}",
-        intersections.stream().map(i -> i.getIntersectingId(candidateAnswer.id())).toList(),
-        candidateAnswer.asString());
-    for (var intersection : intersections) {
-      var intersectingId = intersection.getIntersectingId(clue.id());
-      var intersectingCandidates = allCandidates.get(intersectingId);
-      if (intersectingCandidates.stream()
-          .allMatch(
-              intersectingAnswer ->
-                  candidateAnswer.conflictsWith(intersectingAnswer, intersection))) {
-        return false;
-      }
-    }
-    log.info("found no conflicts for candidate answer {}", candidateAnswer.asString());
-    return true;
   }
 
   private boolean hasDeadEnd(Attempt attempt, Map<Id, Candidates> remainingCandidates) {

@@ -32,8 +32,8 @@ public class Puzzle {
     return words.getIntersections(id);
   }
 
-  public Collection<Intersection> getIntersections() {
-    return words.getIntersections();
+  public int getNumberOfClues() {
+    return clues.size();
   }
 
   public Puzzle updateClue(Clue clue) {

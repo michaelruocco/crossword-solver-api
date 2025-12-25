@@ -22,20 +22,29 @@ public class GreedyAttemptSolver implements AttemptSolver {
   private final AnswerFinder answerFinder;
   private final ClueRanker clueRanker;
   private final PatternFactory patternFactory;
-  private final int maxPasses;
+  private final int maxPassesBuffer;
+  private final int maxCluesOnPass;
 
   public GreedyAttemptSolver(AnswerFinder answerFinder, ClueRanker clueRanker) {
-    this(answerFinder, clueRanker, new PatternFactory(), 60);
+    // TODO configure max attempts buffer and max clues on attempt externally
+    this(answerFinder, clueRanker, new PatternFactory(), 10, 10);
   }
 
   @Override
   public Attempt solve(Attempt attempt) {
     int pass = 1;
+    var maxPasses = attempt.getNumberOfClues() + maxPassesBuffer;
     while (!attempt.isComplete() && pass <= maxPasses) {
       attempt = performPass(attempt, pass);
       pass++;
     }
-    log.info("attempt {} completed in {} of max allowed {} passes", attempt.id(), pass, maxPasses);
+    log.info(
+        "attempt {} completed in {} of max allowed {} passes from {} clues with buffer {}",
+        attempt.id(),
+        pass,
+        maxPasses,
+        attempt.getNumberOfClues(),
+        maxPassesBuffer);
     return attempt;
   }
 
@@ -79,15 +88,14 @@ public class GreedyAttemptSolver implements AttemptSolver {
         var candidateAttempt = attempt;
         for (var intersectingId : intersectingIds) {
           candidateAttempt = candidateAttempt.unconfirmAnswer(intersectingId);
-          var updatedClue = clue.withPattern(patternFactory.build(clue, candidateAttempt));
+          var updatedClue = patternFactory.addPatternToClue(clue, candidateAttempt);
           var updatedAnswer = getAnswer(updatedClue);
           if (updatedAnswer.isPresent()) {
             logAnswer(updatedAnswer.get(), updatedClue);
             candidateAttempt = candidateAttempt.saveAnswer(updatedAnswer.get().confirm());
             var intersectingClue = candidateAttempt.getClue(intersectingId);
             var updatedIntersectingClue =
-                intersectingClue.withPattern(
-                    patternFactory.build(intersectingClue, candidateAttempt));
+                patternFactory.addPatternToClue(intersectingClue, candidateAttempt);
             var updatedIntersectingAnswer = getAnswer(updatedIntersectingClue);
             if (updatedIntersectingAnswer.isPresent()) {
               logAnswer(updatedIntersectingAnswer.get(), updatedIntersectingClue);
@@ -135,20 +143,14 @@ public class GreedyAttemptSolver implements AttemptSolver {
   private Clues selectClues(Attempt attempt) {
     var unconfirmedClues = attempt.getCluesWithUnconfirmedAnswer();
     var selectedClues =
-        addPatternsToClues(unconfirmedClues, attempt).getWithLongestPatternIfPossible();
+        patternFactory
+            .addPatternsToClues(unconfirmedClues, attempt)
+            .getWithLongestPatternIfPossible();
     if (attempt.getClues().size() == selectedClues.size()) {
-      log.info("all clues selected, attempting to select 10 easiest");
+      log.info("all clues selected, attempting to select {} easiest", maxCluesOnPass);
       var rankedClues = clueRanker.rankByEase(selectedClues);
-      return rankedClues.getFirst(10);
+      return rankedClues.getFirst(maxCluesOnPass);
     }
     return selectedClues;
-  }
-
-  private Clues addPatternsToClues(Clues clues, Attempt attempt) {
-    for (var clue : clues) {
-      var pattern = patternFactory.build(clue, attempt);
-      clues = clues.update(clue.withPattern(pattern));
-    }
-    return clues;
   }
 }
