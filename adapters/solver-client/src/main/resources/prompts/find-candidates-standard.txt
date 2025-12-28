@@ -19,3 +19,5 @@ CLUE_ID|ANSWER|CONFIDENCE
 
 If no plausible answers exist, return:
 %CLUE_ID%|NO_MATCH|0
+
+Do not include commentary, markdown, or extra text.

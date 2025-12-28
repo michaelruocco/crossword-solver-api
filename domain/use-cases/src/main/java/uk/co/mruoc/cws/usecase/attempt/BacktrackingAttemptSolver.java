@@ -43,9 +43,11 @@ public class BacktrackingAttemptSolver implements AttemptSolver {
             .filter(c -> !passAttempt.hasConfirmedAnswers() || c.clue().patternCharCount() > 0)
             .filter(c -> !parked.contains(c.getId()))
             .findFirst();
+    var wasParked = false;
     if (candidates.isEmpty()) {
       if (!parked.isEmpty()) {
         candidates = Optional.of(remainingCandidates.get(parked.poll()));
+        wasParked = true;
       }
     }
 
@@ -57,7 +59,7 @@ public class BacktrackingAttemptSolver implements AttemptSolver {
     log.info("selected candidates {}", candidates.get().asString());
     var answers = candidates.get().sortByScore().stream().filter(passAttempt::accepts).toList();
 
-    if (shouldPark(answers)) {
+    if (!wasParked && shouldPark(answers)) {
       log.info("parking clue id {}", answers.getFirst().id());
       parked.add(answers.getFirst().id());
       return solve(inputAttempt);
@@ -93,7 +95,7 @@ public class BacktrackingAttemptSolver implements AttemptSolver {
     if (answers.size() > 1 && answers.stream().allMatch(a -> a.confidenceScore() > 80)) {
       return true;
     }
-    return answers.size() == 1 && bestScore <= 75;
+    return answers.size() == 1 && bestScore < 65;
   }
 
   private Collection<Candidates> sort(Map<Id, Candidates> candidates) {
