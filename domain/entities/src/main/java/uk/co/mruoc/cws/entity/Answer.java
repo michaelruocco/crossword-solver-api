@@ -83,6 +83,6 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
   }
 
   public String asString() {
-    return String.format("%s %s %d", id, value, confidenceScore);
+    return String.format("%s %s %d %s", id, value, confidenceScore, confirmed);
   }
 }

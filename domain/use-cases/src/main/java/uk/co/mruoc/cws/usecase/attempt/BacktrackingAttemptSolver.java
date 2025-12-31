@@ -46,7 +46,7 @@ public class BacktrackingAttemptSolver implements AttemptSolver {
     var wasParked = false;
     if (candidates.isEmpty()) {
       if (!parked.isEmpty()) {
-        candidates = Optional.of(remainingCandidates.get(parked.poll()));
+        candidates = Optional.ofNullable(remainingCandidates.get(parked.poll()));
         wasParked = true;
       }
     }

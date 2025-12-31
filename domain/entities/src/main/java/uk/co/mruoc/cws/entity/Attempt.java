@@ -97,6 +97,18 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
     return getAnswer(id).filter(Answer::confirmed).orElseThrow();
   }
 
+  public Attempt removeInconsistentAnswers() {
+    var updatedAttempt = this;
+    for (Answer answer : answers) {
+      var clue = getClue(answer.id());
+      if (!answer.matches(clue.pattern())) {
+        updatedAttempt = deleteAnswer(answer.id());
+        log.info("removed inconsistent answer {} for clue {}", answer.asString(), clue.asString());
+      }
+    }
+    return updatedAttempt;
+  }
+
   public boolean accepts(Answer answer) {
     var confirmedAnswers = getConfirmedAnswers();
     if (confirmedAnswers.isEmpty()) {
@@ -145,5 +157,9 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
 
   public int getNumberOfClues() {
     return puzzle.getNumberOfClues();
+  }
+
+  public Attempt removeUnconfirmedAnswers() {
+    return withAnswers(answers.removeUnconfirmed());
   }
 }

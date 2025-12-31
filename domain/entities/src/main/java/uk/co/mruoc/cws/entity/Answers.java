@@ -112,6 +112,17 @@ public class Answers implements Iterable<Answer> {
     return new Answers(updatedValues);
   }
 
+  public Answers removeUnconfirmed() {
+    var unconfirmed = filter(a -> !a.confirmed());
+    return removeAll(unconfirmed);
+  }
+
+  public Answers removeAll(Answers answersToRemove) {
+    var updatedValues = copyValues();
+    answersToRemove.stream().map(Answer::id).forEach(updatedValues::remove);
+    return new Answers(updatedValues);
+  }
+
   public Answers removeDifferent(Answers newAnswers) {
     var updatedAnswers = new ArrayList<Answer>();
     for (Answer newAnswer : newAnswers) {

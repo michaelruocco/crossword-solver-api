@@ -87,7 +87,17 @@ public class BedrockAnswerFinderIT {
             .build();
     var clue3 =
         Clue.builder().id(new Id("1D")).text("Ram (3)").lengths(List.of(3)).pattern("T?P").build();
+    var clue4 =
+        Clue.builder()
+            .id(new Id("11D"))
+            .text("Sharp Bark (3)")
+            .lengths(List.of(3))
+            .pattern("Y?P")
+            .build();
     return Stream.of(
-        Arguments.of(clue1, "AMY"), Arguments.of(clue2, "OFFCUT"), Arguments.of(clue3, "TUP"));
+        Arguments.of(clue1, "AMY"),
+        Arguments.of(clue2, "OFFCUT"),
+        Arguments.of(clue3, "TUP"),
+        Arguments.of(clue4, "YAP"));
   }
 }

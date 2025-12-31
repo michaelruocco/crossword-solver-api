@@ -49,7 +49,6 @@ public class CandidateLoader {
 
   public Candidates loadCandidates(Clue clue, int candidatesPerClue) {
     log.debug("getting candidates for clue {}", clue.asString());
-    // TODO add check to call api if database returns fewer than candidates per clue
     var candidates =
         loadCandidatesFromDatabase(clue)
             .orElseGet(() -> loadCandidatesFromApi(clue, candidatesPerClue));
@@ -64,6 +63,7 @@ public class CandidateLoader {
   private Candidates loadCandidatesFromApi(Clue clue, int candidatesPerClue) {
     log.info("loading candidates from api for clue {}", clue.asString());
     var candidates = answerFinder.findCandidates(clue, candidatesPerClue).getValidAnswers(clue);
+    // TODO don't save if no candidates returned at all
     repository.save(candidates);
     return candidates;
   }

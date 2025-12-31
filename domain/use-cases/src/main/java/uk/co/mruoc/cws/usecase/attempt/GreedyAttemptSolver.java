@@ -51,7 +51,7 @@ public class GreedyAttemptSolver implements AttemptSolver {
   public Attempt performPass(Attempt attempt, int pass) {
     var updatedAttempt = tryAnswers(attempt);
     log.info("pass {} updated attempt {}", pass, updatedAttempt.id());
-    return updatedAttempt;
+    return patternFactory.addPatternsToClues(updatedAttempt).removeInconsistentAnswers();
   }
 
   private Attempt tryAnswers(Attempt attempt) {
@@ -103,7 +103,7 @@ public class GreedyAttemptSolver implements AttemptSolver {
             }
           }
         }
-        return candidateAttempt;
+        return candidateAttempt.removeUnconfirmedAnswers();
       }
     }
     throw new RuntimeException("no clues to retry");
