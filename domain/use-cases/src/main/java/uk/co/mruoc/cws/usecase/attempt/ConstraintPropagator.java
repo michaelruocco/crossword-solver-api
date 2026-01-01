@@ -23,7 +23,7 @@ public class ConstraintPropagator {
   private Attempt propagateIntersection(Attempt attempt, Id id, Intersection intersection) {
     var confirmedAnswer = attempt.forceGetConfirmedAnswer(id);
     var confirmedDirection = id.getDirection();
-    int confirmedIndex = intersection.getIndex(confirmedDirection);
+    int confirmedIndex = intersection.toIndex(confirmedDirection);
 
     var letterOpt = confirmedAnswer.letterAt(confirmedIndex);
     if (letterOpt.isEmpty()) {
@@ -31,10 +31,10 @@ public class ConstraintPropagator {
     }
 
     char letter = letterOpt.get();
-    var targetId = intersection.getId(confirmedDirection);
+    var targetId = intersection.toIntersectingId(confirmedDirection);
     var targetClue = attempt.getClue(targetId);
-    int index = intersection.getIntersectingIndex(confirmedDirection);
-    var updatedClue = targetClue.setPatternLetter(index, letter);
+    int index = intersection.toIntersectingIndex(confirmedDirection);
+    var updatedClue = targetClue.withPatternLetter(index, letter);
     var updatedAttempt = attempt.updateClue(updatedClue);
     var confirmedValid = updatedAttempt.getConfirmedValidAnswers();
 

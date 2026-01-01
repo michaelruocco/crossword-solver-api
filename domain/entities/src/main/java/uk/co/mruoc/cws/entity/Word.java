@@ -8,19 +8,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 
-@RequiredArgsConstructor
 @Builder(toBuilder = true)
-@Data
-public class Word {
-  private final Id id;
-  private final int length;
-  private final Coordinates coordinates;
-
-  public int getNumericId() {
+public record Word(Id id, int length, Coordinates coordinates) {
+  public int numericId() {
     return id.getId();
   }
 
@@ -38,25 +30,25 @@ public class Word {
   }
 
   public boolean hasSameId(Word otherWord) {
-    return hasId(otherWord.getId());
+    return hasId(otherWord.id());
   }
 
   public boolean hasId(Id otherId) {
     return id.equals(otherId);
   }
 
-  public Direction getDirection() {
+  public Direction direction() {
     return id.getDirection();
   }
 
-  private Collection<Coordinates> getAllCoordinates() {
-    if (getDirection() == (ACROSS)) {
-      return getAllAcrossCoordinates();
+  private Collection<Coordinates> allCoordinates() {
+    if (direction() == (ACROSS)) {
+      return allAcrossCoordinates();
     }
-    return getAllDownCoordinates();
+    return allDownCoordinates();
   }
 
-  private Collection<Coordinates> getAllAcrossCoordinates() {
+  private Collection<Coordinates> allAcrossCoordinates() {
     var all = new ArrayList<Coordinates>();
     var y = coordinates.y();
     var startX = coordinates.x();
@@ -66,7 +58,7 @@ public class Word {
     return Collections.unmodifiableCollection(all);
   }
 
-  private Collection<Coordinates> getAllDownCoordinates() {
+  private Collection<Coordinates> allDownCoordinates() {
     var all = new ArrayList<Coordinates>();
     var x = coordinates.x();
     var startY = coordinates.y();
@@ -77,11 +69,11 @@ public class Word {
   }
 
   private Optional<Coordinates> findIntersectingCoordinates(Word other) {
-    if (this.getDirection() == other.getDirection()) {
+    if (this.direction() == other.direction()) {
       return Optional.empty();
     }
     var intersectingCoordinates =
-        CollectionUtils.intersection(this.getAllCoordinates(), other.getAllCoordinates());
+        CollectionUtils.intersection(this.allCoordinates(), other.allCoordinates());
     if (intersectingCoordinates.isEmpty()) {
       return Optional.empty();
     }
@@ -98,7 +90,7 @@ public class Word {
   }
 
   private static Word findDirection(Word a, Word b, Direction directionToFind) {
-    if (a.getDirection() == directionToFind) {
+    if (a.direction() == directionToFind) {
       return a;
     }
     return b;

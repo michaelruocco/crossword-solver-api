@@ -8,7 +8,7 @@ public class WordsFactory {
     return new Words(
         clues.stream()
             .map(clue -> toWord(clue, cells))
-            .sorted(Comparator.comparingInt(Word::getNumericId))
+            .sorted(Comparator.comparingInt(Word::numericId))
             .toList());
   }
 

@@ -69,7 +69,7 @@ public class Clues implements Iterable<Clue> {
     return new Clues(updatedClues);
   }
 
-  public Clues getWithLongestPatternIfPossible() {
+  public Clues withLongestPattern() {
     var highestPatternCharCount = values.values().stream().mapToInt(Clue::patternCharCount).max();
     if (highestPatternCharCount.isEmpty()) {
       return this;
@@ -88,22 +88,8 @@ public class Clues implements Iterable<Clue> {
     return new Clues(stream().sorted(Comparator.comparingInt(Clue::numericId)).toList());
   }
 
-  public Clues getFirst(int n) {
+  public Clues first(int n) {
     return new Clues(stream().limit(n).toList());
-  }
-
-  public Clues getWithMaxPatternCharCount() {
-    var maxPatternCharCount = getMaxPatternCharCount();
-    return new Clues(
-        stream().filter(clue -> clue.patternCharCount() >= maxPatternCharCount).toList());
-  }
-
-  public Clues withPatternChars() {
-    return new Clues(stream().filter(clue -> clue.patternCharCount() > 0).toList());
-  }
-
-  private int getMaxPatternCharCount() {
-    return stream().mapToInt(Clue::patternCharCount).max().orElse(0);
   }
 
   private Map<Id, Clue> copyValues() {

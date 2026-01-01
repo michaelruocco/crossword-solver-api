@@ -36,7 +36,7 @@ public class BedrockAnswerFinder implements AnswerFinder {
   public Candidates findCandidates(Clue clue, int numberOfCandidates) {
     var promptText = promptTextFactory.toPromptText(clue, numberOfCandidates);
     var responseText = promptTextExecutor.execute(promptText);
-    return new Candidates(clue, responseConverter.toCandidates(responseText)).getValidAnswers(clue);
+    return new Candidates(clue, responseConverter.toCandidates(responseText)).validAnswers(clue);
   }
 
   @Override
@@ -46,7 +46,7 @@ public class BedrockAnswerFinder implements AnswerFinder {
     }
     var promptText = promptTextFactory.toPromptText(clues);
     var responseText = promptTextExecutor.execute(promptText);
-    return new Answers(responseConverter.toAnswers(responseText)).getValidAnswers(clues);
+    return new Answers(responseConverter.toAnswers(responseText)).validAnswers(clues);
   }
 
   @Override

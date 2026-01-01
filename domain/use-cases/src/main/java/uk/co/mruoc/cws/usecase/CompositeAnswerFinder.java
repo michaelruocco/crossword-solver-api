@@ -21,7 +21,7 @@ public class CompositeAnswerFinder implements AnswerFinder {
         .map(finder -> finder.findCandidates(clue, numberOfCandidates))
         .reduce(Candidates::addAll)
         .map(Candidates::sortByScore)
-        .map(c -> c.getFirst(numberOfCandidates))
+        .map(c -> c.first(numberOfCandidates))
         .orElse(new Candidates(clue));
   }
 

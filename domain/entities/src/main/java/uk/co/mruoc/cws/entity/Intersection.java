@@ -16,26 +16,25 @@ public class Intersection {
         new IntersectingWord(down, coordinates.y() - down.y()));
   }
 
-  public Id getAcrossId() {
-    return across.getId();
-  }
-
-  public Id getDownId() {
-    return down.getId();
-  }
-
-  public int getIndex(Direction direction) {
+  public int toIndex(Direction direction) {
     if (direction == Direction.ACROSS) {
-      return getAcrossIndex();
+      return acrossIndex();
     }
-    return getDownIndex();
+    return downIndex();
   }
 
-  public Id getIntersectingId(Id id) {
+  public Id toIntersectingId(Id id) {
     if (across.word.hasId(id)) {
-      return down.word.getId();
+      return down.word.id();
     }
-    return across.word.getId();
+    return across.word.id();
+  }
+
+  public Id toIntersectingId(Direction direction) {
+    if (direction == Direction.ACROSS) {
+      return down.id();
+    }
+    return across.id();
   }
 
   public Word getOtherWord(Word word) {
@@ -45,47 +44,40 @@ public class Intersection {
     return across.word;
   }
 
-  public int getIntersectingIndex(Direction direction) {
+  public int toIntersectingIndex(Direction direction) {
     if (direction == Direction.ACROSS) {
-      return getDownIndex();
+      return downIndex();
     }
-    return getAcrossIndex();
+    return acrossIndex();
   }
 
-  public int getAcrossIndex() {
+  public int acrossIndex() {
     return across.index;
   }
 
-  public int getDownIndex() {
+  public int downIndex() {
     return down.index;
   }
 
   public boolean contains(Word word) {
-    return across.hasId(word) || down.hasId(word);
+    return across.hasSameId(word) || down.hasSameId(word);
   }
 
   public boolean contains(Id id) {
     return across.hasId(id) || down.hasId(id);
   }
 
-  public Id getId(Direction direction) {
-    if (direction == Direction.ACROSS) {
-      return down.getId();
-    }
-    return across.getId();
-  }
-
   private record IntersectingWord(Word word, int index) {
-    public Id getId() {
-      return word.getId();
+    public Id id() {
+      return word.id();
     }
 
-    public boolean hasId(Word otherWord) {
-      return hasId(otherWord.getId());
+    public boolean hasSameId(Word otherWord) {
+      return hasId(otherWord.id());
     }
 
     public boolean hasId(Id id) {
-      return word.getId().equals(id);
+      return word.id().equals(id);
     }
   }
 }

@@ -67,11 +67,11 @@ public class Answers implements Iterable<Answer> {
     return new Answers(updatedValues);
   }
 
-  public Answers getValidAnswers(Clues clues) {
+  public Answers validAnswers(Clues clues) {
     return filter(new ValidAnswerPredicate(clues));
   }
 
-  public Answers getConfirmedAnswers() {
+  public Answers confirmedAnswers() {
     return filter(Answer::confirmed);
   }
 
@@ -86,7 +86,7 @@ public class Answers implements Iterable<Answer> {
     return new Answers(values.values().stream().map(Answer::confirm).toList());
   }
 
-  public Answers getTop(int n) {
+  public Answers top(int n) {
     return new Answers(values.values().stream().limit(n).toList());
   }
 
@@ -100,10 +100,6 @@ public class Answers implements Iterable<Answer> {
 
   public int size() {
     return values.size();
-  }
-
-  public boolean contains(Id id) {
-    return values.containsKey(id);
   }
 
   public Answers unconfirmAnswer(Id id) {
@@ -138,24 +134,11 @@ public class Answers implements Iterable<Answer> {
     return values.isEmpty();
   }
 
-  public boolean areConsistentAt(Intersection intersection) {
-    if (!containsAnswers(intersection)) {
-      return true;
-    }
-    var acrossAnswer = findById(intersection.getAcrossId()).orElseThrow();
-    var downAnswer = findById(intersection.getDownId()).orElseThrow();
-    return !acrossAnswer.conflictsWith(downAnswer, intersection);
-  }
-
   public String asString() {
     return stream()
         .sorted(Comparator.comparing(Answer::idAsString))
         .map(Answer::asString)
         .collect(Collectors.joining(","));
-  }
-
-  private boolean containsAnswers(Intersection intersection) {
-    return contains(intersection.getAcrossId()) && contains(intersection.getDownId());
   }
 
   private Answers filter(Predicate<Answer> predicate) {

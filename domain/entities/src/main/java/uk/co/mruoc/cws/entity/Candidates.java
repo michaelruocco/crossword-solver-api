@@ -25,7 +25,7 @@ public class Candidates implements Iterable<Answer> {
     this(clue, List.of(answers));
   }
 
-  public Id getId() {
+  public Id id() {
     return clue.id();
   }
 
@@ -55,7 +55,7 @@ public class Candidates implements Iterable<Answer> {
     return values.stream();
   }
 
-  public int getCluePatternCharCount() {
+  public int cluePatternCharCount() {
     return clue.patternCharCount();
   }
 
@@ -71,19 +71,19 @@ public class Candidates implements Iterable<Answer> {
     return values.size();
   }
 
-  public int getBestScore() {
-    return getBest().map(Answer::confidenceScore).orElse(0);
+  public int bestScore() {
+    return best().map(Answer::confidenceScore).orElse(0);
   }
 
-  public Optional<Answer> getBest() {
+  public Optional<Answer> best() {
     return values.stream().max(Comparator.comparingInt(Answer::confidenceScore));
   }
 
-  public Candidates getFirst(int n) {
+  public Candidates first(int n) {
     return new Candidates(clue, values.stream().limit(n).toList());
   }
 
-  public Candidates getValidAnswers(Clue clue) {
+  public Candidates validAnswers(Clue clue) {
     return new Candidates(clue, values.stream().filter(new ValidAnswerPredicate(clue)).toList());
   }
 
@@ -94,7 +94,7 @@ public class Candidates implements Iterable<Answer> {
   public String asString() {
     return String.format(
         "clue %s %s %s -> has %d candidates and best score %d %s",
-        clue.id(), clue.text(), clue.pattern(), values.size(), getBestScore(), valuesAsString());
+        clue.id(), clue.text(), clue.pattern(), values.size(), bestScore(), valuesAsString());
   }
 
   public String valuesAsString() {

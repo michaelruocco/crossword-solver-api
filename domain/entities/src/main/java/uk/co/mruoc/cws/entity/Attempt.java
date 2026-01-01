@@ -16,10 +16,6 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
     return puzzle.getId();
   }
 
-  public int confirmedAnswerCount() {
-    return getConfirmedAnswers().size();
-  }
-
   public boolean hasConfirmedAnswers() {
     return !getConfirmedAnswers().isEmpty();
   }
@@ -39,7 +35,7 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
   }
 
   public Clue getClue(Id id) {
-    return puzzle.getClue(id);
+    return puzzle.clue(id);
   }
 
   public Clues getCluesWithUnconfirmedAnswer() {
@@ -47,11 +43,11 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
   }
 
   public Answers getConfirmedValidAnswers() {
-    return answers.getConfirmedAnswers().getValidAnswers(puzzle.getClues());
+    return answers.confirmedAnswers().validAnswers(puzzle.getClues());
   }
 
   public Answers getConfirmedAnswers() {
-    return answers.getConfirmedAnswers();
+    return answers.confirmedAnswers();
   }
 
   public Words getWords() {
@@ -78,7 +74,7 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
   }
 
   public Collection<Id> getIntersectingIds(Id id) {
-    return puzzle.getIntersectingIds(id);
+    return puzzle.intersectingIds(id);
   }
 
   public Attempt unconfirmAnswer(Id id) {
@@ -86,11 +82,11 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
   }
 
   public Collection<Intersection> getIntersections(Id id) {
-    return puzzle.getIntersections(id);
+    return puzzle.intersections(id);
   }
 
   public Attempt updateClue(Clue clue) {
-    return withPuzzle(puzzle.updateClue(clue));
+    return withPuzzle(puzzle.withClue(clue));
   }
 
   public Answer forceGetConfirmedAnswer(Id id) {
@@ -114,14 +110,14 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
     if (confirmedAnswers.isEmpty()) {
       return true;
     }
-    var intersections = puzzle.getIntersections(answer.id());
+    var intersections = puzzle.intersections(answer.id());
     log.debug(
         "found intersections {} for answer {}",
-        intersections.stream().map(i -> i.getIntersectingId(answer.id())).toList(),
+        intersections.stream().map(i -> i.toIntersectingId(answer.id())).toList(),
         answer.asString());
 
     for (var intersection : intersections) {
-      var intersectingId = intersection.getIntersectingId(answer.id());
+      var intersectingId = intersection.toIntersectingId(answer.id());
       var intersectingAnswer = confirmedAnswers.findById(intersectingId);
       if (intersectingAnswer.isPresent()) {
         if (answer.conflictsWith(intersectingAnswer.get(), intersection)) {
@@ -130,10 +126,6 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
       }
     }
     return true;
-  }
-
-  public boolean hasConfirmedAnswer(Id id) {
-    return getConfirmedAnswers().contains(id);
   }
 
   public String asString() {
@@ -156,7 +148,7 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
   }
 
   public int getNumberOfClues() {
-    return puzzle.getNumberOfClues();
+    return puzzle.numberOfClues();
   }
 
   public Attempt removeUnconfirmedAnswers() {

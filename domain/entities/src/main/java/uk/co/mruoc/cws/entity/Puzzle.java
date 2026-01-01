@@ -20,23 +20,23 @@ public class Puzzle {
     return clues.hasClue(id);
   }
 
-  public Clue getClue(Id id) {
+  public Clue clue(Id id) {
     return clues.forceFind(id);
   }
 
-  public Collection<Id> getIntersectingIds(Id id) {
+  public Collection<Id> intersectingIds(Id id) {
     return words.getIntersectingIds(id);
   }
 
-  public Collection<Intersection> getIntersections(Id id) {
+  public Collection<Intersection> intersections(Id id) {
     return words.getIntersections(id);
   }
 
-  public int getNumberOfClues() {
+  public int numberOfClues() {
     return clues.size();
   }
 
-  public Puzzle updateClue(Clue clue) {
+  public Puzzle withClue(Clue clue) {
     return withClues(clues.update(clue));
   }
 }

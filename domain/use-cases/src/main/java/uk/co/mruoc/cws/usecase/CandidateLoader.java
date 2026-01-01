@@ -20,7 +20,6 @@ public class CandidateLoader {
 
   private final AnswerFinder answerFinder;
   private final Executor executor;
-  private final int candidatesPerClue;
   private final CandidateRepository repository;
 
   public Map<Id, Candidates> loadCandidates(Clues clues) {
@@ -29,25 +28,19 @@ public class CandidateLoader {
   }
 
   public Map<Id, Candidates> loadCandidates(Clues clues, int candidatesPerClue) {
-    var futures =
-        clues.stream()
-            .map(
-                clue ->
-                    CompletableFuture.supplyAsync(
-                            () -> loadCandidates(clue, candidatesPerClue), executor)
-                        .orTimeout(30, TimeUnit.SECONDS)
-                        .exceptionally(error -> handleApiFailure(clue, error)))
-            .toList();
-    return futures.stream()
+    return clues.stream()
+        .map(clue -> asyncLoadCandidates(clue, candidatesPerClue))
         .map(CompletableFuture::join)
-        .collect(Collectors.toMap(Candidates::getId, Function.identity()));
+        .collect(Collectors.toMap(Candidates::id, Function.identity()));
   }
 
-  public Candidates loadCandidates(Clue clue) {
-    return loadCandidates(clue, 5);
+  private CompletableFuture<Candidates> asyncLoadCandidates(Clue clue, int candidatesPerClue) {
+    return CompletableFuture.supplyAsync(() -> loadCandidates(clue, candidatesPerClue), executor)
+        .orTimeout(30, TimeUnit.SECONDS)
+        .exceptionally(error -> handleApiFailure(clue, error));
   }
 
-  public Candidates loadCandidates(Clue clue, int candidatesPerClue) {
+  private Candidates loadCandidates(Clue clue, int candidatesPerClue) {
     log.debug("getting candidates for clue {}", clue.asString());
     var candidates =
         loadCandidatesFromDatabase(clue)
@@ -62,7 +55,7 @@ public class CandidateLoader {
 
   private Candidates loadCandidatesFromApi(Clue clue, int candidatesPerClue) {
     log.info("loading candidates from api for clue {}", clue.asString());
-    var candidates = answerFinder.findCandidates(clue, candidatesPerClue).getValidAnswers(clue);
+    var candidates = answerFinder.findCandidates(clue, candidatesPerClue).validAnswers(clue);
     // TODO don't save if no candidates returned at all
     repository.save(candidates);
     return candidates;

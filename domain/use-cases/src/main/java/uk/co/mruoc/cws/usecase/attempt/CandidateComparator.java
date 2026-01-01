@@ -7,9 +7,9 @@ public class CandidateComparator implements Comparator<Candidates> {
   @Override
   public int compare(Candidates c1, Candidates c2) {
     return Comparator.comparingInt(Candidates::size)
-        .thenComparingInt(Candidates::getCluePatternCharCount)
+        .thenComparingInt(Candidates::cluePatternCharCount)
         .reversed()
-        .thenComparingInt(Candidates::getBestScore)
+        .thenComparingInt(Candidates::bestScore)
         .reversed()
         .compare(c1, c2);
   }

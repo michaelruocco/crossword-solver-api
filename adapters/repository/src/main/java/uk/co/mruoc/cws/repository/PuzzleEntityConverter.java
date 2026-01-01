@@ -83,7 +83,7 @@ public class PuzzleEntityConverter {
 
   private Collection<CellEntity> toCellEntities(Puzzle puzzle) {
     return puzzle.getWords().stream()
-        .collect(Collectors.toMap(Word::getNumericId, Function.identity(), (w1, w2) -> w1))
+        .collect(Collectors.toMap(Word::numericId, Function.identity(), (w1, w2) -> w1))
         .values()
         .stream()
         .map(word -> toEntity(puzzle, word))
@@ -93,7 +93,7 @@ public class PuzzleEntityConverter {
   private CellEntity toEntity(Puzzle puzzle, Word word) {
     var entity = new CellEntity();
     entity.setPuzzleId(puzzle.getId());
-    entity.setCellId(word.getNumericId());
+    entity.setCellId(word.numericId());
     entity.setX(word.x());
     entity.setY(word.y());
     return entity;

@@ -26,7 +26,7 @@ public class GreedyAttemptSolver implements AttemptSolver {
   private final int maxCluesOnPass;
 
   public GreedyAttemptSolver(AnswerFinder answerFinder, ClueRanker clueRanker) {
-    // TODO configure max attempts buffer and max clues on attempt externally
+    // TODO configure max attempts buffer and max clues on pass externally
     this(answerFinder, clueRanker, new PatternFactory(), 10, 10);
   }
 
@@ -110,11 +110,7 @@ public class GreedyAttemptSolver implements AttemptSolver {
   }
 
   private Answers getAnswers(Clues selectedClues) {
-    return answerFinder
-        .findAnswers(selectedClues)
-        .getValidAnswers(selectedClues)
-        .sortByScore()
-        .getTop(1);
+    return answerFinder.findAnswers(selectedClues).validAnswers(selectedClues).sortByScore().top(1);
   }
 
   private Optional<Answer> getAnswer(Clue clue) {
@@ -143,13 +139,11 @@ public class GreedyAttemptSolver implements AttemptSolver {
   private Clues selectClues(Attempt attempt) {
     var unconfirmedClues = attempt.getCluesWithUnconfirmedAnswer();
     var selectedClues =
-        patternFactory
-            .addPatternsToClues(unconfirmedClues, attempt)
-            .getWithLongestPatternIfPossible();
+        patternFactory.addPatternsToClues(unconfirmedClues, attempt).withLongestPattern();
     if (attempt.getClues().size() == selectedClues.size()) {
       log.info("all clues selected, attempting to select {} easiest", maxCluesOnPass);
       var rankedClues = clueRanker.rankByEase(selectedClues);
-      return rankedClues.getFirst(maxCluesOnPass);
+      return rankedClues.first(maxCluesOnPass);
     }
     return selectedClues;
   }

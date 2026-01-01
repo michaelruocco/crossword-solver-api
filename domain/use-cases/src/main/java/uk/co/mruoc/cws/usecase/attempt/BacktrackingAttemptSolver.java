@@ -41,7 +41,7 @@ public class BacktrackingAttemptSolver implements AttemptSolver {
     var candidates =
         sortedCandidates.stream()
             .filter(c -> !passAttempt.hasConfirmedAnswers() || c.clue().patternCharCount() > 0)
-            .filter(c -> !parked.contains(c.getId()))
+            .filter(c -> !parked.contains(c.id()))
             .findFirst();
     var wasParked = false;
     if (candidates.isEmpty()) {
@@ -107,13 +107,12 @@ public class BacktrackingAttemptSolver implements AttemptSolver {
       var clue = candidates.clue();
       boolean constrained = clue.isConstrainedByAtLeastNChars(3);
       if (constrained) {
-        boolean anyAcceptable =
-            candidates.getValidAnswers(clue).stream().anyMatch(attempt::accepts);
+        boolean anyAcceptable = candidates.validAnswers(clue).stream().anyMatch(attempt::accepts);
         if (!anyAcceptable) {
           log.info(
               "found real dead end at candidates {} from valid answers {}",
               candidates.asString(),
-              candidates.getValidAnswers(clue).asString());
+              candidates.validAnswers(clue).asString());
           return true;
         }
       }

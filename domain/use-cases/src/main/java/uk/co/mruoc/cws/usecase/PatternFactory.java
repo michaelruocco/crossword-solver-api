@@ -28,8 +28,8 @@ public class PatternFactory {
     var answers = attempt.answers();
     var intersections = attempt.getIntersections(clue.id());
     for (var intersection : intersections) {
-      int index = intersection.getIntersectingIndex(clue.direction());
-      var id = intersection.getId(clue.direction());
+      int index = intersection.toIntersectingIndex(clue.direction());
+      var id = intersection.toIntersectingId(clue.direction());
       var letter = answers.getLetterOfConfirmedAnswer(id, index);
       log.debug(
           "got index {} letter {} for clue {} using intersection {}",
@@ -37,7 +37,7 @@ public class PatternFactory {
           letter,
           id,
           intersection);
-      letter.ifPresent(l -> pattern.setCharAt(intersection.getIndex(clue.direction()), l));
+      letter.ifPresent(l -> pattern.setCharAt(intersection.toIndex(clue.direction()), l));
     }
     return pattern.toString();
   }

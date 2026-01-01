@@ -24,11 +24,11 @@ public class Words {
   }
 
   public Collection<Id> getIntersectingIds(Id id) {
-    return getIntersectingWords(findById(id)).stream().map(Word::getId).toList();
+    return getIntersectingWords(findById(id)).stream().map(Word::id).toList();
   }
 
   public Coordinates getCoordinates(int id) {
-    return findByNumericId(id).getCoordinates();
+    return findByNumericId(id).coordinates();
   }
 
   public Words(Collection<Word> words) {
@@ -37,7 +37,7 @@ public class Words {
 
   private Word findByNumericId(int id) {
     return words.stream()
-        .filter(word -> word.getNumericId() == id)
+        .filter(word -> word.numericId() == id)
         .findFirst()
         .orElseThrow(() -> new WordNotFoundForNumericIdException(id));
   }

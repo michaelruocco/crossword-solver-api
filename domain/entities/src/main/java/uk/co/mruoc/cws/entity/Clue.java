@@ -23,7 +23,7 @@ public record Clue(
     return id.getDirection();
   }
 
-  public Clue setPatternLetter(int index, char letter) {
+  public Clue withPatternLetter(int index, char letter) {
     char[] chars = pattern().toCharArray();
     chars[index] = letter;
     return withPattern(new String(chars));

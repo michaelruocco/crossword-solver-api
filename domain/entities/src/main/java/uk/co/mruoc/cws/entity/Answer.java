@@ -29,8 +29,8 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
   }
 
   public boolean conflictsWith(Answer other, Intersection intersection) {
-    int thisIndex = intersection.getIndex(id.getDirection());
-    int otherIndex = intersection.getIntersectingIndex(id.getDirection());
+    int thisIndex = intersection.toIndex(id.getDirection());
+    int otherIndex = intersection.toIntersectingIndex(id.getDirection());
     var conflicts =
         letterAt(thisIndex)
             .flatMap(

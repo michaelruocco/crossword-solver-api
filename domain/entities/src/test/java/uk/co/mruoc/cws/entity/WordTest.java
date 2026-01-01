@@ -21,8 +21,8 @@ class WordTest {
 
     var intersection = across.findIntersectionBetween(down).orElseThrow();
 
-    assertThat(intersection.getAcrossIndex()).isEqualTo(3);
-    assertThat(intersection.getDownIndex()).isEqualTo(1);
+    assertThat(intersection.acrossIndex()).isEqualTo(3);
+    assertThat(intersection.downIndex()).isEqualTo(1);
   }
 
   @Test
@@ -41,8 +41,8 @@ class WordTest {
 
     var intersection = across.findIntersectionBetween(down).orElseThrow();
 
-    assertThat(intersection.getAcrossIndex()).isEqualTo(0);
-    assertThat(intersection.getDownIndex()).isEqualTo(4);
+    assertThat(intersection.acrossIndex()).isEqualTo(0);
+    assertThat(intersection.downIndex()).isEqualTo(4);
   }
 
   @Test
@@ -65,8 +65,8 @@ class WordTest {
 
     var intersection = across.findIntersectionBetween(down).orElseThrow();
 
-    assertThat(intersection.getAcrossIndex()).isEqualTo(0);
-    assertThat(intersection.getDownIndex()).isEqualTo(4);
+    assertThat(intersection.acrossIndex()).isEqualTo(0);
+    assertThat(intersection.downIndex()).isEqualTo(4);
   }
 
   @Test
