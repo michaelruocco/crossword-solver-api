@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.usecase.puzzle;
 
+import java.util.Optional;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Puzzle;
@@ -23,21 +24,18 @@ public class PuzzleCreator {
 
   public long create(String imageUrl) {
     var image = imageDownloader.downloadImage(imageUrl);
-    validateDoesNotAlreadyExist(image);
+    return findIdIfAlreadyExists(image).orElseGet(() -> create(image));
+  }
+
+  private Optional<Long> findIdIfAlreadyExists(Image image) {
+    var hash = image.getHash();
+    return repository.findByHash(hash).map(Puzzle::getId);
+  }
+
+  private long create(Image image) {
     var puzzle = toPuzzle(image);
     repository.save(puzzle);
     return puzzle.getId();
-  }
-
-  private void validateDoesNotAlreadyExist(Image image) {
-    var hash = image.getHash();
-    repository
-        .findByHash(hash)
-        .ifPresent(puzzle -> throwPuzzleAlreadyExistsException(puzzle.getId(), hash));
-  }
-
-  private void throwPuzzleAlreadyExistsException(long id, String hash) {
-    throw new PuzzleImageUrlAlreadyExistsException(id, hash);
   }
 
   private Puzzle toPuzzle(Image image) {
