@@ -9,17 +9,16 @@ import uk.co.mruoc.cws.entity.Attempt;
 @Slf4j
 public class AsyncAttemptSolver {
 
-  private final AttemptSolver attemptSolver;
-  private final AttemptRepository repository;
+  private final AttemptSolverRunnableFactory runnableFactory;
   private final Executor executor;
 
-  public void solve(Attempt attempt) {
-    var runnable =
-        AttemptSolverRunnable.builder()
-            .solver(attemptSolver)
-            .repository(repository)
-            .attemptId(attempt.id())
-            .build();
+  public void asyncSolve(Attempt attempt) {
+    var runnable = runnableFactory.build(attempt);
     executor.execute(runnable);
+  }
+
+  public void syncSolve(Attempt attempt) {
+    var runnable = runnableFactory.build(attempt);
+    runnable.run();
   }
 }

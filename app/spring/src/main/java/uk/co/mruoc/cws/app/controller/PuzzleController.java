@@ -67,7 +67,7 @@ public class PuzzleController {
 
   @PostMapping("/{puzzleId}/attempts/{attemptId}/automatic-answers")
   public ApiAttempt updateAttemptAutomaticAnswers(@PathVariable long attemptId) {
-    facade.solvePuzzleAttempt(attemptId);
+    facade.asyncSolvePuzzleAttempt(attemptId);
     return getAttempt(attemptId);
   }
 

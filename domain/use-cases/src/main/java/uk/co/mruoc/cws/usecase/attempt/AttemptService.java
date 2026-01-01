@@ -10,15 +10,20 @@ public class AttemptService {
   private final AttemptCreator creator;
   private final AttemptFinder finder;
   private final AttemptUpdater updater;
-  private final AsyncAttemptSolver solver;
+  private final AsyncAttemptSolver asyncSolver;
 
   public long createAttempt(long puzzleId) {
     return creator.create(puzzleId);
   }
 
-  public void solveAttempt(long attemptId) {
+  public void asyncSolveAttempt(long attemptId) {
     var attempt = findById(attemptId);
-    solver.solve(attempt);
+    asyncSolver.asyncSolve(attempt);
+  }
+
+  public void syncSolveAttempt(long attemptId) {
+    var attempt = findById(attemptId);
+    asyncSolver.syncSolve(attempt);
   }
 
   public Attempt findById(long id) {

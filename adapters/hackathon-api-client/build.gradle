@@ -1,3 +1,9 @@
 plugins {
     id "crossword-solver-api.java-conventions"
 }
+
+dependencies {
+    implementation project(":entities")
+    implementation project(":use-cases")
+    api "org.springframework:spring-webflux:7.0.2"
+}

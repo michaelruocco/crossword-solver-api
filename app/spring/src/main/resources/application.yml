@@ -27,3 +27,6 @@ bedrock:
     modelId: eu.anthropic.claude-3-7-sonnet-20250219-v1:0
     temperature: 0.2
     maxTokens: 2024
+
+hackathon:
+  base-url: https://hackathon.caci.co.uk/api

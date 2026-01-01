@@ -35,8 +35,12 @@ public class CrosswordSolverFacade {
     return attemptService.findById(attemptId);
   }
 
-  public void solvePuzzleAttempt(long attemptId) {
-    attemptService.solveAttempt(attemptId);
+  public void syncSolvePuzzleAttempt(long attemptId) {
+    attemptService.syncSolveAttempt(attemptId);
+  }
+
+  public void asyncSolvePuzzleAttempt(long attemptId) {
+    attemptService.asyncSolveAttempt(attemptId);
   }
 
   public void deleteAttemptAnswer(long attemptId, Id id) {

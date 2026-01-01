@@ -26,6 +26,7 @@ import uk.co.mruoc.cws.usecase.attempt.AttemptFinder;
 import uk.co.mruoc.cws.usecase.attempt.AttemptRepository;
 import uk.co.mruoc.cws.usecase.attempt.AttemptService;
 import uk.co.mruoc.cws.usecase.attempt.AttemptSolver;
+import uk.co.mruoc.cws.usecase.attempt.AttemptSolverRunnableFactory;
 import uk.co.mruoc.cws.usecase.attempt.AttemptUpdater;
 import uk.co.mruoc.cws.usecase.attempt.BacktrackingAttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.CompositeAttemptSolver;
@@ -82,7 +83,7 @@ public class AppConfig {
         .creator(creator)
         .finder(finder)
         .updater(updater)
-        .solver(solver)
+        .asyncSolver(solver)
         .build();
   }
 
@@ -131,11 +132,17 @@ public class AppConfig {
   }
 
   @Bean
-  public AsyncAttemptSolver asyncAttemptSolver(
-      AttemptSolver attemptSolver, AttemptRepository repository, Executor executor) {
+  public AttemptSolverRunnableFactory attemptSolverRunnableFactory(AttemptSolver attemptSolver, AttemptRepository repository) {
+    return AttemptSolverRunnableFactory.builder()
+            .attemptSolver(attemptSolver)
+            .repository(repository)
+            .build();
+  }
+
+  @Bean
+  public AsyncAttemptSolver asyncAttemptSolver(AttemptSolverRunnableFactory runnableFactory, Executor executor) {
     return AsyncAttemptSolver.builder()
-        .attemptSolver(attemptSolver)
-        .repository(repository)
+        .runnableFactory(runnableFactory)
         .executor(executor)
         .build();
   }
