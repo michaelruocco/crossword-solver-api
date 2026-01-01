@@ -20,11 +20,12 @@ public class BedrockAnswerFinder implements AnswerFinder {
   private final FindAnswerResponseConverter responseConverter;
 
   public BedrockAnswerFinder(BedrockRuntimeClient client) {
-    this(client, ModelId.DEFAULT);
+    this(client, new DefaultBedrockConversationConfig());
   }
 
-  public BedrockAnswerFinder(BedrockRuntimeClient client, String model) {
-    this(new PromptTextExecutor(client, model));
+  public BedrockAnswerFinder(
+      BedrockRuntimeClient client, BedrockConversationConfig conversationConfig) {
+    this(new PromptTextExecutor(client, conversationConfig));
   }
 
   public BedrockAnswerFinder(PromptTextExecutor promptTextExecutor) {

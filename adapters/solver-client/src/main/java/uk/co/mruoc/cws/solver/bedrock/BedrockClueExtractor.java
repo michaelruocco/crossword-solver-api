@@ -1,6 +1,7 @@
 package uk.co.mruoc.cws.solver.bedrock;
 
-import java.nio.charset.StandardCharsets;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.core.SdkBytes;
@@ -45,21 +46,24 @@ public class BedrockClueExtractor implements ClueExtractor {
 
   private Clues extractClues(byte[] bytes) {
     var requestBody = requestBodyFactory.toInvokeModelRequestBody(bytes);
-    var request =
-        InvokeModelRequest.builder()
-            .modelId(modelId)
-            .body(SdkBytes.fromString(requestBody, StandardCharsets.UTF_8))
-            .contentType("application/json")
-            .accept("application/json")
-            .build();
+    var request = toInvokeModelRequest(requestBody);
     var response = client.invokeModel(request);
     var cluesJson = toCluesJson(response);
     log.debug("extracted clues json {}", cluesJson);
     return mapper.toClues(cluesJson);
   }
 
+  private InvokeModelRequest toInvokeModelRequest(String requestBody) {
+    return InvokeModelRequest.builder()
+        .modelId(modelId)
+        .body(SdkBytes.fromString(requestBody, UTF_8))
+        .contentType("application/json")
+        .accept("application/json")
+        .build();
+  }
+
   private String toCluesJson(InvokeModelResponse response) {
-    var responseBody = response.body().asString(StandardCharsets.UTF_8);
+    var responseBody = response.body().asString(UTF_8);
     return mapper.extractFirstContentText(responseBody);
   }
 }

@@ -5,31 +5,41 @@ import software.amazon.awssdk.services.bedrockruntime.BedrockRuntimeClient;
 import software.amazon.awssdk.services.bedrockruntime.model.ContentBlock;
 import software.amazon.awssdk.services.bedrockruntime.model.ConversationRole;
 import software.amazon.awssdk.services.bedrockruntime.model.ConverseRequest;
+import software.amazon.awssdk.services.bedrockruntime.model.InferenceConfiguration;
 import software.amazon.awssdk.services.bedrockruntime.model.Message;
 
 @RequiredArgsConstructor
 public class PromptTextExecutor {
 
   private final BedrockRuntimeClient client;
-  private final String modelId;
-
-  public PromptTextExecutor(BedrockRuntimeClient client) {
-    this(client, ModelId.DEFAULT);
-  }
+  private final BedrockConversationConfig conversationConfig;
 
   public String execute(String promptText) {
-    var message =
-        Message.builder()
-            .content(ContentBlock.fromText(promptText))
-            .role(ConversationRole.USER)
-            .build();
-    var request =
-        ConverseRequest.builder()
-            .modelId(modelId)
-            .messages(message)
-            .inferenceConfig(config -> config.temperature(0.2f).maxTokens(2024))
-            .build();
+    var message = toUserMessage(promptText);
+    var request = toConversationRequest(message);
     var response = client.converse(request);
     return response.output().message().content().getFirst().text();
+  }
+
+  private Message toUserMessage(String promptText) {
+    return Message.builder()
+        .content(ContentBlock.fromText(promptText))
+        .role(ConversationRole.USER)
+        .build();
+  }
+
+  private ConverseRequest toConversationRequest(Message message) {
+    return ConverseRequest.builder()
+        .modelId(conversationConfig.modelId())
+        .messages(message)
+        .inferenceConfig(buildInferenceConfig())
+        .build();
+  }
+
+  private InferenceConfiguration buildInferenceConfig() {
+    return InferenceConfiguration.builder()
+        .temperature(conversationConfig.temperature())
+        .maxTokens(conversationConfig.maxTokens())
+        .build();
   }
 }
