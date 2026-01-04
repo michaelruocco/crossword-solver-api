@@ -9,7 +9,6 @@ dependencies {
     implementation "org.apache.commons:commons-text:${commonsText}"
     implementation "org.seleniumhq.selenium:selenium-java:4.39.0"
     implementation "com.openai:openai-java:${openAiVersion}"
-    implementation "com.github.michaelruocco:json-adapter:${jsonAdapterVersion}"
     implementation "com.github.michaelruocco:file-loader:7.0.4"
     implementation "io.github.resilience4j:resilience4j-retry:${resilience4jVersion}"
     implementation "software.amazon.awssdk:bedrockruntime:${awsSdkVersion}"

@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import java.io.IOException;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Direction;
 import uk.co.mruoc.cws.entity.Id;
-import uk.co.mruoc.json.jackson.JsonParserConverter;
 
 public class AnswerDeserializer extends StdDeserializer<Answer> {
 
@@ -16,8 +16,8 @@ public class AnswerDeserializer extends StdDeserializer<Answer> {
   }
 
   @Override
-  public Answer deserialize(JsonParser parser, DeserializationContext context) {
-    JsonNode node = JsonParserConverter.toNode(parser);
+  public Answer deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+    JsonNode node = parser.getCodec().readTree(parser);
     return Answer.builder()
         .id(new Id(node.get("id").intValue(), Direction.valueOf(node.get("direction").asText())))
         .value(node.get("value").asText())

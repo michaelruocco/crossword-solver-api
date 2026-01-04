@@ -4,13 +4,12 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import java.io.IOException;
 import java.util.Optional;
 import uk.co.mruoc.cws.entity.Coordinates;
 import uk.co.mruoc.cws.entity.Direction;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.entity.Word;
-import uk.co.mruoc.json.jackson.JsonNodeConverter;
-import uk.co.mruoc.json.jackson.JsonParserConverter;
 
 public class WordDeserializer extends StdDeserializer<Word> {
 
@@ -19,12 +18,13 @@ public class WordDeserializer extends StdDeserializer<Word> {
   }
 
   @Override
-  public Word deserialize(JsonParser parser, DeserializationContext context) {
-    JsonNode node = JsonParserConverter.toNode(parser);
+  public Word deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+    JsonNode node = parser.getCodec().readTree(parser);
     return Word.builder()
         .id(new Id(node.get("id").intValue(), toDirectionIfPresent(node)))
         .length(toLengthIfPresent(node))
-        .coordinates(JsonNodeConverter.toObject(node.get("coordinates"), parser, Coordinates.class))
+        .coordinates(
+            node.get("coordinates").traverse(parser.getCodec()).readValueAs(Coordinates.class))
         .build();
   }
 
