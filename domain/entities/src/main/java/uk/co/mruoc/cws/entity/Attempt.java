@@ -50,6 +50,10 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
     return answers.confirmedAnswers();
   }
 
+  public Answers answersByDirection(Direction direction) {
+    return answers.byDirection(direction);
+  }
+
   public Words getWords() {
     return puzzle.getWords();
   }

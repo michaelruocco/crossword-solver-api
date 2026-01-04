@@ -17,6 +17,7 @@ public class PuzzleEntity {
 
   @Id private long id;
   private String name;
+  private String format;
 
   @Column(unique = true)
   private String hash;

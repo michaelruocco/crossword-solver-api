@@ -10,6 +10,7 @@ import lombok.With;
 public class Puzzle {
   private final Long id;
   private final String name;
+  private final String format;
   private final String hash;
 
   @With private final Clues clues;

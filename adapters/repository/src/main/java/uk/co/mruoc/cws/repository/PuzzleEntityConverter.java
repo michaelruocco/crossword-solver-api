@@ -32,6 +32,7 @@ public class PuzzleEntityConverter {
     return Puzzle.builder()
         .id(entity.getId())
         .name(entity.getName())
+        .format(entity.getFormat())
         .hash(entity.getHash())
         .clues(clues)
         .words(wordsFactory.toWords(clues, cells))
@@ -42,6 +43,7 @@ public class PuzzleEntityConverter {
     var entity = new PuzzleEntity();
     entity.setId(puzzle.getId());
     entity.setName(puzzle.getName());
+    entity.setFormat(puzzle.getFormat());
     entity.setHash(puzzle.getHash());
     entity.setClues(toClueEntities(puzzle));
     entity.setCells(toCellEntities(puzzle));

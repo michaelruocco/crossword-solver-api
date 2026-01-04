@@ -50,6 +50,14 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
     return conflicts;
   }
 
+  public boolean hasDirection(Direction direction) {
+    return id.getDirection() == direction;
+  }
+
+  public int numericId() {
+    return id.getId();
+  }
+
   public Answer confirm() {
     return new Answer(id, value, confidenceScore, true);
   }

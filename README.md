@@ -17,8 +17,8 @@ Crossword solver API
 
 ## TODO
 
+* Add proper grid space detection to enable removing S from HORSDOEUVRES to give HORSDOEUVRE
 * Add cryptic puzzle detection
-* Integrate with hackathon apis
 * Add endpoint to accept direct file upload
 * Add file size validation on direct file upload
 * Try to figure out how to ensure RAM / TAP / TUP clue gets answered correctly

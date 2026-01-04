@@ -1,9 +1,8 @@
 package uk.co.mruoc.cws.usecase;
 
+import java.util.Collection;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Collection;
 
 @Slf4j
 @Builder
@@ -23,8 +22,12 @@ public class HackathonFacade {
     var attemptId = solverFacade.createPuzzleAttempt(puzzleId);
     log.info("created attempt {} for puzzle {}", attemptId, puzzleId);
     solverFacade.syncSolvePuzzleAttempt(attemptId);
+    recordAttemptAnswers(attemptId);
+  }
+
+  public void recordAttemptAnswers(long attemptId) {
     var attempt = solverFacade.findAttemptById(attemptId);
-    log.info("solved attempt {}", attempt.asString());
+    log.info("recording answers for attempt {}", attempt.asString());
     hackathonClient.recordAnswers(attempt);
   }
 }

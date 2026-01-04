@@ -1,12 +1,11 @@
 package uk.co.mruoc.cws.usecase;
 
-import uk.co.mruoc.cws.entity.Attempt;
-
 import java.util.Collection;
+import uk.co.mruoc.cws.entity.Attempt;
 
 public interface HackathonClient {
 
-    Collection<String> getPuzzleImageUrls();
+  Collection<String> getPuzzleImageUrls();
 
-    void recordAnswers(Attempt attempt);
+  void recordAnswers(Attempt attempt);
 }

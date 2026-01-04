@@ -76,10 +76,11 @@ public class Answers implements Iterable<Answer> {
   }
 
   public Answers sortByScore() {
-    return new Answers(
-        values.values().stream()
-            .sorted(Comparator.comparingInt(Answer::confidenceScore).reversed())
-            .toList());
+    return sort(Comparator.comparingInt(Answer::confidenceScore).reversed());
+  }
+
+  public Answers sortByNumericId() {
+    return sort(Comparator.comparingInt(Answer::numericId));
   }
 
   public Answers confirmAll() {
@@ -139,6 +140,14 @@ public class Answers implements Iterable<Answer> {
         .sorted(Comparator.comparing(Answer::idAsString))
         .map(Answer::asString)
         .collect(Collectors.joining(","));
+  }
+
+  public Answers byDirection(Direction direction) {
+    return filter(a -> a.hasDirection(direction));
+  }
+
+  private Answers sort(Comparator<Answer> comparator) {
+    return new Answers(values.values().stream().sorted(comparator).toList());
   }
 
   private Answers filter(Predicate<Answer> predicate) {

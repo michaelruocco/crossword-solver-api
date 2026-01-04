@@ -132,19 +132,18 @@ public class AppConfig {
   }
 
   @Bean
-  public AttemptSolverRunnableFactory attemptSolverRunnableFactory(AttemptSolver attemptSolver, AttemptRepository repository) {
+  public AttemptSolverRunnableFactory attemptSolverRunnableFactory(
+      AttemptSolver attemptSolver, AttemptRepository repository) {
     return AttemptSolverRunnableFactory.builder()
-            .attemptSolver(attemptSolver)
-            .repository(repository)
-            .build();
+        .attemptSolver(attemptSolver)
+        .repository(repository)
+        .build();
   }
 
   @Bean
-  public AsyncAttemptSolver asyncAttemptSolver(AttemptSolverRunnableFactory runnableFactory, Executor executor) {
-    return AsyncAttemptSolver.builder()
-        .runnableFactory(runnableFactory)
-        .executor(executor)
-        .build();
+  public AsyncAttemptSolver asyncAttemptSolver(
+      AttemptSolverRunnableFactory runnableFactory, Executor executor) {
+    return AsyncAttemptSolver.builder().runnableFactory(runnableFactory).executor(executor).build();
   }
 
   @Bean

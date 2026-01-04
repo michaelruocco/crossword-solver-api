@@ -45,6 +45,7 @@ public class PuzzleCreator {
     return Puzzle.builder()
         .id(repository.getNextId())
         .name(image.getName())
+        .format(image.getFormat())
         .hash(image.getHash())
         .clues(clues)
         .words(wordsFactory.toWords(clues, cells))

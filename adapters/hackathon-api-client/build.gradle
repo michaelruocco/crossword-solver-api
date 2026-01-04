@@ -6,4 +6,5 @@ dependencies {
     implementation project(":entities")
     implementation project(":use-cases")
     api "org.springframework:spring-webflux:7.0.2"
+    implementation "tools.jackson.core:jackson-databind:${jacksonVersion}"
 }
