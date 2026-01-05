@@ -8,12 +8,14 @@ import uk.co.mruoc.cws.entity.Attempt;
 @Slf4j
 public class AttemptSolverRunnableFactory {
 
-  private final AttemptSolver attemptSolver;
+  private final AttemptFinder finder;
+  private final AttemptSolver solver;
   private final AttemptRepository repository;
 
   public Runnable build(Attempt attempt) {
     return AttemptSolverRunnable.builder()
-        .solver(attemptSolver)
+        .finder(finder)
+        .solver(solver)
         .repository(repository)
         .attemptId(attempt.id())
         .build();

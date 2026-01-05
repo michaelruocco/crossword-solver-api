@@ -9,9 +9,11 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import java.util.Collection;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @IdClass(ClueEntityId.class)
 @Table(name = "clue")

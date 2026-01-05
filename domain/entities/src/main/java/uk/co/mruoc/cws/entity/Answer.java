@@ -58,6 +58,10 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
     return id.getId();
   }
 
+  public Direction direction() {
+    return id.getDirection();
+  }
+
   public Answer confirm() {
     return new Answer(id, value, confidenceScore, true);
   }

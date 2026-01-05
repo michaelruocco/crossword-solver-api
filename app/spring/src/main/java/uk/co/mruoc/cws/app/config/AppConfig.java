@@ -133,9 +133,10 @@ public class AppConfig {
 
   @Bean
   public AttemptSolverRunnableFactory attemptSolverRunnableFactory(
-      AttemptSolver attemptSolver, AttemptRepository repository) {
+      AttemptFinder finder, AttemptSolver solver, AttemptRepository repository) {
     return AttemptSolverRunnableFactory.builder()
-        .attemptSolver(attemptSolver)
+        .finder(finder)
+        .solver(solver)
         .repository(repository)
         .build();
   }

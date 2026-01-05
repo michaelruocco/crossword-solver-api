@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Attempt;
 import uk.co.mruoc.cws.entity.Puzzle;
+import uk.co.mruoc.cws.entity.Result;
 
 @RequiredArgsConstructor
 public class ApiConverter {
@@ -11,9 +12,10 @@ public class ApiConverter {
   private final ApiPuzzleConverter puzzleConverter;
   private final ApiAttemptConverter attemptConverter;
   private final ApiAnswerConverter answerConverter;
+  private final ApiResultConverter resultConverter;
 
   public ApiConverter() {
-    this(new ApiPuzzleConverter(), new ApiAttemptConverter(), new ApiAnswerConverter());
+    this(new ApiPuzzleConverter(), new ApiAttemptConverter(), new ApiAnswerConverter(), new ApiResultConverter());
   }
 
   public ApiPuzzle<ApiClue> toApiPuzzle(Puzzle puzzle) {
@@ -26,5 +28,9 @@ public class ApiConverter {
 
   public ApiAttempt toApiAttempt(Attempt attempt) {
     return attemptConverter.toApiAttempt(attempt);
+  }
+
+  public ApiResult toApiResult(Result result) {
+    return resultConverter.toApiResult(result);
   }
 }

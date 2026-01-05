@@ -9,6 +9,10 @@ public class AttemptFinder {
   private final AttemptRepository repository;
 
   public Attempt findById(Long id) {
-    return repository.forceFindById(id);
+    return forceFindById(id);
+  }
+
+  private Attempt forceFindById(long id) {
+    return repository.findById(id).orElseThrow(() -> new AttemptNotFoundByIdException(id));
   }
 }
