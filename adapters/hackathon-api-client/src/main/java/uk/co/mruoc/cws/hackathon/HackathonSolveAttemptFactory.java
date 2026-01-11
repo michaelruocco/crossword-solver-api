@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import tools.jackson.databind.ObjectMapper;
 import uk.co.mruoc.cws.entity.Attempt;
 import uk.co.mruoc.cws.entity.Direction;
 import uk.co.mruoc.cws.entity.Puzzle;
@@ -14,10 +15,16 @@ import uk.co.mruoc.cws.entity.Puzzle;
 @RequiredArgsConstructor
 public class HackathonSolveAttemptFactory {
 
+  private final ObjectMapper mapper;
   private final String teamName;
 
-  public HackathonSolveAttemptFactory() {
-    this("Michael Ruocco");
+  public HackathonSolveAttemptFactory(ObjectMapper mapper) {
+    this(mapper,"Michael Ruocco");
+  }
+
+  public String toHackathonAttemptJson(Attempt attempt) {
+    var hackathonAttempt = toHackathonAttempt(attempt);
+    return mapper.writeValueAsString(hackathonAttempt);
   }
 
   public HackathonSolveAttempt toHackathonAttempt(Attempt attempt) {

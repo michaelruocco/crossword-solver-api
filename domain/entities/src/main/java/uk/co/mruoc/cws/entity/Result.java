@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class Result {
 
+    private final Attempt attempt;
     private final int totalCount;
     private final int correctCount;
     private final Answers incorrectAnswers;

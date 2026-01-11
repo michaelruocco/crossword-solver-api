@@ -33,7 +33,7 @@ public class HackathonConfig {
     log.info("configuring hackathon client with base url {}", url);
     return DefaultHackathonClient.builder()
         .webClient(webClient(url, jacksonJsonDecoder(jsonMapper)))
-        .attemptFactory(new HackathonSolveAttemptFactory())
+        .attemptFactory(new HackathonSolveAttemptFactory(jsonMapper))
         .build();
   }
 

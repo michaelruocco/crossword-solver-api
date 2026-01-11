@@ -126,7 +126,7 @@ public class AppConfig {
   @Bean
   public CompositeAttemptSolver compositeAttemptSolver(
       BacktrackingAttemptSolver backtrackingSolver, GreedyAttemptSolver greedySolver) {
-    int maxPasses = 2;
+    int maxPasses = 5;
     // TODO configure max passes or store max passes and current passes against attempt
     return new CompositeAttemptSolver(backtrackingSolver, greedySolver, maxPasses);
   }

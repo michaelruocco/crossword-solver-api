@@ -38,6 +38,7 @@ public class DefaultHackathonClient implements HackathonClient {
   public Result recordAnswers(Attempt attempt) {
     var initialResult = doRecordAnswers(attempt);
     var finalResult = Result.builder()
+            .attempt(attempt)
             .totalCount(initialResult.getTotal())
             .correctCount(initialResult.getCorrect())
             .incorrectAnswers(toIncorrectAnswers(attempt, initialResult))
@@ -49,13 +50,13 @@ public class DefaultHackathonClient implements HackathonClient {
   }
 
   private HackathonResult doRecordAnswers(Attempt attempt) {
-    var hackathonAttempt = attemptFactory.toHackathonAttempt(attempt);
-    log.debug("sending body {}", hackathonAttempt);
+    var json = attemptFactory.toHackathonAttemptJson(attempt);
+    log.debug("sending request body {}", json);
     var hackathonResult = webClient
             .post()
             .uri("/solve")
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(hackathonAttempt)
+            .bodyValue(json)
             .retrieve()
             .bodyToMono(HackathonResult.class)
             .switchIfEmpty(Mono.error(new HackathonClientException("empty response")))
