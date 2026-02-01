@@ -28,15 +28,18 @@ public class GridExtractor {
   }
 
   public Mat extractGrid(Mat input) {
-    var corners = matConverter.toCornersOfLargestContour(input);
-    return warpPerspective(input, corners);
+    var warped = matConverter.wrapGrid(input);
+    return matConverter.crop(warped, 10);
+
+    //var corners = matConverter.toCornersOfLargestContour(input);
+    //return warpPerspective(input, corners);
   }
 
-  private Mat warpPerspective(Mat input, Corners corners) {
+  /*private Mat warpPerspective(Mat input, Corners corners) {
     var transform = corners.perspectiveTransform();
     var maxSize = corners.maxSize();
     var warped = new Mat();
     Imgproc.warpPerspective(input, warped, transform, maxSize);
     return warped;
-  }
+  }*/
 }

@@ -29,7 +29,7 @@ class ProcessedGridImageFactoryIT {
     OUTPUT_DIRECTORY.init();
   }
 
-  @AfterAll
+  //@AfterAll
   static void deleteOutputDirectory() {
     OUTPUT_DIRECTORY.delete();
     MatLogger.deleteAll();

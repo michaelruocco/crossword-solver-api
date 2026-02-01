@@ -3,8 +3,10 @@ package uk.co.mruoc.cws.solver.textract;
 import java.awt.image.BufferedImage;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ProcessedGridImageFactory {
 
@@ -43,14 +45,16 @@ public class ProcessedGridImageFactory {
   }
 
   private Mat toProcessedGrid(BufferedImage input) {
+    //var original = new MatConverter().toMat(new ImageConverter().toBytes(input));
+
     var grid = gridExtractor.extractGrid(input);
-    var dimensions = calculator.calculateDimensions(input);
+    var dimensions = calculator.calculateDimensions(grid);
+    log.info("average column width {} and height {}", dimensions.getAverageColumnWidth(), dimensions.getAverageRowHeight());
     return toMat(grid, dimensions);
   }
 
   public Mat toMat(Mat grid, GridDimensions dimensions) {
-    var rows =
-        IntStream.range(0, dimensions.getNumberOfRows())
+    var rows = IntStream.iterate(dimensions.getNumberOfRows() - 1, i -> i >= 0, i -> i - 1)
             .mapToObj(y -> toRow(grid, dimensions, y))
             .toList();
     return matConcatenator.verticalConcat(rows);
@@ -70,5 +74,9 @@ public class ProcessedGridImageFactory {
   private Mat toProcessedCell(Mat grid, GridDimensions dimensions, int x, int y) {
     var cell = dimensions.toCell(grid, x, y);
     return cellProcessor.process(cell);
+    /*if (x == 8 && y == 22) {
+      return cellProcessor.process(cell);
+    }
+    return cell;*/
   }
 }

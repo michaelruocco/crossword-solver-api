@@ -2,10 +2,13 @@ package uk.co.mruoc.cws.solver.textract;
 
 import static org.opencv.core.Core.BORDER_CONSTANT;
 import static org.opencv.core.CvType.CV_8UC3;
+import static org.opencv.imgproc.Imgproc.RETR_LIST;
+import static uk.co.mruoc.cws.solver.textract.RectUtils.contains;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -36,11 +39,11 @@ public class CellProcessor {
   }
 
   public Mat process(Mat input) {
-    var newCell = buildNewCell(input);
     if (isMostlyDark(input)) {
-      return newCell;
+      return buildNewCell(input, backgroundColor);
     }
 
+    var newCell = buildNewCell(input);
     var digits = findDigits(input);
     if (digits.isEmpty()) {
       return newCell;
@@ -51,9 +54,13 @@ public class CellProcessor {
   }
 
   private Mat buildNewCell(Mat input) {
+    return buildNewCell(input, backgroundColor);
+  }
+
+  private Mat buildNewCell(Mat input, Scalar color) {
     var height = input.height() * cellScale;
     var width = input.width() * cellScale;
-    var background = new Mat(height, width, CV_8UC3, backgroundColor);
+    var background = new Mat(height, width, CV_8UC3, color);
     var newCell = new Mat();
     Core.copyMakeBorder(
         background,
@@ -79,7 +86,7 @@ public class CellProcessor {
     for (var r = 0; r < input.rows(); r++) {
       for (var c = 0; c < input.cols(); c++) {
         var intensity = input.get(r, c)[0];
-        if (intensity < 67) {
+        if (intensity < 100) {
           darkPixels++;
         }
       }
@@ -91,7 +98,7 @@ public class CellProcessor {
     var gray = converter.toGrayscale(input);
     var binary = converter.toBinary(gray);
     var contours =
-        converter.toContours(binary).stream()
+        converter.toContours(binary, RETR_LIST).stream()
             .sorted(Comparator.comparingInt(this::getLeftmostX))
             .toList();
     return toDigits(binary, contours);
@@ -107,39 +114,67 @@ public class CellProcessor {
     return minX;
   }
 
+  private Collection<MatOfPoint> filterLikelyDigitContours(Mat binary, Collection<MatOfPoint> contours) {
+    var candidateContours = contours.stream().filter(contour -> isLikelyDigit(binary, contour)).toList();
+    return removeDuplicates(candidateContours);
+  }
+
+  private Collection<MatOfPoint> removeDuplicates(Collection<MatOfPoint> contours) {
+    var deduplicated = new ArrayList<MatOfPoint>();
+    for (var contour : contours) {
+      var isContained = false;
+      var thisBox = Imgproc.boundingRect(contour);
+      var otherContours = new ArrayList<>(contours);
+      otherContours.remove(contour);
+      for (var otherContour : otherContours) {
+        var otherBox = Imgproc.boundingRect(otherContour);
+        if (contains(otherBox, thisBox)) {
+          isContained = true;
+        }
+      }
+      if (!isContained) {
+        deduplicated.add(contour);
+      }
+    }
+    return deduplicated;
+  }
+
+
+
   private Collection<Mat> toDigits(Mat binary, Collection<MatOfPoint> contours) {
-    return contours.stream()
-        .map(contour -> extractLikelyDigit(binary, contour))
-        .flatMap(Optional::stream)
+    var candidateContours = filterLikelyDigitContours(binary, contours);
+    return candidateContours.stream()
+        .map(contour -> toSubmat(binary, contour))
         .map(digit -> converter.scale(digit, digitScale))
         .map(converter::invert)
         .toList();
   }
 
-  private Optional<Mat> extractLikelyDigit(Mat binary, MatOfPoint contour) {
+  private boolean isLikelyDigit(Mat binary, MatOfPoint contour) {
     var contourArea = Imgproc.contourArea(contour);
     if (contourArea <= 0) {
-      return Optional.empty();
+      return false;
     }
 
     var box = Imgproc.boundingRect(contour);
-    if (box.x == 0 && box.y == 0) {
-      return Optional.empty();
+    if (box.x == 0 || box.y == 0) {
+      return false;
     }
 
     var totalArea = binary.rows() * binary.cols();
     var percentageOfArea = (contourArea / totalArea) * 100;
     if (percentageOfArea <= 0.75 || percentageOfArea >= 8) {
-      return Optional.empty();
+      return false;
     }
 
     var percentageOfHeight = ((double) box.height / binary.height()) * 100;
     var percentageOfWidth = ((double) box.width / binary.width()) * 100;
-    if (percentageOfHeight >= 45 || percentageOfWidth >= 45) {
-      return Optional.empty();
-    }
+    return percentageOfHeight < 45 && percentageOfWidth < 45;
+  }
 
-    return Optional.of(binary.submat(box));
+  private Mat toSubmat(Mat binary, MatOfPoint contour) {
+    var box = Imgproc.boundingRect(contour);
+    return binary.submat(box);
   }
 
   private Mat centerNumberInCell(Mat cell, Mat number) {

@@ -1,16 +1,16 @@
 package uk.co.mruoc.cws.solver.textract;
 
-import static org.opencv.imgproc.Imgproc.MORPH_RECT;
-
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
-import org.opencv.core.Size;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import uk.co.mruoc.cws.image.ImageConverter;
 import uk.co.mruoc.cws.usecase.Image;
@@ -47,63 +47,58 @@ public class GridDimensionsCalculator {
   }
 
   public GridDimensions calculateDimensions(Mat input) {
-    var gray = matConverter.toGrayscale(input);
-    var binary = matConverter.toBinary(gray);
-    var cleaned = matConverter.clean(binary);
+    var grayCropped = matConverter.toGrayscale(input);
+    var blurred = matConverter.blur(grayCropped);
+    var binary = matConverter.toBinary(blurred);
+    var smoothed = matConverter.smooth(binary);
+    //min area 35 to preserve all numbers if needed
+    var cleaned = matConverter.removeNoiseSmallerThan(smoothed, 1500);
+
+    var horizontal = matConverter.toHorizontalGridLines(cleaned);
+    var horizontalCoordinates = toHorizontalCoordinates(horizontal);
+    var vertical = matConverter.toVerticalGridLines(cleaned);
+    var verticalCoordinates = toVerticalCoordinates(vertical);
+    var gridLines = matConverter.combine(horizontal, vertical);
+    MatLogger.debug(gridLines, "grid-lines");
+
+    var intersections = matConverter.toIntersections(cleaned);
+    MatLogger.debug(intersections, "intersections");
+
+    var points = matConverter.toPoints(intersections).stream()
+            .sorted(Comparator.comparingDouble((Point p) -> p.y).reversed())
+            .toList();
+
+    int rowCount = horizontalCoordinates.size();
+    int columnCount = verticalCoordinates.size();
+
+    var rows = new ArrayList<List<Point>>();
+    Mat out = input.clone();
+    for (int y = 0; y < rowCount; y++) {
+      int start = y * columnCount;
+      int end = start + columnCount;
+      rows.add(points.subList(start, end).stream().sorted(Comparator.comparingDouble((Point p) -> p.x)).toList());
+    }
+    for (var row : rows) {
+      for (var p : row) {
+        Imgproc.circle(out, p, 5, new Scalar(0, 0, 255), 5);
+      }
+    }
+    MatLogger.debug(out, "grid-with-intersections");
     return GridDimensions.builder()
-        .rows(toHorizontalCoordinates(cleaned))
-        .columns(toVerticalCoordinates(cleaned))
+        .rows(horizontalCoordinates)
+        .columns(verticalCoordinates)
+        .points(rows)
         .build();
   }
 
   private List<Integer> toHorizontalCoordinates(Mat input) {
-    var lines = toHorizontalGridLines(input);
-    var coordinates = toCoordinates(lines, (rect) -> rect.y);
-    return cluster(lines, coordinates);
-  }
-
-  private Mat toHorizontalGridLines(Mat input) {
-    var horizontals = new Mat();
-    int width = Math.max(20, input.cols() / 40);
-    Imgproc.erode(input, horizontals, toKernel(width, 1));
-
-    var connected = new Mat();
-    Imgproc.dilate(horizontals, connected, toKernel(350, 1));
-
-    var bridged = new Mat();
-    Imgproc.dilate(connected, bridged, toKernel(1, 17));
-
-    var thinned = new Mat();
-    Imgproc.erode(bridged, thinned, toKernel(1, 17));
-    MatLogger.debug(thinned, "horizontal-grid-lines");
-    return thinned;
+    var coordinates = toCoordinates(input, (rect) -> rect.y);
+    return cluster(input, coordinates);
   }
 
   private List<Integer> toVerticalCoordinates(Mat input) {
-    var lines = toVerticalGridLines(input);
-    var coordinates = toCoordinates(lines, (rect) -> rect.x);
-    return cluster(lines, coordinates);
-  }
-
-  private Mat toKernel(int width, int height) {
-    return Imgproc.getStructuringElement(MORPH_RECT, new Size(width, height));
-  }
-
-  private Mat toVerticalGridLines(Mat input) {
-    var verticals = new Mat();
-    int height = Math.max(20, input.rows() / 40);
-    Imgproc.erode(input, verticals, toKernel(1, height));
-
-    var connected = new Mat();
-    Imgproc.dilate(verticals, connected, toKernel(1, 475));
-
-    var bridged = new Mat();
-    Imgproc.dilate(connected, bridged, toKernel(17, 1));
-
-    var thinned = new Mat();
-    Imgproc.erode(bridged, thinned, toKernel(17, 1));
-    MatLogger.debug(thinned, "vertical-grid-lines");
-    return thinned;
+    var coordinates = toCoordinates(input, (rect) -> rect.x);
+    return cluster(input, coordinates);
   }
 
   private List<Integer> toCoordinates(Mat lines, Function<Rect, Integer> function) {

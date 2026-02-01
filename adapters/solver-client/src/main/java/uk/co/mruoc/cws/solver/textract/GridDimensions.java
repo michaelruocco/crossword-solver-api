@@ -21,6 +21,7 @@ public class GridDimensions {
 
   private final List<Integer> rows;
   private final List<Integer> columns;
+  private final List<List<Point>> points;
 
   public int getNumberOfRows() {
     return rows.size() - 1;
@@ -54,15 +55,11 @@ public class GridDimensions {
   }
 
   private MatOfPoint2f getSourcePoints(int x, int y) {
-    int left = columns.get(x);
-    int right = columns.get(x + 1);
-    int top = rows.get(y);
-    int bottom = rows.get(y + 1);
-    return new MatOfPoint2f(
-        new Point(left, top),
-        new Point(right, top),
-        new Point(right, bottom),
-        new Point(left, bottom));
+    var bl = points.get(y).get(x);
+    var br = points.get(y).get(x + 1);
+    var tr = points.get(y + 1).get(x + 1);
+    var tl = points.get(y + 1).get(x);
+    return new MatOfPoint2f(tl, tr, br, bl);
   }
 
   private MatOfPoint2f getDestinationPoints(int width, int height) {
