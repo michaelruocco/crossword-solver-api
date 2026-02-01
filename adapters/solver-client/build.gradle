@@ -17,6 +17,7 @@ dependencies {
     implementation "software.amazon.awssdk:textract:${awsSdkVersion}"
     implementation "org.apache.commons:commons-math3:3.6.1"
     implementation "commons-io:commons-io:2.21.0"
+    implementation "net.sourceforge.tess4j:tess4j:5.18.0"
 
     testFixturesImplementation project(":use-cases")
     testFixturesImplementation "com.openai:openai-java:${openAiVersion}"

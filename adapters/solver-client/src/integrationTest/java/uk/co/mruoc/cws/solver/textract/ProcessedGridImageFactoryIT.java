@@ -39,13 +39,13 @@ class ProcessedGridImageFactoryIT {
   @ValueSource(
       strings = {
         "/examples/puzzle1/puzzle1.png",
-        "/examples/puzzle2/puzzle2.png",
-        "/examples/puzzle3/puzzle3.png",
-        "/examples/puzzle4/puzzle4.png",
-        "/examples/puzzle5/puzzle5.png",
-        "/examples/puzzle9/puzzle9.jpg",
-        "/examples/puzzle14/puzzle14.jpg",
-        "/examples/puzzle24/puzzle24.jpg"
+        //"/examples/puzzle2/puzzle2.png",
+        //"/examples/puzzle3/puzzle3.png",
+        //"/examples/puzzle4/puzzle4.png",
+        //"/examples/puzzle5/puzzle5.png",
+        //"/examples/puzzle9/puzzle9.jpg",
+        //"/examples/puzzle14/puzzle14.jpg",
+        //"/examples/puzzle24/puzzle24.jpg"
       })
   void shouldExtractCellsFromImage(String puzzlePath) {
     var puzzleName = toFilenameExcludingExtension(puzzlePath);

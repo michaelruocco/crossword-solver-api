@@ -4,6 +4,7 @@ import static org.opencv.core.Core.BORDER_CONSTANT;
 import static org.opencv.core.CvType.CV_8UC3;
 import static org.opencv.imgproc.Imgproc.RETR_LIST;
 import static uk.co.mruoc.cws.solver.textract.RectUtils.contains;
+import static uk.co.mruoc.cws.solver.textract.RectUtils.removeDuplicates;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +17,7 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 @RequiredArgsConstructor
@@ -33,24 +35,43 @@ public class CellProcessor {
 
   private final MatConverter converter;
   private final MatConcatenator concatenator;
+  private final NumberDetector detector;
 
   public CellProcessor() {
-    this(WHITE, BLACK, 4, 7, 6, 25, new MatConverter(), new MatConcatenator());
+    this(WHITE, BLACK, 26, 7, 48, 400, new MatConverter(), new MatConcatenator(), new NumberDetector());
   }
 
   public Mat process(Mat input) {
     if (isMostlyDark(input)) {
-      return buildNewCell(input, backgroundColor);
+      return buildNewCell(input, backgroundColor, 4);
     }
 
-    var newCell = buildNewCell(input);
+    var newCell = buildNewCell(input, foregroundColor, 4);
     var digits = findDigits(input);
     if (digits.isEmpty()) {
       return newCell;
     }
 
+    var numberCell = buildNewCell(input);
     var number = concatenator.horizontalConcat(digits, digitSpacing);
-    return centerNumberInCell(newCell, number);
+    var cell = centerNumberInCell(numberCell, number);
+    var digit = detector.detect(cell);
+    var digitCell = buildNewCell(input, backgroundColor, 4);
+    if (digit.isEmpty()) {
+      return digitCell;
+    }
+
+    var text = Integer.toString(digit.get());
+    int fontFace = Imgproc.FONT_HERSHEY_SIMPLEX;
+    double fontScale = 10.0; // adjust to fit cell
+    int thickness = 20;
+    Size textSize = Imgproc.getTextSize(text, fontFace, fontScale, thickness, new int[1]);
+    var textX = digitCell.width() * 0.05; //(digitCell.width() - textSize.width) / 6;
+    var textY = (digitCell.height() * 0.1) + textSize.height; //(digitCell.height() - textSize.height) / 4;
+    var textLocation = new Point(textX, textY);
+    Imgproc.putText(digitCell, text, textLocation, fontFace, fontScale, foregroundColor, thickness);
+    MatLogger.debug(digitCell, String.format("digit-cell-%s", text));
+    return digitCell;
   }
 
   private Mat buildNewCell(Mat input) {
@@ -58,8 +79,12 @@ public class CellProcessor {
   }
 
   private Mat buildNewCell(Mat input, Scalar color) {
-    var height = input.height() * cellScale;
-    var width = input.width() * cellScale;
+    return buildNewCell(input, color, cellScale);
+  }
+
+  private Mat buildNewCell(Mat input, Scalar color, int scale) {
+    var height = input.height() * scale;
+    var width = input.width() * scale;
     var background = new Mat(height, width, CV_8UC3, color);
     var newCell = new Mat();
     Core.copyMakeBorder(
@@ -118,28 +143,6 @@ public class CellProcessor {
     var candidateContours = contours.stream().filter(contour -> isLikelyDigit(binary, contour)).toList();
     return removeDuplicates(candidateContours);
   }
-
-  private Collection<MatOfPoint> removeDuplicates(Collection<MatOfPoint> contours) {
-    var deduplicated = new ArrayList<MatOfPoint>();
-    for (var contour : contours) {
-      var isContained = false;
-      var thisBox = Imgproc.boundingRect(contour);
-      var otherContours = new ArrayList<>(contours);
-      otherContours.remove(contour);
-      for (var otherContour : otherContours) {
-        var otherBox = Imgproc.boundingRect(otherContour);
-        if (contains(otherBox, thisBox)) {
-          isContained = true;
-        }
-      }
-      if (!isContained) {
-        deduplicated.add(contour);
-      }
-    }
-    return deduplicated;
-  }
-
-
 
   private Collection<Mat> toDigits(Mat binary, Collection<MatOfPoint> contours) {
     var candidateContours = filterLikelyDigitContours(binary, contours);

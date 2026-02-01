@@ -30,6 +30,7 @@ public class MatConcatenator {
     var targetHeight = findMax(mats, Mat::height);
     var paddedMats = padAllToHeight(mats, targetHeight);
     var spacedMats = addSpacingIfRequired(paddedMats, targetHeight, spacing);
+
     var combined = new Mat();
     Core.hconcat(spacedMats, combined);
     return combined;
@@ -80,6 +81,9 @@ public class MatConcatenator {
 
   private List<Mat> addSpacingIfRequired(List<Mat> mats, int targetSize, int spacing) {
     if (spacing < 1) {
+      return mats;
+    }
+    if (mats.size() < 2) {
       return mats;
     }
     var type = findType(mats);
