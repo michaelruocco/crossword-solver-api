@@ -1,6 +1,5 @@
 package uk.co.mruoc.cws.solver.textract;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -12,7 +11,6 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-import uk.co.mruoc.cws.image.ImageConverter;
 import uk.co.mruoc.cws.usecase.Image;
 
 @RequiredArgsConstructor
@@ -23,17 +21,11 @@ public class GridDimensionsCalculator {
     OpenCvInitializer.init();
   }
 
-  private final ImageConverter imageConverter;
   private final GridExtractor gridExtractor;
   private final MatConverter matConverter;
 
   public GridDimensionsCalculator() {
-    this(new ImageConverter(), new GridExtractor(), new MatConverter());
-  }
-
-  public GridDimensions calculateDimensions(BufferedImage image) {
-    var bytes = imageConverter.toBytes(image);
-    return calculateDimensions(bytes);
+    this(new GridExtractor(), new MatConverter());
   }
 
   public GridDimensions calculateDimensions(Image image) {
@@ -51,7 +43,7 @@ public class GridDimensionsCalculator {
     var blurred = matConverter.blur(grayCropped);
     var binary = matConverter.toBinary(blurred);
     var smoothed = matConverter.smooth(binary);
-    //min area 35 to preserve all numbers if needed
+    // min area 35 to preserve all numbers if needed
     var cleaned = matConverter.removeNoiseSmallerThan(smoothed, 1500);
 
     var horizontal = matConverter.toHorizontalGridLines(cleaned);
@@ -64,7 +56,8 @@ public class GridDimensionsCalculator {
     var intersections = matConverter.toIntersections(cleaned);
     MatLogger.debug(intersections, "intersections");
 
-    var points = matConverter.toPoints(intersections).stream()
+    var points =
+        matConverter.toPoints(intersections).stream()
             .sorted(Comparator.comparingDouble((Point p) -> p.y).reversed())
             .toList();
 
@@ -76,7 +69,10 @@ public class GridDimensionsCalculator {
     for (int y = 0; y < rowCount; y++) {
       int start = y * columnCount;
       int end = start + columnCount;
-      rows.add(points.subList(start, end).stream().sorted(Comparator.comparingDouble((Point p) -> p.x)).toList());
+      rows.add(
+          points.subList(start, end).stream()
+              .sorted(Comparator.comparingDouble((Point p) -> p.x))
+              .toList());
     }
     for (var row : rows) {
       for (var p : row) {

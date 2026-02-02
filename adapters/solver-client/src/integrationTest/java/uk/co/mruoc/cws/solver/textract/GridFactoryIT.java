@@ -16,12 +16,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 import uk.co.mruoc.cws.usecase.UrlConverter;
 
 @Slf4j
-class ProcessedGridImageFactoryIT {
+class GridFactoryIT {
 
   private static final ImageDirectory OUTPUT_DIRECTORY =
       new ImageDirectory("integration-test-files/output-grid");
 
-  private final ProcessedGridImageFactory factory = new ProcessedGridImageFactory();
+  private final GridFactory factory = new GridFactory();
+  private final GridImageFactory imageFactory = new GridImageFactory();
   private final UrlConverter urlConverter = new UrlConverter();
 
   @BeforeAll
@@ -31,7 +32,7 @@ class ProcessedGridImageFactoryIT {
 
   @AfterAll
   static void deleteOutputDirectory() {
-    OUTPUT_DIRECTORY.delete();
+    // OUTPUT_DIRECTORY.delete();
     MatLogger.deleteAll();
   }
 
@@ -51,9 +52,10 @@ class ProcessedGridImageFactoryIT {
     var puzzleName = toFilenameExcludingExtension(puzzlePath);
     var puzzle = loadImage(puzzlePath);
 
-    var grid = factory.toProcessedGridImage(puzzle);
+    var grid = factory.toGrid(puzzle);
 
-    var outputPath = OUTPUT_DIRECTORY.writePng(grid, puzzleName);
+    var image = imageFactory.toImage(grid);
+    var outputPath = OUTPUT_DIRECTORY.writePng(image, puzzleName);
     var expectedPath = toExpectedGridPath(puzzleName);
     assertThat(areFilesIdentical(outputPath, expectedPath)).isTrue();
   }

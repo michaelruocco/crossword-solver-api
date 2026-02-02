@@ -2,8 +2,6 @@ package uk.co.mruoc.cws.repository.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
@@ -33,6 +31,7 @@ public class AttemptAnswerEntity {
   @Id
   @Column(name = "clue_id", nullable = false)
   private String clueId;
+
   private String value;
   private int score;
   private boolean confirmed;

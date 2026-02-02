@@ -1,10 +1,9 @@
 package uk.co.mruoc.cws.api;
 
+import java.util.Collection;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Answers;
 import uk.co.mruoc.cws.entity.Id;
-
-import java.util.Collection;
 
 public class ApiAnswerConverter {
 

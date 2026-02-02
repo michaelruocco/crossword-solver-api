@@ -7,16 +7,16 @@ import lombok.Data;
 @Data
 public class Result {
 
-    private final Attempt attempt;
-    private final int totalCount;
-    private final int correctCount;
-    private final Answers incorrectAnswers;
+  private final Attempt attempt;
+  private final int totalCount;
+  private final int correctCount;
+  private final Answers incorrectAnswers;
 
-    public double percentageCorrect() {
-        return (correctCount / (double) totalCount) * 100;
-    }
+  public double percentageCorrect() {
+    return (correctCount / (double) totalCount) * 100;
+  }
 
-    public boolean hasIncorrectAnswers() {
-        return correctCount < totalCount;
-    }
+  public boolean hasIncorrectAnswers() {
+    return correctCount < totalCount;
+  }
 }

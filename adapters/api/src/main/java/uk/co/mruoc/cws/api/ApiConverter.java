@@ -15,7 +15,11 @@ public class ApiConverter {
   private final ApiResultConverter resultConverter;
 
   public ApiConverter() {
-    this(new ApiPuzzleConverter(), new ApiAttemptConverter(), new ApiAnswerConverter(), new ApiResultConverter());
+    this(
+        new ApiPuzzleConverter(),
+        new ApiAttemptConverter(),
+        new ApiAnswerConverter(),
+        new ApiResultConverter());
   }
 
   public ApiPuzzle<ApiClue> toApiPuzzle(Puzzle puzzle) {

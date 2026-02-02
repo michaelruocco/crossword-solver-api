@@ -1,7 +1,6 @@
 package uk.co.mruoc.cws.solver.textract;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.co.mruoc.cws.solver.bedrock.TextractClientFactory.buildCellExtractor;
 
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
@@ -12,15 +11,13 @@ import uk.co.mruoc.cws.solver.stub.StubCellExtractor;
 import uk.co.mruoc.cws.usecase.CellExtractor;
 import uk.co.mruoc.cws.usecase.ImageDownloader;
 import uk.co.mruoc.cws.usecase.StubImageDownloader;
-import uk.co.mruoc.junit.EnvVarsPresent;
 
-@EnvVarsPresent(values = {"AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"})
 @Slf4j
-class TextractCellExtractorIT {
+class TesseractCellExtractorIT {
 
   private final ImageDownloader downloader = new StubImageDownloader();
 
-  private final CellExtractor extractor = buildCellExtractor();
+  private final CellExtractor extractor = new TesseractCellExtractor();
 
   @ParameterizedTest
   @MethodSource("imageUrls")
@@ -29,9 +26,9 @@ class TextractCellExtractorIT {
 
     var cells = extractor.extractCells(image);
 
-    cells.forEach(word -> log.info(word.toString()));
+    cells.forEach(cell -> log.info(cell.toString()));
     var expectedCells = new StubCellExtractor().extractCells(image);
-    assertThat(cells).containsExactlyElementsOf(expectedCells);
+    assertThat(cells).containsExactlyInAnyOrderElementsOf(expectedCells);
   }
 
   private static Stream<Arguments> imageUrls() {

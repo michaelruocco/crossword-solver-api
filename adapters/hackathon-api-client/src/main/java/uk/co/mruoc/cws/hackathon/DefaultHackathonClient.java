@@ -3,7 +3,6 @@ package uk.co.mruoc.cws.hackathon;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -37,7 +36,8 @@ public class DefaultHackathonClient implements HackathonClient {
   @Override
   public Result recordAnswers(Attempt attempt) {
     var initialResult = doRecordAnswers(attempt);
-    var finalResult = Result.builder()
+    var finalResult =
+        Result.builder()
             .attempt(attempt)
             .totalCount(initialResult.getTotal())
             .correctCount(initialResult.getCorrect())
@@ -52,7 +52,8 @@ public class DefaultHackathonClient implements HackathonClient {
   private HackathonResult doRecordAnswers(Attempt attempt) {
     var json = attemptFactory.toHackathonAttemptJson(attempt);
     log.debug("sending request body {}", json);
-    var hackathonResult = webClient
+    var hackathonResult =
+        webClient
             .post()
             .uri("/solve")
             .contentType(MediaType.APPLICATION_JSON)
@@ -61,14 +62,16 @@ public class DefaultHackathonClient implements HackathonClient {
             .bodyToMono(HackathonResult.class)
             .switchIfEmpty(Mono.error(new HackathonClientException("empty response")))
             .block(Duration.ofSeconds(10));
-    return Optional.ofNullable(hackathonResult).orElseThrow(() -> new HackathonClientException(attempt.id()));
+    return Optional.ofNullable(hackathonResult)
+        .orElseThrow(() -> new HackathonClientException(attempt.id()));
   }
 
   private Answers toIncorrectAnswers(Attempt attempt, HackathonResult initialResult) {
     if (initialResult.allCorrect()) {
       return new Answers();
     }
-    return new Answers(attempt.answers().stream()
+    return new Answers(
+        attempt.answers().stream()
             .filter(answer -> isIncorrect(answer, attempt, initialResult))
             .toList());
   }

@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.textract.TextractClient;
-import uk.co.mruoc.cws.solver.textract.TextractCellExtractor;
 import uk.co.mruoc.cws.usecase.CellExtractor;
 
 @Configuration

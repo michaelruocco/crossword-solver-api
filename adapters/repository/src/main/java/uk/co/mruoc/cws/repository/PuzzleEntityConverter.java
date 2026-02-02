@@ -67,7 +67,8 @@ public class PuzzleEntityConverter {
   }
 
   private Cell toCell(CellEntity entity) {
-    return new Cell(entity.getCellId(), new Coordinates(entity.getX(), entity.getY()));
+    var coordinates = new Coordinates(entity.getX(), entity.getY());
+    return new Cell(coordinates, entity.isBlack(), entity.getCellId());
   }
 
   private Collection<ClueEntity> toClueEntities(Puzzle puzzle) {

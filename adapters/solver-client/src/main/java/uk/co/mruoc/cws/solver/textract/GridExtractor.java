@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
 import uk.co.mruoc.cws.image.ImageConverter;
 
 @RequiredArgsConstructor
@@ -31,8 +30,8 @@ public class GridExtractor {
     var warped = matConverter.wrapGrid(input);
     return matConverter.crop(warped, 10);
 
-    //var corners = matConverter.toCornersOfLargestContour(input);
-    //return warpPerspective(input, corners);
+    // var corners = matConverter.toCornersOfLargestContour(input);
+    // return warpPerspective(input, corners);
   }
 
   /*private Mat warpPerspective(Mat input, Corners corners) {

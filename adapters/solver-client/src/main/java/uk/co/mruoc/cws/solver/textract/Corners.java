@@ -3,15 +3,11 @@ package uk.co.mruoc.cws.solver.textract;
 import lombok.Builder;
 import lombok.ToString;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-
-import java.util.Arrays;
 
 @ToString
 @Builder
@@ -22,25 +18,10 @@ public class Corners {
   final Point bottomRight;
   final Point bottomLeft;
 
-  public Mat perspectiveTransform() {
-    return perspectiveTransform(1);
-  }
-
   public Mat perspectiveTransform(double scale) {
     var srcPoints = new MatOfPoint2f(toArray(scale));
     var dstPoints = toDestinationPoints(maxSize());
     return Imgproc.getPerspectiveTransform(srcPoints, dstPoints);
-  }
-
-  public Size padedMaxSize(double paddingPercentage) {
-    var maxSize = maxSize();
-    var paddedWidth = pad(maxSize.width, paddingPercentage);
-    var paddedHeight = pad(maxSize.height, paddingPercentage);
-    return new Size(paddedWidth, paddedHeight);
-  }
-
-  private double pad(double length, double padPercentage) {
-    return length + (padPercentage * length);
   }
 
   public Size maxSize() {
@@ -72,26 +53,13 @@ public class Corners {
   }
 
   private Point[] toArray(double scale) {
-    if (scale == 1d) {
-      return new Point[]{topLeft, topRight, bottomRight, bottomLeft};
-    }
     var center = center();
-    return new Point[]{
-            expand(topLeft, center, scale),
-            expand(topRight, center, scale),
-            expand(bottomRight, center, scale),
-            expand(bottomLeft, center, scale)
+    return new Point[] {
+      expand(topLeft, center, scale),
+      expand(topRight, center, scale),
+      expand(bottomRight, center, scale),
+      expand(bottomLeft, center, scale)
     };
-  }
-
-  public Corners expand(double scale) {
-    var center = center();
-    return Corners.builder()
-            .topLeft(expand(topLeft, center, scale))
-            .topRight(expand(topLeft, center, scale))
-            .bottomRight(expand(bottomRight, center, scale))
-            .bottomLeft(expand(bottomLeft, center, scale))
-            .build();
   }
 
   private MatOfPoint2f toDestinationPoints(Size maxSize) {

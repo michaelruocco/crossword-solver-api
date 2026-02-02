@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CellEntityId implements Serializable {
   private long puzzleId;
-  private int cellId;
+  private int x;
+  private int y;
 }

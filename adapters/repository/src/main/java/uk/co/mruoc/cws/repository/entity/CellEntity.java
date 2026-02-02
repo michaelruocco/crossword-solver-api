@@ -14,7 +14,8 @@ import lombok.Setter;
 @Table(name = "cell")
 public class CellEntity {
   @Id private long puzzleId;
-  @Id private int cellId;
-  private int x;
-  private int y;
+  @Id private int x;
+  @Id private int y;
+  private int cellId;
+  private boolean black;
 }

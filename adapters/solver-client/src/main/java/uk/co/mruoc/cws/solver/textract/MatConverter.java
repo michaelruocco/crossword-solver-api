@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import javax.imageio.ImageIO;
-
 import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -99,7 +98,7 @@ public class MatConverter {
 
     int newX = Math.max(boundingRect.x - expandPixels, 0);
     int newY = Math.max(boundingRect.y - expandPixels, 0);
-    int newWidth = Math.min(boundingRect.width + 2 * expandPixels,  input.cols() - newX);
+    int newWidth = Math.min(boundingRect.width + 2 * expandPixels, input.cols() - newX);
     int newHeight = Math.min(boundingRect.height + 2 * expandPixels, input.rows() - newY);
     var expandedRect = new Rect(newX, newY, newWidth, newHeight);
     var cropped = new Mat(input, expandedRect);
@@ -138,7 +137,7 @@ public class MatConverter {
 
     var thinned = new Mat();
     Imgproc.erode(bridged, thinned, toKernel(1, 17));
-    //MatLogger.debug(thinned, "horizontal-grid-lines");
+    // MatLogger.debug(thinned, "horizontal-grid-lines");
     return thinned;
   }
 
@@ -155,7 +154,7 @@ public class MatConverter {
 
     var thinned = new Mat();
     Imgproc.erode(bridged, thinned, toKernel(17, 1));
-    //MatLogger.debug(thinned, "vertical-grid-lines");
+    // MatLogger.debug(thinned, "vertical-grid-lines");
     return thinned;
   }
 
@@ -196,7 +195,7 @@ public class MatConverter {
 
   public Mat blur(Mat input) {
     Mat blurred = new Mat();
-    Imgproc.GaussianBlur(input, blurred, new Size(7,7), 0);
+    Imgproc.GaussianBlur(input, blurred, new Size(7, 7), 0);
     MatLogger.debug(blurred, "blurred");
     return blurred;
   }
@@ -213,8 +212,12 @@ public class MatConverter {
 
     var gridBounds = Imgproc.boundingRect(toLargestContour(cleaned));
     var contours = toContours(input, RETR_LIST);
-    var contoursToFill = contours.stream()
-            .filter(contour -> outsideBounds(contour, gridBounds) || hasAreaLessThanOrEqualTo(contour, minArea))
+    var contoursToFill =
+        contours.stream()
+            .filter(
+                contour ->
+                    outsideBounds(contour, gridBounds)
+                        || hasAreaLessThanOrEqualTo(contour, minArea))
             .toList();
     fillBlack(cleaned, contoursToFill);
     log.info("filled {} of {} contours", contoursToFill.size(), contours.size());
@@ -330,10 +333,7 @@ public class MatConverter {
   }
 
   public List<Point> toPoints(Mat input) {
-    return toContours(input).stream()
-            .map(this::toCenterPoint)
-            .flatMap(Optional::stream)
-            .toList();
+    return toContours(input).stream().map(this::toCenterPoint).flatMap(Optional::stream).toList();
   }
 
   private Optional<Point> toCenterPoint(MatOfPoint contour) {
@@ -348,7 +348,7 @@ public class MatConverter {
 
   private boolean hasAreaLessThanOrEqualTo(MatOfPoint contour, int threshold) {
     var box = Imgproc.boundingRect(contour);
-    //TODO make these configuration inputs rather than hardcoded 80
+    // TODO make these configuration inputs rather than hardcoded 80
     if (box.width > 80) {
       return false;
     }

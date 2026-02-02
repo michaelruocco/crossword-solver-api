@@ -19,7 +19,7 @@ public class HackathonSolveAttemptFactory {
   private final String teamName;
 
   public HackathonSolveAttemptFactory(ObjectMapper mapper) {
-    this(mapper,"Michael Ruocco");
+    this(mapper, "Michael Ruocco");
   }
 
   public String toHackathonAttemptJson(Attempt attempt) {
