@@ -42,10 +42,7 @@ public class NumberDetector {
 
     public Optional<Integer> detect(Mat cell) {
         try {
-            var t = temp(cell);
-            var output = new File(String.format("integration-test-files/debug-images/cell-%d.png", temp.getAndIncrement()));
-            var image = converter.toBufferedImage(t);
-            ImageIO.write(image, "png", output);
+            var image = converter.toBufferedImage(cell);
             var raw = tesseract.doOCR(image);
             var text = raw.trim();
             log.info("text {}", text);
@@ -56,53 +53,9 @@ public class NumberDetector {
                 return Optional.empty();
             }
             return Optional.of(Integer.parseInt(text));
-        } catch (IOException | TesseractException e) {
+        } catch (TesseractException e) {
             return Optional.empty();
         }
-    }
-
-    private Mat temp(Mat input) {
-        Mat gray = new Mat();
-        Imgproc.cvtColor(input, gray, Imgproc.COLOR_BGR2GRAY); // convert to grayscale
-
-        Mat binary = new Mat();
-        Imgproc.threshold(gray, binary, 100, 255, Imgproc.THRESH_BINARY); // simple threshold
-
-// Find contours
-        var contours = findNumberContours(binary);
-// System.out.println("got " + contours.size() + " contours");
-// Draw bounding boxes on original color image
-        for (MatOfPoint contour : contours) {
-            Rect rect = Imgproc.boundingRect(contour);
-            //System.out.println("x " + rect.x + " y " + rect.y + " width " + rect.width + " height " + rect.height);
-            Imgproc.rectangle(input, rect.tl(), rect.br(), new Scalar(0, 0, 255), 5); // red box
-            if (rect.width > 1250) {
-                System.out.println("splitting");
-                Mat roi = new Mat(input, rect); // crop contour area
-
-                int midX = rect.width / 2;
-                Mat leftHalf = new Mat(roi, new Rect(0, 0, midX, rect.height));
-                Mat rightHalf = new Mat(roi, new Rect(midX, 0, rect.width - midX, rect.height));
-                int gap = 100;
-
-                Mat expanded = new Mat(rect.height, rect.width + gap, roi.type(), new Scalar(255, 255, 255));
-                // Left half goes at start
-                leftHalf.copyTo(expanded.submat(new Rect(0, 0, leftHalf.width(), leftHalf.height())));
-
-// Right half goes after leftHalf + gap
-                rightHalf.copyTo(expanded.submat(new Rect(leftHalf.width() + gap, 0, rightHalf.width(), rightHalf.height())));
-
-                int pasteX = rect.x - (gap / 2);
-                int pasteY = rect.y;
-
-// Make sure we don’t go outside the image boundary
-                Rect pasteRect = new Rect(pasteX, pasteY, expanded.width(), expanded.height());
-                expanded.copyTo(new Mat(input, pasteRect));
-
-                //System.out.println("drawing");
-            }
-        }
-        return input;
     }
 
     private Collection<MatOfPoint> findNumberContours(Mat input) {
@@ -119,7 +72,7 @@ public class NumberDetector {
 
     private static Tesseract buildTesseract() {
             var dataFolder = new File("./tessdata");
-            System.out.println(dataFolder.getAbsolutePath());
+            log.debug("setting up tesseract with data path {} ", dataFolder.getAbsolutePath());
             var tesseract = new Tesseract();
             tesseract.setDatapath(dataFolder.getAbsolutePath());
             tesseract.setVariable("tessedit_char_whitelist", "0123456789");

@@ -184,9 +184,13 @@ public class MatConverter {
   }
 
   public Mat toBinary(Mat input, int c) {
+    return toBinary(input, 51, c);
+  }
+
+  public Mat toBinary(Mat input, int blockSize, int c) {
     var binary = new Mat();
     Imgproc.adaptiveThreshold(
-        input, binary, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, 51, c);
+        input, binary, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV, blockSize, c);
     return binary;
   }
 

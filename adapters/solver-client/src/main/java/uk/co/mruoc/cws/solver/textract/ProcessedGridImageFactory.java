@@ -45,8 +45,6 @@ public class ProcessedGridImageFactory {
   }
 
   private Mat toProcessedGrid(BufferedImage input) {
-    //var original = new MatConverter().toMat(new ImageConverter().toBytes(input));
-
     var grid = gridExtractor.extractGrid(input);
     var dimensions = calculator.calculateDimensions(grid);
     log.info("average column width {} and height {}", dimensions.getAverageColumnWidth(), dimensions.getAverageRowHeight());
@@ -72,11 +70,11 @@ public class ProcessedGridImageFactory {
   }
 
   private Mat toProcessedCell(Mat grid, GridDimensions dimensions, int x, int y) {
-    var cell = dimensions.toCell(grid, x, y);
-    return cellProcessor.process(cell);
-    /*if (x == 8 && y == 22) {
-      return cellProcessor.process(cell);
-    }
-    return cell;*/
+    var cellMat = dimensions.toCell(grid, x, y);
+    var cell = cellProcessor.toCell(cellMat, x, y);
+    return cellProcessor.toMat(dimensions, cell);
+
+    //return cellProcessor.process(cellMat, x, y);
+     // return cellProcessor.process(cell);
   }
 }
