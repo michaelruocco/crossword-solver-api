@@ -9,6 +9,7 @@ import uk.co.mruoc.cws.usecase.GridExtractor;
 @Configuration
 public class TesseractSolverClientConfig {
 
+  // TODO make tessdata folder path a configuration parameter
   @Bean
   public NumberDetector numberDetector() {
     var path =
@@ -16,8 +17,6 @@ public class TesseractSolverClientConfig {
     return new NumberDetector(path);
   }
 
-  // TODO add configurable tesseract instance as a bean and pass into cell extractor / grid factory
-  // / number detector
   @Bean
   public GridExtractor tesseractCellExtractor(NumberDetector numberDetector) {
     return new TesseractGridExtractor(numberDetector);
