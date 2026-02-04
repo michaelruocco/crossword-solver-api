@@ -14,14 +14,12 @@ dependencies {
     implementation "software.amazon.awssdk:bedrockruntime:${awsSdkVersion}"
     implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
     implementation "org.openpnp:opencv:4.9.0-0"
-    implementation "software.amazon.awssdk:textract:${awsSdkVersion}"
     implementation "org.apache.commons:commons-math3:3.6.1"
     implementation "commons-io:commons-io:2.21.0"
-    implementation "net.sourceforge.tess4j:tess4j:5.18.0"
+    api "net.sourceforge.tess4j:tess4j:5.18.0"
 
     testFixturesImplementation project(":use-cases")
     testFixturesImplementation "com.openai:openai-java:${openAiVersion}"
     testFixturesImplementation "org.apache.commons:commons-text:${commonsText}"
     testFixturesImplementation "software.amazon.awssdk:bedrockruntime:${awsSdkVersion}"
-    testFixturesImplementation "software.amazon.awssdk:textract:${awsSdkVersion}"
 }

@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.solver.textract;
+package uk.co.mruoc.cws.solver.tesseract;
 
 import java.awt.image.BufferedImage;
 import java.util.Collection;
@@ -21,7 +21,11 @@ public class GridFactory {
   private final CellFactory cellFactory;
 
   public GridFactory() {
-    this(new GridExtractor(), new GridDimensionsCalculator(), new CellFactory());
+    this(new NumberDetector());
+  }
+
+  public GridFactory(NumberDetector numberDetector) {
+    this(new GridExtractor(), new GridDimensionsCalculator(), new CellFactory(numberDetector));
   }
 
   public Grid toGrid(BufferedImage input) {

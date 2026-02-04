@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.solver.textract;
+package uk.co.mruoc.cws.solver.tesseract;
 
 import static org.opencv.imgproc.Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
@@ -10,7 +10,7 @@ import static org.opencv.imgproc.Imgproc.MORPH_RECT;
 import static org.opencv.imgproc.Imgproc.RETR_EXTERNAL;
 import static org.opencv.imgproc.Imgproc.RETR_LIST;
 import static org.opencv.imgproc.Imgproc.THRESH_BINARY_INV;
-import static uk.co.mruoc.cws.solver.textract.RectUtils.contains;
+import static uk.co.mruoc.cws.solver.tesseract.RectUtils.contains;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;

@@ -11,4 +11,5 @@ public class ApiPuzzle<T> {
   private final String name;
   private final String hash;
   private final Collection<T> clues;
+  private final ApiGrid grid;
 }

@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.solver.textract;
+package uk.co.mruoc.cws.solver.tesseract;
 
 import static net.sourceforge.tess4j.ITessAPI.TessOcrEngineMode.OEM_LSTM_ONLY;
 import static net.sourceforge.tess4j.ITessAPI.TessPageSegMode.PSM_SINGLE_WORD;
@@ -19,7 +19,15 @@ public class NumberDetector {
   private final MatConverter converter;
 
   public NumberDetector() {
-    this(buildTesseract(), new MatConverter());
+    this(buildTesseract());
+  }
+
+  public NumberDetector(String dataFolderPath) {
+    this(buildTesseract(dataFolderPath));
+  }
+
+  public NumberDetector(Tesseract tesseract) {
+    this(tesseract, new MatConverter());
   }
 
   public Optional<Integer> detect(Mat cell) {
@@ -43,10 +51,15 @@ public class NumberDetector {
 
   private static Tesseract buildTesseract() {
     var dataFolder = new File("./tessdata");
-    log.debug("setting up tesseract with data path {} ", dataFolder.getAbsolutePath());
+    return buildTesseract(dataFolder.getAbsolutePath());
+  }
+
+  private static Tesseract buildTesseract(String dataFolderPath) {
     var tesseract = new Tesseract();
-    tesseract.setDatapath(dataFolder.getAbsolutePath());
+    log.info("setting up tesseract with data folder path {} ", dataFolderPath);
+    tesseract.setDatapath(dataFolderPath);
     tesseract.setVariable("tessedit_char_whitelist", "0123456789");
+    tesseract.setVariable("user_defined_dpi", "300");
     tesseract.setPageSegMode(PSM_SINGLE_WORD);
     tesseract.setOcrEngineMode(OEM_LSTM_ONLY);
     tesseract.setLanguage("eng");

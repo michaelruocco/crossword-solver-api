@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.solver.textract;
+package uk.co.mruoc.cws.solver.tesseract;
 
 import java.util.ArrayList;
 import java.util.Comparator;

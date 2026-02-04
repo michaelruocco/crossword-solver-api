@@ -3,9 +3,12 @@ package uk.co.mruoc.cws.api;
 import java.util.Collection;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Attempt;
+import uk.co.mruoc.cws.entity.Cell;
+import uk.co.mruoc.cws.entity.Cells;
 import uk.co.mruoc.cws.entity.Clue;
+import uk.co.mruoc.cws.entity.Clues;
+import uk.co.mruoc.cws.entity.Grid;
 import uk.co.mruoc.cws.entity.Puzzle;
-import uk.co.mruoc.cws.entity.Words;
 
 public class ApiPuzzleConverter {
 
@@ -14,7 +17,8 @@ public class ApiPuzzleConverter {
         .id(puzzle.getId())
         .name(puzzle.getName())
         .hash(puzzle.getHash())
-        .clues(toApiClues(puzzle))
+        .clues(toApiClues(puzzle.getClues()))
+        .grid(toApiGrid(puzzle.getGrid()))
         .build();
   }
 
@@ -28,17 +32,36 @@ public class ApiPuzzleConverter {
         .build();
   }
 
-  private Collection<ApiClue> toApiClues(Puzzle puzzle) {
-    return puzzle.getClues().stream().map(clue -> toApiClue(clue, puzzle.getWords())).toList();
+  private Collection<ApiClue> toApiClues(Clues clues) {
+    return clues.stream().map(this::toApiClue).toList();
   }
 
-  private ApiClue toApiClue(Clue clue, Words words) {
+  private ApiClue toApiClue(Clue clue) {
     return ApiClue.builder()
         .id(clue.numericId())
         .direction(clue.direction())
-        .coordinates(words.getCoordinates(clue.numericId()))
         .text(clue.text())
         .lengths(clue.lengths())
+        .build();
+  }
+
+  private ApiGrid toApiGrid(Grid grid) {
+    return ApiGrid.builder()
+        .cells(toApiCells(grid.cells()))
+        .columnWidth(grid.columnWidth())
+        .rowHeight(grid.rowHeight())
+        .build();
+  }
+
+  private Collection<ApiCell> toApiCells(Cells cells) {
+    return cells.stream().map(this::toApiCell).toList();
+  }
+
+  private ApiCell toApiCell(Cell cell) {
+    return ApiCell.builder()
+        .coordinates(cell.coordinates())
+        .black(cell.black())
+        .id(cell.getId().orElse(null))
         .build();
   }
 
@@ -47,7 +70,7 @@ public class ApiPuzzleConverter {
   }
 
   private ApiAttemptClue toApiAttemptClue(Clue clue, Attempt attempt) {
-    var apiClue = toApiClue(clue, attempt.getWords());
+    var apiClue = toApiClue(clue);
     var builder = ApiAttemptClue.builder().clue(apiClue);
     attempt.getAnswer(clue.id()).map(this::toApiAttemptClueAnswer).ifPresent(builder::answer);
     return builder.build();

@@ -1,26 +1,26 @@
 package uk.co.mruoc.cws.solver.stub;
 
 import lombok.RequiredArgsConstructor;
-import uk.co.mruoc.cws.entity.Cells;
+import uk.co.mruoc.cws.entity.Grid;
 import uk.co.mruoc.cws.solver.JsonMapper;
-import uk.co.mruoc.cws.usecase.CellExtractor;
+import uk.co.mruoc.cws.usecase.GridExtractor;
 import uk.co.mruoc.cws.usecase.Image;
 import uk.co.mruoc.file.FileLoader;
 
 @RequiredArgsConstructor
-public class StubCellExtractor implements CellExtractor {
+public class StubGridExtractor implements GridExtractor {
 
   private final StubJsonPathFactory cluePathFactory;
   private final JsonMapper mapper;
 
-  public StubCellExtractor() {
+  public StubGridExtractor() {
     this(new StubJsonPathFactory(), new JsonMapper());
   }
 
   @Override
-  public Cells extractCells(Image image) {
+  public Grid extractGrid(Image image) {
     var path = cluePathFactory.toCellJsonPath(image.getName());
     var json = FileLoader.loadContentFromClasspath(path);
-    return mapper.toCells(json);
+    return new Grid(mapper.toCells(json), 125, 125);
   }
 }

@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.solver.textract;
+package uk.co.mruoc.cws.solver.tesseract;
 
 import static org.opencv.core.Core.BORDER_CONSTANT;
 import static org.opencv.core.CvType.CV_8UC1;

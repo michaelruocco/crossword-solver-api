@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -29,6 +30,10 @@ public class Cells implements Iterable<Cell> {
 
   public Optional<Cell> findByCoordinates(Coordinates coordinates) {
     return findBy(cell -> cell.hasCoordinates(coordinates));
+  }
+
+  public Stream<Cell> stream() {
+    return values.stream();
   }
 
   public Coordinates forceFindCoordinatesById(int id) {

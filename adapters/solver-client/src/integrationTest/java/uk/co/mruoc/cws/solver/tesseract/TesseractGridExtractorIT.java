@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.solver.textract;
+package uk.co.mruoc.cws.solver.tesseract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -7,28 +7,29 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import uk.co.mruoc.cws.solver.stub.StubCellExtractor;
-import uk.co.mruoc.cws.usecase.CellExtractor;
+import uk.co.mruoc.cws.solver.stub.StubGridExtractor;
+import uk.co.mruoc.cws.usecase.GridExtractor;
 import uk.co.mruoc.cws.usecase.ImageDownloader;
 import uk.co.mruoc.cws.usecase.StubImageDownloader;
 
 @Slf4j
-class TesseractCellExtractorIT {
+class TesseractGridExtractorIT {
 
   private final ImageDownloader downloader = new StubImageDownloader();
 
-  private final CellExtractor extractor = new TesseractCellExtractor();
+  private final GridExtractor extractor = new TesseractGridExtractor();
 
   @ParameterizedTest
   @MethodSource("imageUrls")
-  void shouldExtractCellsFromImage(String imageUrl) {
+  void shouldExtractGridFromImage(String imageUrl) {
     var image = downloader.downloadImage(imageUrl);
 
-    var cells = extractor.extractCells(image);
+    var grid = extractor.extractGrid(image);
 
+    var cells = grid.cells();
     cells.forEach(cell -> log.info(cell.toString()));
-    var expectedCells = new StubCellExtractor().extractCells(image);
-    assertThat(cells).containsExactlyInAnyOrderElementsOf(expectedCells);
+    var expectedGrid = new StubGridExtractor().extractGrid(image);
+    assertThat(cells).containsExactlyInAnyOrderElementsOf(expectedGrid.cells());
   }
 
   private static Stream<Arguments> imageUrls() {

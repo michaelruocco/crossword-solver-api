@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Puzzle;
 import uk.co.mruoc.cws.entity.WordsFactory;
-import uk.co.mruoc.cws.usecase.CellExtractor;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
+import uk.co.mruoc.cws.usecase.GridExtractor;
 import uk.co.mruoc.cws.usecase.Image;
 import uk.co.mruoc.cws.usecase.ImageDownloader;
 import uk.co.mruoc.cws.usecase.UrlConverter;
@@ -18,7 +18,7 @@ public class PuzzleCreator {
   private final UrlConverter urlConverter;
   private final ImageDownloader imageDownloader;
   private final ClueExtractor clueExtractor;
-  private final CellExtractor cellExtractor;
+  private final GridExtractor gridExtractor;
   private final PuzzleRepository repository;
   private final WordsFactory wordsFactory;
 
@@ -41,14 +41,15 @@ public class PuzzleCreator {
   private Puzzle toPuzzle(Image image) {
     log.info("building puzzle from name {} and hash {}", image.getName(), image.getHash());
     var clues = clueExtractor.extractClues(image);
-    var cells = cellExtractor.extractCells(image);
+    var grid = gridExtractor.extractGrid(image);
     return Puzzle.builder()
         .id(repository.getNextId())
         .name(image.getName())
         .format(image.getFormat())
         .hash(image.getHash())
         .clues(clues)
-        .words(wordsFactory.toWords(clues, cells))
+        .grid(grid)
+        .words(wordsFactory.toWords(clues, grid.cells()))
         .build();
   }
 }

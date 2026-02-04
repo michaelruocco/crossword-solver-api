@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,10 @@ public class CellEntity {
   @Id private long puzzleId;
   @Id private int x;
   @Id private int y;
-  private int cellId;
+  private Integer cellId;
   private boolean black;
+
+  public Optional<Integer> getCellId() {
+    return Optional.ofNullable(cellId);
+  }
 }

@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.solver.textract;
+package uk.co.mruoc.cws.solver.tesseract;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;

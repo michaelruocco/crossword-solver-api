@@ -1,17 +1,15 @@
 package uk.co.mruoc.cws.repository;
 
 import java.util.Collection;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.cws.entity.Cell;
 import uk.co.mruoc.cws.entity.Cells;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Clues;
 import uk.co.mruoc.cws.entity.Coordinates;
+import uk.co.mruoc.cws.entity.Grid;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.entity.Puzzle;
-import uk.co.mruoc.cws.entity.Word;
 import uk.co.mruoc.cws.entity.WordsFactory;
 import uk.co.mruoc.cws.repository.entity.CellEntity;
 import uk.co.mruoc.cws.repository.entity.ClueEntity;
@@ -35,6 +33,7 @@ public class PuzzleEntityConverter {
         .format(entity.getFormat())
         .hash(entity.getHash())
         .clues(clues)
+        .grid(new Grid(cells, entity.getColumnWidth(), entity.getRowHeight()))
         .words(wordsFactory.toWords(clues, cells))
         .build();
   }
@@ -47,6 +46,9 @@ public class PuzzleEntityConverter {
     entity.setHash(puzzle.getHash());
     entity.setClues(toClueEntities(puzzle));
     entity.setCells(toCellEntities(puzzle));
+    var grid = puzzle.getGrid();
+    entity.setColumnWidth(grid.columnWidth());
+    entity.setRowHeight(grid.rowHeight());
     return entity;
   }
 
@@ -68,7 +70,7 @@ public class PuzzleEntityConverter {
 
   private Cell toCell(CellEntity entity) {
     var coordinates = new Coordinates(entity.getX(), entity.getY());
-    return new Cell(coordinates, entity.isBlack(), entity.getCellId());
+    return new Cell(coordinates, entity.isBlack(), entity.getCellId().orElse(null));
   }
 
   private Collection<ClueEntity> toClueEntities(Puzzle puzzle) {
@@ -85,20 +87,17 @@ public class PuzzleEntityConverter {
   }
 
   private Collection<CellEntity> toCellEntities(Puzzle puzzle) {
-    return puzzle.getWords().stream()
-        .collect(Collectors.toMap(Word::numericId, Function.identity(), (w1, w2) -> w1))
-        .values()
-        .stream()
-        .map(word -> toEntity(puzzle, word))
-        .toList();
+    var grid = puzzle.getGrid();
+    return grid.cells().stream().map(cell -> toEntity(puzzle, cell)).toList();
   }
 
-  private CellEntity toEntity(Puzzle puzzle, Word word) {
+  private CellEntity toEntity(Puzzle puzzle, Cell cell) {
     var entity = new CellEntity();
     entity.setPuzzleId(puzzle.getId());
-    entity.setCellId(word.numericId());
-    entity.setX(word.x());
-    entity.setY(word.y());
+    entity.setCellId(cell.getId().orElse(null));
+    entity.setX(cell.x());
+    entity.setY(cell.y());
+    entity.setBlack(cell.black());
     return entity;
   }
 }

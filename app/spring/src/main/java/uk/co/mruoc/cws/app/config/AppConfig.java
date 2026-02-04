@@ -14,11 +14,11 @@ import uk.co.mruoc.cws.usecase.AnswerDeleter;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.cws.usecase.CandidateLoader;
 import uk.co.mruoc.cws.usecase.CandidateRepository;
-import uk.co.mruoc.cws.usecase.CellExtractor;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
 import uk.co.mruoc.cws.usecase.ClueRanker;
 import uk.co.mruoc.cws.usecase.CompositeAnswerFinder;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
+import uk.co.mruoc.cws.usecase.GridExtractor;
 import uk.co.mruoc.cws.usecase.UrlConverter;
 import uk.co.mruoc.cws.usecase.attempt.AsyncAttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.AttemptCreator;
@@ -57,12 +57,12 @@ public class AppConfig {
 
   @Bean
   public PuzzleCreator puzzleCreator(
-      ClueExtractor clueExtractor, CellExtractor cellExtractor, PuzzleRepository repository) {
+      ClueExtractor clueExtractor, GridExtractor gridExtractor, PuzzleRepository repository) {
     return PuzzleCreator.builder()
         .urlConverter(new UrlConverter())
         .imageDownloader(new DefaultImageDownloader())
         .clueExtractor(clueExtractor)
-        .cellExtractor(cellExtractor)
+        .gridExtractor(gridExtractor)
         .repository(repository)
         .wordsFactory(new WordsFactory())
         .build();

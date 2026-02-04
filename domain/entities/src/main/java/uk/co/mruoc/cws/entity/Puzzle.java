@@ -12,10 +12,9 @@ public class Puzzle {
   private final String name;
   private final String format;
   private final String hash;
-
   @With private final Clues clues;
-
   private final Words words;
+  private final Grid grid;
 
   public boolean hasClue(Id id) {
     return clues.hasClue(id);

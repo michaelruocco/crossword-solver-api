@@ -31,4 +31,7 @@ public class PuzzleEntity {
   @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "puzzleId")
   private Collection<CellEntity> cells;
+
+  private int columnWidth;
+  private int rowHeight;
 }

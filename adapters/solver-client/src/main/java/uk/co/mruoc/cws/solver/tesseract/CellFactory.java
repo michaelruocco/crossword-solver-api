@@ -1,9 +1,9 @@
-package uk.co.mruoc.cws.solver.textract;
+package uk.co.mruoc.cws.solver.tesseract;
 
 import static org.opencv.core.CvType.CV_8UC3;
 import static org.opencv.imgproc.Imgproc.INTER_NEAREST;
 import static org.opencv.imgproc.Imgproc.RETR_LIST;
-import static uk.co.mruoc.cws.solver.textract.RectUtils.removeDuplicates;
+import static uk.co.mruoc.cws.solver.tesseract.RectUtils.removeDuplicates;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -34,7 +34,11 @@ public class CellFactory {
   private final NumberDetector detector;
 
   public CellFactory() {
-    this(new MatConverter(), new NumberDetector());
+    this(new NumberDetector());
+  }
+
+  public CellFactory(NumberDetector numberDetector) {
+    this(new MatConverter(), numberDetector);
   }
 
   public Cell toCell(Mat input, int x, int y) {
