@@ -2,11 +2,15 @@ package uk.co.mruoc.cws.entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.Builder;
 import lombok.With;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.IterableUtils;
 
 @Slf4j
 @Builder
@@ -50,8 +54,20 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
     return answers.confirmedAnswers();
   }
 
-  public Answers answersByDirection(Direction direction) {
-    return answers.byDirection(direction);
+  public AttemptCells getCells() {
+    var attemptCells =
+        answers.confirmedAnswers().stream()
+            .map(this::toAttemptCells)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toMap(AttemptCell::coordinates, Function.identity(), (_, c) -> c));
+    for (var cell : puzzle.cells()) {
+      var attemptCell = Optional.ofNullable(attemptCells.get(cell.coordinates()));
+      if (attemptCell.isEmpty()) {
+        var missingAttemptCell = new AttemptCell(cell);
+        attemptCells.put(missingAttemptCell.coordinates(), missingAttemptCell);
+      }
+    }
+    return new AttemptCells(attemptCells.values()).sort();
   }
 
   public Words getWords() {
@@ -64,13 +80,6 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
 
   public boolean isComplete() {
     return puzzle.getClues().stream().map(Clue::id).allMatch(answers::isConfirmed);
-  }
-
-  private void validateClueExistsForAnswer(Answer answer) {
-    var id = answer.id();
-    if (!puzzle.hasClue(id)) {
-      throw new ClueNotFoundForIdException(id, this);
-    }
   }
 
   public Attempt deleteAnswer(Id id) {
@@ -157,5 +166,43 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
 
   public Attempt removeUnconfirmedAnswers() {
     return withAnswers(answers.removeUnconfirmed());
+  }
+
+  public Grid getGrid() {
+    return puzzle.getGrid();
+  }
+
+  public String getGridAnswerValue(Id id) {
+    return toAttemptCells(id).stream()
+        .map(AttemptCell::letter)
+        .filter(Objects::nonNull)
+        .map(String::valueOf)
+        .collect(Collectors.joining());
+  }
+
+  private Collection<AttemptCell> toAttemptCells(Id id) {
+    var answer = answers.confirmedAnswers().findById(id);
+    if (answer.isPresent()) {
+      return toAttemptCells(answer.get());
+    }
+    return puzzle.cells().getWordCells(id).stream().map(AttemptCell::new).toList();
+  }
+
+  private Collection<AttemptCell> toAttemptCells(Answer answer) {
+    var cells = puzzle.cells().getWordCells(answer.id());
+    return IntStream.range(0, cells.size()).mapToObj(i -> toAttemptCell(answer, cells, i)).toList();
+  }
+
+  private AttemptCell toAttemptCell(Answer answer, Collection<Cell> cells, int i) {
+    var cell = IterableUtils.get(cells, i);
+    var letter = answer.letterAt(i).orElse(null);
+    return new AttemptCell(cell, letter);
+  }
+
+  private void validateClueExistsForAnswer(Answer answer) {
+    var id = answer.id();
+    if (!puzzle.hasClue(id)) {
+      throw new ClueNotFoundForIdException(id, this);
+    }
   }
 }

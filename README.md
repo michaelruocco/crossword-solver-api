@@ -17,8 +17,7 @@ Crossword solver API
 
 ## TODO
 
-* Add cryptic puzzle detection
-* Add proper grid space detection to enable removing S from HORSDOEUVRES to give HORSDOEUVRE
+* Add cryptic puzzle detection and solving
 * Try to figure out how to ensure tricky clues get answered correctly:
     * Ram (3) -> TAP/TOP -> TUP
     * Sharp bark (3) -> YIP -> YAP

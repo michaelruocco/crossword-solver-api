@@ -39,4 +39,8 @@ public class Puzzle {
   public Puzzle withClue(Clue clue) {
     return withClues(clues.update(clue));
   }
+
+  public Cells cells() {
+    return grid.cells();
+  }
 }

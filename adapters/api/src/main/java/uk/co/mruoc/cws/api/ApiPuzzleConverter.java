@@ -3,6 +3,8 @@ package uk.co.mruoc.cws.api;
 import java.util.Collection;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Attempt;
+import uk.co.mruoc.cws.entity.AttemptCell;
+import uk.co.mruoc.cws.entity.AttemptCells;
 import uk.co.mruoc.cws.entity.Cell;
 import uk.co.mruoc.cws.entity.Cells;
 import uk.co.mruoc.cws.entity.Clue;
@@ -12,8 +14,8 @@ import uk.co.mruoc.cws.entity.Puzzle;
 
 public class ApiPuzzleConverter {
 
-  public ApiPuzzle<ApiClue> toApiPuzzle(Puzzle puzzle) {
-    return ApiPuzzle.<ApiClue>builder()
+  public ApiPuzzle<ApiClue, ApiCell> toApiPuzzle(Puzzle puzzle) {
+    return ApiPuzzle.<ApiClue, ApiCell>builder()
         .id(puzzle.getId())
         .name(puzzle.getName())
         .hash(puzzle.getHash())
@@ -22,13 +24,14 @@ public class ApiPuzzleConverter {
         .build();
   }
 
-  public ApiPuzzle<ApiAttemptClue> toApiAttemptPuzzle(Attempt attempt) {
+  public ApiPuzzle<ApiAttemptClue, ApiAttemptCell> toApiAttemptPuzzle(Attempt attempt) {
     var puzzle = attempt.puzzle();
-    return ApiPuzzle.<ApiAttemptClue>builder()
+    return ApiPuzzle.<ApiAttemptClue, ApiAttemptCell>builder()
         .id(puzzle.getId())
         .name(puzzle.getName())
         .hash(puzzle.getHash())
         .clues(toApiAttemptClues(attempt))
+        .grid(toApiAttemptGrid(attempt))
         .build();
   }
 
@@ -45,11 +48,31 @@ public class ApiPuzzleConverter {
         .build();
   }
 
-  private ApiGrid toApiGrid(Grid grid) {
-    return ApiGrid.builder()
+  private ApiGrid<ApiCell> toApiGrid(Grid grid) {
+    return ApiGrid.<ApiCell>builder()
         .cells(toApiCells(grid.cells()))
         .columnWidth(grid.columnWidth())
         .rowHeight(grid.rowHeight())
+        .build();
+  }
+
+  private ApiGrid<ApiAttemptCell> toApiAttemptGrid(Attempt attempt) {
+    var grid = attempt.getGrid();
+    return ApiGrid.<ApiAttemptCell>builder()
+        .cells(toApiAttemptCells(attempt.getCells()))
+        .columnWidth(grid.columnWidth())
+        .rowHeight(grid.rowHeight())
+        .build();
+  }
+
+  private Collection<ApiAttemptCell> toApiAttemptCells(AttemptCells cells) {
+    return cells.sort().stream().map(this::toApiAttemptCell).toList();
+  }
+
+  private ApiAttemptCell toApiAttemptCell(AttemptCell attemptCell) {
+    return ApiAttemptCell.builder()
+        .cell(toApiCell(attemptCell.cell()))
+        .letter(attemptCell.letter())
         .build();
   }
 

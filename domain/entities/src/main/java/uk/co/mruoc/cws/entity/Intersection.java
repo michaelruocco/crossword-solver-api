@@ -13,7 +13,7 @@ public class Intersection {
   public Intersection(Word across, Word down, Coordinates coordinates) {
     this(
         new IntersectingWord(across, coordinates.x() - across.x()),
-        new IntersectingWord(down, coordinates.y() - down.y()));
+        new IntersectingWord(down, down.y() - coordinates.y()));
   }
 
   public int toIndex(Direction direction) {

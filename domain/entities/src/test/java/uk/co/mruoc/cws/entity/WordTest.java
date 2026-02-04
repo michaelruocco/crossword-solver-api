@@ -9,15 +9,16 @@ class WordTest {
   @Test
   void shouldFindIntersectionOfTwoWords() {
     /*
-      0 1 2 3 4 5 X
-    0       D
-    1 A A A X A A
-    2       D
-    3       D
     Y
+    4
+    3       D
+    2 A A A X A A
+    1       D
+    0       D
+      0 1 2 3 4 5 X
     */
-    var across = across().coordinates(new Coordinates(0, 1)).length(5).build();
-    var down = down().coordinates(new Coordinates(3, 0)).length(4).build();
+    var across = across().coordinates(new Coordinates(0, 2)).length(5).build();
+    var down = down().coordinates(new Coordinates(3, 3)).length(4).build();
 
     var intersection = across.findIntersectionBetween(down).orElseThrow();
 
@@ -28,16 +29,16 @@ class WordTest {
   @Test
   void shouldFindIntersectionOfTwoWordsThatIntersectOnLastLetter() {
     /*
-      0 1 2 3 4 5 X
-    0 D
-    1 D
-    2 D
-    3 D
-    4 X A A A A
     Y
+    4 D
+    3 D
+    2 D
+    1 D
+    0 X A A A A
+      0 1 2 3 4 5 X
     */
-    var across = across().coordinates(new Coordinates(0, 4)).length(5).build();
-    var down = down().coordinates(new Coordinates(0, 0)).length(5).build();
+    var across = across().coordinates(new Coordinates(0, 0)).length(5).build();
+    var down = down().coordinates(new Coordinates(0, 4)).length(5).build();
 
     var intersection = across.findIntersectionBetween(down).orElseThrow();
 
@@ -48,20 +49,16 @@ class WordTest {
   @Test
   void shouldFindIntersectionOfTwoWordsThatIntersectOnLastLetter1() {
     /*
-      0 1 2 3 4 5 6 7 8 X
-    0
-    1
-    2
-    3
-    4         D
-    5         D
-    6         D
-    7         D
-    8         X A A A A
     Y
+    5         D
+    4         D
+    3         D
+    2         D
+    1         X A A A A
+      0 1 2 3 4 5 6 7 8 X
     */
-    var across = across().coordinates(new Coordinates(4, 8)).length(5).build();
-    var down = down().coordinates(new Coordinates(4, 4)).length(5).build();
+    var across = across().coordinates(new Coordinates(4, 1)).length(5).build();
+    var down = down().coordinates(new Coordinates(4, 5)).length(5).build();
 
     var intersection = across.findIntersectionBetween(down).orElseThrow();
 
@@ -72,15 +69,15 @@ class WordTest {
   @Test
   void shouldNotReturnIntersectionIfNotPresent() {
     /*
-      0 1 2 3 4 5 X
-    0       D
-    1 A A   D
-    2       D
-    3       D
     Y
+    3       D
+    2 A A   D
+    1       D
+    0       D
+      0 1 2 3 4 5 X
     */
-    var across = across().coordinates(new Coordinates(0, 1)).length(2).build();
-    var down = down().coordinates(new Coordinates(3, 0)).length(4).build();
+    var across = across().coordinates(new Coordinates(0, 2)).length(2).build();
+    var down = down().coordinates(new Coordinates(3, 3)).length(4).build();
 
     var intersection = across.findIntersectionBetween(down);
 

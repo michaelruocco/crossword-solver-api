@@ -63,7 +63,7 @@ public record Word(Id id, int length, Coordinates coordinates) {
     var x = coordinates.x();
     var startY = coordinates.y();
     for (int y = 0; y < length; y++) {
-      all.add(new Coordinates(x, startY + y));
+      all.add(new Coordinates(x, startY - y));
     }
     return Collections.unmodifiableCollection(all);
   }

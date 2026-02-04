@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.entity;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 
@@ -58,6 +60,40 @@ public class Cells implements Iterable<Cell> {
 
   public int maxY() {
     return toMax(Cell::y);
+  }
+
+  public Cells sort() {
+    return new Cells(
+        values.stream()
+            .sorted(Comparator.comparing(Cell::coordinates, new CoordinatesComparator()))
+            .toList());
+  }
+
+  public Collection<Cell> getWordCells(Id id) {
+    var idCell = forceFindById(id.getId());
+    var direction = id.getDirection();
+    return getWhiteCellsFrom(idCell, direction);
+  }
+
+  private Collection<Cell> getWhiteCellsFrom(Cell cell, Direction direction) {
+    var whiteCells = new ArrayList<Cell>();
+    whiteCells.add(cell);
+    var increment = toIncrementFunction(direction);
+    var nextCoordinates = increment.apply(cell.coordinates());
+    var nextCell = findByCoordinates(nextCoordinates);
+    while (nextCell.isPresent() && !nextCell.get().black()) {
+      whiteCells.add(nextCell.get());
+      nextCoordinates = increment.apply(nextCoordinates);
+      nextCell = findByCoordinates(nextCoordinates);
+    }
+    return whiteCells;
+  }
+
+  private UnaryOperator<Coordinates> toIncrementFunction(Direction direction) {
+    if (direction == Direction.ACROSS) {
+      return Coordinates::incrementX;
+    }
+    return Coordinates::decrementY;
   }
 
   private int toMax(Function<Cell, Integer> function) {

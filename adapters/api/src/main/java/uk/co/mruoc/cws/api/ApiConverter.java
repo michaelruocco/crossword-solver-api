@@ -22,7 +22,7 @@ public class ApiConverter {
         new ApiResultConverter());
   }
 
-  public ApiPuzzle<ApiClue> toApiPuzzle(Puzzle puzzle) {
+  public ApiPuzzle<ApiClue, ApiCell> toApiPuzzle(Puzzle puzzle) {
     return puzzleConverter.toApiPuzzle(puzzle);
   }
 

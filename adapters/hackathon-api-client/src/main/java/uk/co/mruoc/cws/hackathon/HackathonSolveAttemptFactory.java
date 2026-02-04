@@ -37,15 +37,15 @@ public class HackathonSolveAttemptFactory {
   }
 
   private static String toImageName(Puzzle puzzle) {
-    return String.format("%s.%s", puzzle.getName(), puzzle.getFormat());
+    return String.format("%s%s", puzzle.getName(), puzzle.getFormat());
   }
 
   private static Map<String, String> toAnswers(Attempt attempt, Direction direction) {
     return attempt.getConfirmedAnswers().byDirection(direction).sortByNumericId().stream()
         .collect(
             Collectors.toMap(
-                a -> Integer.toString(a.numericId()),
-                a -> a.value().toLowerCase(),
+                answer -> Integer.toString(answer.numericId()),
+                answer -> attempt.getGridAnswerValue(answer.id()),
                 (x, y) -> y,
                 LinkedHashMap::new));
   }

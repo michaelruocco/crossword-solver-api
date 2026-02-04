@@ -51,7 +51,7 @@ public class DefaultHackathonClient implements HackathonClient {
 
   private HackathonResult doRecordAnswers(Attempt attempt) {
     var json = attemptFactory.toHackathonAttemptJson(attempt);
-    log.debug("sending request body {}", json);
+    log.info("sending request body {}", json);
     var hackathonResult =
         webClient
             .post()

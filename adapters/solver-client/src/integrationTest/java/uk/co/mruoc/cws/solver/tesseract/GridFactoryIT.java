@@ -32,7 +32,7 @@ class GridFactoryIT {
 
   @AfterAll
   static void deleteOutputDirectory() {
-    // OUTPUT_DIRECTORY.delete();
+    OUTPUT_DIRECTORY.delete();
     MatLogger.deleteAll();
   }
 
