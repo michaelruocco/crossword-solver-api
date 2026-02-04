@@ -7,7 +7,7 @@ buildscript {
 plugins {
     id "crossword-solver-api.java-conventions"
     id "org.springframework.boot" version "${springBootVersion}"
-    id "com.gorylenko.gradle-git-properties" version "2.5.4"
+    id "com.gorylenko.gradle-git-properties" version "2.5.5"
 }
 
 ext {
@@ -40,6 +40,7 @@ dependencies {
     implementation "software.amazon.awssdk:bedrockruntime:${awsSdkVersion}"
     implementation "software.amazon.awssdk:textract:${awsSdkVersion}"
     implementation "software.amazon.awssdk:url-connection-client:${awsSdkVersion}"
+    implementation "net.sourceforge.tess4j:tess4j:${tesseractVersion}"
     runtimeOnly "org.flywaydb:flyway-database-postgresql:11.20.0"
     runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
 
