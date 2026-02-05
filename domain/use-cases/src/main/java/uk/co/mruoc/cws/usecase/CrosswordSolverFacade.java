@@ -19,6 +19,10 @@ public class CrosswordSolverFacade {
     return puzzleService.create(imageUrl);
   }
 
+  public long createPuzzle(Image image) {
+    return puzzleService.create(image);
+  }
+
   public Puzzle findPuzzleById(long puzzleId) {
     return puzzleService.findById(puzzleId);
   }

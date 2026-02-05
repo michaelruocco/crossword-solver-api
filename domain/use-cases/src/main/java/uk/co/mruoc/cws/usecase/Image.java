@@ -13,4 +13,8 @@ public class Image {
   private final String hash;
   private final byte[] bytes;
   private final BufferedImage bufferedImage;
+
+  public double getSizeInMB() {
+    return bytes.length / (1024.0 * 1024.0);
+  }
 }

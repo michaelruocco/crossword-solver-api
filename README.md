@@ -21,5 +21,3 @@ Crossword solver API
 * Try to figure out how to ensure tricky clues get answered correctly:
     * Ram (3) -> TAP/TOP -> TUP
     * Sharp bark (3) -> YIP -> YAP
-* Add endpoint to accept direct file upload
-* Add file size validation puzzle creation

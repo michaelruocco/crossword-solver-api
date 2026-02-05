@@ -9,14 +9,13 @@ import uk.co.mruoc.cws.usecase.ClueExtractor;
 import uk.co.mruoc.cws.usecase.GridExtractor;
 import uk.co.mruoc.cws.usecase.Image;
 import uk.co.mruoc.cws.usecase.ImageDownloader;
-import uk.co.mruoc.cws.usecase.UrlConverter;
 
 @Builder
 @Slf4j
 public class PuzzleCreator {
 
-  private final UrlConverter urlConverter;
   private final ImageDownloader imageDownloader;
+  private final ImageValidator validator;
   private final ClueExtractor clueExtractor;
   private final GridExtractor gridExtractor;
   private final PuzzleRepository repository;
@@ -24,7 +23,11 @@ public class PuzzleCreator {
 
   public long create(String imageUrl) {
     var image = imageDownloader.downloadImage(imageUrl);
-    return findIdIfAlreadyExists(image).orElseGet(() -> create(image));
+    return create(image);
+  }
+
+  public long create(Image image) {
+    return findIdIfAlreadyExists(image).orElseGet(() -> doCreate(image));
   }
 
   private Optional<Long> findIdIfAlreadyExists(Image image) {
@@ -32,14 +35,19 @@ public class PuzzleCreator {
     return repository.findByHash(hash).map(Puzzle::getId);
   }
 
-  private long create(Image image) {
+  private long doCreate(Image image) {
+    validator.validate(image);
     var puzzle = toPuzzle(image);
     repository.save(puzzle);
     return puzzle.getId();
   }
 
   private Puzzle toPuzzle(Image image) {
-    log.info("building puzzle from name {} and hash {}", image.getName(), image.getHash());
+    log.info(
+        "building puzzle from name {} and hash {} from image with size {}mb",
+        image.getName(),
+        image.getHash(),
+        image.getSizeInMB());
     var clues = clueExtractor.extractClues(image);
     var grid = gridExtractor.extractGrid(image);
     return Puzzle.builder()

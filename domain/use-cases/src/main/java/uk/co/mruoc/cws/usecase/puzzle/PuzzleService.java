@@ -2,6 +2,7 @@ package uk.co.mruoc.cws.usecase.puzzle;
 
 import lombok.Builder;
 import uk.co.mruoc.cws.entity.Puzzle;
+import uk.co.mruoc.cws.usecase.Image;
 
 @Builder
 public class PuzzleService {
@@ -11,6 +12,10 @@ public class PuzzleService {
 
   public long create(String imageUrl) {
     return creator.create(imageUrl);
+  }
+
+  public long create(Image image) {
+    return creator.create(image);
   }
 
   public Puzzle findById(Long id) {

@@ -1,14 +1,18 @@
 package uk.co.mruoc.cws.app.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import uk.co.mruoc.cws.api.ApiAnswer;
 import uk.co.mruoc.cws.api.ApiAttempt;
 import uk.co.mruoc.cws.api.ApiConverter;
@@ -23,24 +27,34 @@ import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
 public class PuzzleController {
 
   private final CrosswordSolverFacade facade;
-  private final ApiConverter converter;
+  private final ApiConverter apiConverter;
+  private final MultipartFileConverter multipartFileConverter;
 
   @Autowired
   public PuzzleController(CrosswordSolverFacade facade) {
-    this(facade, new ApiConverter());
+    this(facade, new ApiConverter(), new MultipartFileConverter());
   }
 
   @PostMapping
   public ApiPuzzle createPuzzle(@RequestBody ApiCreatePuzzleRequest request) {
     var puzzleId = facade.createPuzzle(request.getImageUrl());
     var puzzle = facade.findPuzzleById(puzzleId);
-    return converter.toApiPuzzle(puzzle);
+    return apiConverter.toApiPuzzle(puzzle);
+  }
+
+  @PostMapping(path = "/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ApiPuzzle createPuzzle(
+      @RequestParam("file") MultipartFile file, HttpServletRequest request) {
+    var image = multipartFileConverter.toImage(file);
+    var puzzleId = facade.createPuzzle(image);
+    var puzzle = facade.findPuzzleById(puzzleId);
+    return apiConverter.toApiPuzzle(puzzle);
   }
 
   @GetMapping("/{puzzleId}")
   public ApiPuzzle getPuzzle(@PathVariable long puzzleId) {
     var puzzle = facade.findPuzzleById(puzzleId);
-    return converter.toApiPuzzle(puzzle);
+    return apiConverter.toApiPuzzle(puzzle);
   }
 
   @PostMapping("/{puzzleId}/attempts")
@@ -52,7 +66,7 @@ public class PuzzleController {
   @PostMapping("/{puzzleId}/attempts/{attemptId}/answers")
   public ApiAttempt updateAttemptAnswer(
       @PathVariable long attemptId, @RequestBody ApiAnswer apiAnswer) {
-    var answer = converter.toAnswer(apiAnswer);
+    var answer = apiConverter.toAnswer(apiAnswer);
     facade.updateAttemptAnswer(attemptId, answer);
     return getAttempt(attemptId);
   }
@@ -73,6 +87,6 @@ public class PuzzleController {
   @GetMapping("/{puzzleId}/attempts/{attemptId}")
   public ApiAttempt getAttempt(@PathVariable long attemptId) {
     var attempt = facade.findAttemptById(attemptId);
-    return converter.toApiAttempt(attempt);
+    return apiConverter.toApiAttempt(attempt);
   }
 }

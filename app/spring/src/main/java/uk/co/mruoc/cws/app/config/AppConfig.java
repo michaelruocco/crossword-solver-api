@@ -19,7 +19,6 @@ import uk.co.mruoc.cws.usecase.ClueRanker;
 import uk.co.mruoc.cws.usecase.CompositeAnswerFinder;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
 import uk.co.mruoc.cws.usecase.GridExtractor;
-import uk.co.mruoc.cws.usecase.UrlConverter;
 import uk.co.mruoc.cws.usecase.attempt.AsyncAttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.AttemptCreator;
 import uk.co.mruoc.cws.usecase.attempt.AttemptFinder;
@@ -31,6 +30,7 @@ import uk.co.mruoc.cws.usecase.attempt.AttemptUpdater;
 import uk.co.mruoc.cws.usecase.attempt.BacktrackingAttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.CompositeAttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.GreedyAttemptSolver;
+import uk.co.mruoc.cws.usecase.puzzle.ImageValidator;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleCreator;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleFinder;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleRepository;
@@ -59,8 +59,8 @@ public class AppConfig {
   public PuzzleCreator puzzleCreator(
       ClueExtractor clueExtractor, GridExtractor gridExtractor, PuzzleRepository repository) {
     return PuzzleCreator.builder()
-        .urlConverter(new UrlConverter())
         .imageDownloader(new DefaultImageDownloader())
+        .validator(new ImageValidator())
         .clueExtractor(clueExtractor)
         .gridExtractor(gridExtractor)
         .repository(repository)
