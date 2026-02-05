@@ -2,7 +2,7 @@ package uk.co.mruoc.cws.solver.stub;
 
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.cws.entity.Grid;
-import uk.co.mruoc.cws.solver.JsonMapper;
+import uk.co.mruoc.cws.solver.CrosswordJsonMapper;
 import uk.co.mruoc.cws.usecase.GridExtractor;
 import uk.co.mruoc.cws.usecase.Image;
 import uk.co.mruoc.file.FileLoader;
@@ -11,10 +11,10 @@ import uk.co.mruoc.file.FileLoader;
 public class StubGridExtractor implements GridExtractor {
 
   private final StubJsonPathFactory cluePathFactory;
-  private final JsonMapper mapper;
+  private final CrosswordJsonMapper mapper;
 
   public StubGridExtractor() {
-    this(new StubJsonPathFactory(), new JsonMapper());
+    this(new StubJsonPathFactory(), new CrosswordJsonMapper());
   }
 
   @Override

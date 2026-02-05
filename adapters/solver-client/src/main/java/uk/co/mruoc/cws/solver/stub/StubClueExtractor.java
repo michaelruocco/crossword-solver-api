@@ -3,7 +3,7 @@ package uk.co.mruoc.cws.solver.stub;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Clues;
-import uk.co.mruoc.cws.solver.JsonMapper;
+import uk.co.mruoc.cws.solver.CrosswordJsonMapper;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
 import uk.co.mruoc.cws.usecase.Image;
 import uk.co.mruoc.file.FileLoader;
@@ -13,10 +13,10 @@ import uk.co.mruoc.file.FileLoader;
 public class StubClueExtractor implements ClueExtractor {
 
   private final StubJsonPathFactory cluePathFactory;
-  private final JsonMapper mapper;
+  private final CrosswordJsonMapper mapper;
 
   public StubClueExtractor() {
-    this(new StubJsonPathFactory(), new JsonMapper());
+    this(new StubJsonPathFactory(), new CrosswordJsonMapper());
   }
 
   @Override

@@ -6,11 +6,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import lombok.Builder;
 import lombok.With;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.IterableUtils;
 
 @Slf4j
 @Builder
@@ -52,22 +50,6 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
 
   public Answers getConfirmedAnswers() {
     return answers.confirmedAnswers();
-  }
-
-  public AttemptCells getCells() {
-    var attemptCells =
-        answers.confirmedAnswers().stream()
-            .map(this::toAttemptCells)
-            .flatMap(Collection::stream)
-            .collect(Collectors.toMap(AttemptCell::coordinates, Function.identity(), (_, c) -> c));
-    for (var cell : puzzle.cells()) {
-      var attemptCell = Optional.ofNullable(attemptCells.get(cell.coordinates()));
-      if (attemptCell.isEmpty()) {
-        var missingAttemptCell = new AttemptCell(cell);
-        attemptCells.put(missingAttemptCell.coordinates(), missingAttemptCell);
-      }
-    }
-    return new AttemptCells(attemptCells.values()).sort();
   }
 
   public Words getWords() {
@@ -169,34 +151,44 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
   }
 
   public Grid getGrid() {
-    return puzzle.getGrid();
+    var grid = puzzle.getGrid();
+    return grid.withCells(populateCells());
+  }
+
+  private Cells populateCells() {
+    var confirmedAnswers = answers.confirmedAnswers();
+    if (confirmedAnswers.isEmpty()) {
+      return puzzle.cells();
+    }
+    var populatedCells =
+        confirmedAnswers.stream()
+            .map(answer -> toWordCells(answer.id()).stream().toList())
+            .flatMap(Collection::stream)
+            .collect(Collectors.toMap(Cell::coordinates, Function.identity(), (_, c) -> c));
+    for (var cell : puzzle.cells()) {
+      var populatedCell = Optional.ofNullable(populatedCells.get(cell.coordinates()));
+      if (populatedCell.isEmpty()) {
+        populatedCells.put(cell.coordinates(), cell);
+      }
+    }
+    return new Cells(populatedCells.values()).sort();
   }
 
   public String getGridAnswerValue(Id id) {
-    return toAttemptCells(id).stream()
-        .map(AttemptCell::letter)
+    return toWordCells(id).stream()
+        .map(Cell::letter)
         .filter(Objects::nonNull)
         .map(String::valueOf)
         .collect(Collectors.joining());
   }
 
-  private Collection<AttemptCell> toAttemptCells(Id id) {
+  private Cells toWordCells(Id id) {
     var answer = answers.confirmedAnswers().findById(id);
+    var wordCells = puzzle.getWordCells(id);
     if (answer.isPresent()) {
-      return toAttemptCells(answer.get());
+      return wordCells.populateLetters(answer.get());
     }
-    return puzzle.cells().getWordCells(id).stream().map(AttemptCell::new).toList();
-  }
-
-  private Collection<AttemptCell> toAttemptCells(Answer answer) {
-    var cells = puzzle.cells().getWordCells(answer.id());
-    return IntStream.range(0, cells.size()).mapToObj(i -> toAttemptCell(answer, cells, i)).toList();
-  }
-
-  private AttemptCell toAttemptCell(Answer answer, Collection<Cell> cells, int i) {
-    var cell = IterableUtils.get(cells, i);
-    var letter = answer.letterAt(i).orElse(null);
-    return new AttemptCell(cell, letter);
+    return wordCells;
   }
 
   private void validateClueExistsForAnswer(Answer answer) {

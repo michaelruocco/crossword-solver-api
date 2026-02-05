@@ -8,10 +8,10 @@ import uk.co.mruoc.cws.entity.Clues;
 @Slf4j
 public class ClueExtractorResponseConverter {
 
-  private final JsonMapper mapper;
+  private final CrosswordJsonMapper mapper;
 
   public ClueExtractorResponseConverter() {
-    this(new JsonMapper());
+    this(new CrosswordJsonMapper());
   }
 
   public Clues toClues(String json) {

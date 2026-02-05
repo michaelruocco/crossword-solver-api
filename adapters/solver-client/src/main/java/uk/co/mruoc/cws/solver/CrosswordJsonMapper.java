@@ -1,9 +1,9 @@
 package uk.co.mruoc.cws.solver;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Answers;
 import uk.co.mruoc.cws.entity.Cell;
@@ -12,18 +12,18 @@ import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Clues;
 
 @RequiredArgsConstructor
-public class JsonMapper {
+public class CrosswordJsonMapper {
 
-  private final ObjectMapper mapper;
+  private final JsonMapper mapper;
 
-  public JsonMapper() {
+  public CrosswordJsonMapper() {
     this(buildMapper());
   }
 
   public String jsonEscape(String json) {
     try {
       return mapper.writeValueAsString(json);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new RuntimeException(e);
     }
   }
@@ -32,8 +32,8 @@ public class JsonMapper {
     try {
       var root = mapper.readTree(json);
       var textNode = root.path("content").get(0).path("text");
-      return textNode.asText();
-    } catch (JsonProcessingException e) {
+      return textNode.stringValue();
+    } catch (JacksonException e) {
       throw new RuntimeException(e);
     }
   }
@@ -41,7 +41,7 @@ public class JsonMapper {
   public Clues toClues(String json) {
     try {
       return new Clues(mapper.readValue(json, Clue[].class));
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new RuntimeException(e);
     }
   }
@@ -49,7 +49,7 @@ public class JsonMapper {
   public Cells toCells(String json) {
     try {
       return new Cells(mapper.readValue(json, Cell[].class));
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new RuntimeException(e);
     }
   }
@@ -57,22 +57,15 @@ public class JsonMapper {
   public Answers toAnswers(String json) {
     try {
       return new Answers(mapper.readValue(json, Answer[].class));
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new RuntimeException(e);
     }
   }
 
-  public String toJson(Clues clues) {
-    try {
-      return mapper.writeValueAsString(clues.stream().toArray());
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private static ObjectMapper buildMapper() {
-    return new ObjectMapper()
-        .registerModule(new CrosswordModule())
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  private static JsonMapper buildMapper() {
+    return JsonMapper.builder()
+        .addModule(new CrosswordModule())
+        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        .build();
   }
 }

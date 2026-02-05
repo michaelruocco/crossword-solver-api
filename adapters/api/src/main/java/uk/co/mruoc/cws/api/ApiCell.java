@@ -8,10 +8,11 @@ import uk.co.mruoc.cws.entity.Coordinates;
 
 @Builder
 @Data
-@JsonPropertyOrder({"id", "black", "coordinates"})
+@JsonPropertyOrder({"id", "coordinates", "black", "letter"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiCell {
   private final Integer id;
-  private final boolean black;
   private final Coordinates coordinates;
+  private final boolean black;
+  private final Character letter;
 }

@@ -2,18 +2,22 @@ package uk.co.mruoc.cws.entity;
 
 import java.util.Optional;
 
-public record Cell(Coordinates coordinates, boolean black, Integer id) {
+public record Cell(Coordinates coordinates, boolean black, Integer id, Character letter) {
 
   public static Cell blackCell(Coordinates coordinates) {
-    return new Cell(coordinates, true, null);
+    return new Cell(coordinates, true, null, null);
   }
 
   public static Cell whiteCell(Coordinates coordinates) {
-    return new Cell(coordinates, false, null);
+    return new Cell(coordinates, false, null, null);
   }
 
   public static Cell idCell(Coordinates coordinates, Integer id) {
-    return new Cell(coordinates, false, id);
+    return new Cell(coordinates, false, id, null);
+  }
+
+  public Cell(Coordinates coordinates, boolean black, Integer id) {
+    this(coordinates, black, id, null);
   }
 
   public boolean hasId(int otherId) {
@@ -28,8 +32,16 @@ public record Cell(Coordinates coordinates, boolean black, Integer id) {
     return getId().orElseThrow();
   }
 
+  public Cell withLetter(Character letter) {
+    return new Cell(coordinates, black, id, letter);
+  }
+
   public Optional<Integer> getId() {
     return Optional.ofNullable(id);
+  }
+
+  public Optional<Character> getLetter() {
+    return Optional.ofNullable(letter);
   }
 
   public int x() {

@@ -43,4 +43,8 @@ public class Puzzle {
   public Cells cells() {
     return grid.cells();
   }
+
+  public Cells getWordCells(Id id) {
+    return grid.getWordCells(id);
+  }
 }

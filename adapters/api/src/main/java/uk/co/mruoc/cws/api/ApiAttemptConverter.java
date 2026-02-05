@@ -15,7 +15,7 @@ public class ApiAttemptConverter {
   public ApiAttempt toApiAttempt(Attempt attempt) {
     return ApiAttempt.builder()
         .id(attempt.id())
-        .puzzle(puzzleConverter.toApiAttemptPuzzle(attempt))
+        .puzzle(puzzleConverter.toApiPuzzle(attempt))
         .build();
   }
 }

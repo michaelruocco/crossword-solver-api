@@ -1,21 +1,32 @@
 package uk.co.mruoc.cws.api;
 
 import java.util.Collection;
-import uk.co.mruoc.cws.entity.Answer;
+import uk.co.mruoc.cws.entity.Answers;
 import uk.co.mruoc.cws.entity.Attempt;
-import uk.co.mruoc.cws.entity.AttemptCell;
-import uk.co.mruoc.cws.entity.AttemptCells;
 import uk.co.mruoc.cws.entity.Cell;
 import uk.co.mruoc.cws.entity.Cells;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Clues;
 import uk.co.mruoc.cws.entity.Grid;
+import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.entity.Puzzle;
 
 public class ApiPuzzleConverter {
 
-  public ApiPuzzle<ApiClue, ApiCell> toApiPuzzle(Puzzle puzzle) {
-    return ApiPuzzle.<ApiClue, ApiCell>builder()
+  public ApiPuzzle toApiPuzzle(Attempt attempt) {
+    var puzzle = attempt.puzzle();
+    var answers = attempt.getConfirmedAnswers();
+    return ApiPuzzle.builder()
+        .id(puzzle.getId())
+        .name(puzzle.getName())
+        .hash(puzzle.getHash())
+        .clues(addAnswers(toApiClues(puzzle.getClues()), answers))
+        .grid(toApiGrid(attempt.getGrid()))
+        .build();
+  }
+
+  public ApiPuzzle toApiPuzzle(Puzzle puzzle) {
+    return ApiPuzzle.builder()
         .id(puzzle.getId())
         .name(puzzle.getName())
         .hash(puzzle.getHash())
@@ -24,19 +35,27 @@ public class ApiPuzzleConverter {
         .build();
   }
 
-  public ApiPuzzle<ApiAttemptClue, ApiAttemptCell> toApiAttemptPuzzle(Attempt attempt) {
-    var puzzle = attempt.puzzle();
-    return ApiPuzzle.<ApiAttemptClue, ApiAttemptCell>builder()
-        .id(puzzle.getId())
-        .name(puzzle.getName())
-        .hash(puzzle.getHash())
-        .clues(toApiAttemptClues(attempt))
-        .grid(toApiAttemptGrid(attempt))
+  private ApiClues addAnswers(ApiClues clues, Answers answers) {
+    return ApiClues.builder()
+        .across(addAnswers(clues.getAcross(), answers))
+        .down(addAnswers(clues.getDown(), answers))
         .build();
   }
 
-  private Collection<ApiClue> toApiClues(Clues clues) {
-    return clues.stream().map(this::toApiClue).toList();
+  private Collection<ApiClue> addAnswers(Collection<ApiClue> clues, Answers answers) {
+    return clues.stream().map(clue -> addAnswer(clue, answers)).toList();
+  }
+
+  private ApiClue addAnswer(ApiClue clue, Answers answers) {
+    var id = new Id(clue.getId(), clue.getDirection());
+    return answers.findById(id).map(answer -> clue.withAnswer(answer.value())).orElse(clue);
+  }
+
+  private ApiClues toApiClues(Clues clues) {
+    return ApiClues.builder()
+        .across(clues.getAcross().stream().map(this::toApiClue).toList())
+        .down(clues.getDown().stream().map(this::toApiClue).toList())
+        .build();
   }
 
   private ApiClue toApiClue(Clue clue) {
@@ -48,31 +67,11 @@ public class ApiPuzzleConverter {
         .build();
   }
 
-  private ApiGrid<ApiCell> toApiGrid(Grid grid) {
-    return ApiGrid.<ApiCell>builder()
+  private ApiGrid toApiGrid(Grid grid) {
+    return ApiGrid.builder()
         .cells(toApiCells(grid.cells()))
         .columnWidth(grid.columnWidth())
         .rowHeight(grid.rowHeight())
-        .build();
-  }
-
-  private ApiGrid<ApiAttemptCell> toApiAttemptGrid(Attempt attempt) {
-    var grid = attempt.getGrid();
-    return ApiGrid.<ApiAttemptCell>builder()
-        .cells(toApiAttemptCells(attempt.getCells()))
-        .columnWidth(grid.columnWidth())
-        .rowHeight(grid.rowHeight())
-        .build();
-  }
-
-  private Collection<ApiAttemptCell> toApiAttemptCells(AttemptCells cells) {
-    return cells.sort().stream().map(this::toApiAttemptCell).toList();
-  }
-
-  private ApiAttemptCell toApiAttemptCell(AttemptCell attemptCell) {
-    return ApiAttemptCell.builder()
-        .cell(toApiCell(attemptCell.cell()))
-        .letter(attemptCell.letter())
         .build();
   }
 
@@ -85,25 +84,7 @@ public class ApiPuzzleConverter {
         .coordinates(cell.coordinates())
         .black(cell.black())
         .id(cell.getId().orElse(null))
-        .build();
-  }
-
-  private Collection<ApiAttemptClue> toApiAttemptClues(Attempt attempt) {
-    return attempt.getClues().stream().map(clue -> toApiAttemptClue(clue, attempt)).toList();
-  }
-
-  private ApiAttemptClue toApiAttemptClue(Clue clue, Attempt attempt) {
-    var apiClue = toApiClue(clue);
-    var builder = ApiAttemptClue.builder().clue(apiClue);
-    attempt.getAnswer(clue.id()).map(this::toApiAttemptClueAnswer).ifPresent(builder::answer);
-    return builder.build();
-  }
-
-  private ApiAttemptClueAnswer toApiAttemptClueAnswer(Answer answer) {
-    return ApiAttemptClueAnswer.builder()
-        .value(answer.value())
-        .confidenceScore(answer.confidenceScore())
-        .confirmed(answer.confirmed())
+        .letter(cell.getLetter().orElse(null))
         .build();
   }
 }

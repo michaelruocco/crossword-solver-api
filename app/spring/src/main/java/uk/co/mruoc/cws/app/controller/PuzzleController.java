@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.co.mruoc.cws.api.ApiAnswer;
 import uk.co.mruoc.cws.api.ApiAttempt;
-import uk.co.mruoc.cws.api.ApiCell;
-import uk.co.mruoc.cws.api.ApiClue;
 import uk.co.mruoc.cws.api.ApiConverter;
 import uk.co.mruoc.cws.api.ApiCreatePuzzleRequest;
 import uk.co.mruoc.cws.api.ApiPuzzle;
@@ -33,14 +31,14 @@ public class PuzzleController {
   }
 
   @PostMapping
-  public ApiPuzzle<ApiClue, ApiCell> createPuzzle(@RequestBody ApiCreatePuzzleRequest request) {
+  public ApiPuzzle createPuzzle(@RequestBody ApiCreatePuzzleRequest request) {
     var puzzleId = facade.createPuzzle(request.getImageUrl());
     var puzzle = facade.findPuzzleById(puzzleId);
     return converter.toApiPuzzle(puzzle);
   }
 
   @GetMapping("/{puzzleId}")
-  public ApiPuzzle<ApiClue, ApiCell> getPuzzle(@PathVariable long puzzleId) {
+  public ApiPuzzle getPuzzle(@PathVariable long puzzleId) {
     var puzzle = facade.findPuzzleById(puzzleId);
     return converter.toApiPuzzle(puzzle);
   }

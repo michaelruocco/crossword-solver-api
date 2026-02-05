@@ -1,6 +1,6 @@
 package uk.co.mruoc.cws.solver;
 
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.module.SimpleModule;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Word;

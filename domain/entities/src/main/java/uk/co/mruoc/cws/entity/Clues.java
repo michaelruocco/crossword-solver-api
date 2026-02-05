@@ -80,6 +80,14 @@ public class Clues implements Iterable<Clue> {
             .toList());
   }
 
+  public Clues getDown() {
+    return ofDirection(Direction.DOWN);
+  }
+
+  public Clues getAcross() {
+    return ofDirection(Direction.ACROSS);
+  }
+
   public Clues sortByIds(Collection<Id> ids) {
     return new Clues(ids.stream().map(values::get).toList());
   }
@@ -94,6 +102,11 @@ public class Clues implements Iterable<Clue> {
 
   private Map<Id, Clue> copyValues() {
     return new LinkedHashMap<>(values);
+  }
+
+  private Clues ofDirection(Direction direction) {
+    return new Clues(
+        values.values().stream().filter(clue -> clue.direction() == direction).toList());
   }
 
   private static Map<Id, Clue> toMap(Collection<Clue> clues) {

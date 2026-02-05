@@ -9,8 +9,10 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.IterableUtils;
 
 @RequiredArgsConstructor
 public class Cells implements Iterable<Cell> {
@@ -62,6 +64,10 @@ public class Cells implements Iterable<Cell> {
     return toMax(Cell::y);
   }
 
+  public int size() {
+    return values.size();
+  }
+
   public Cells sort() {
     return new Cells(
         values.stream()
@@ -69,13 +75,19 @@ public class Cells implements Iterable<Cell> {
             .toList());
   }
 
-  public Collection<Cell> getWordCells(Id id) {
+  public Cells populateLetters(Answer answer) {
+    var cells = getWordCells(answer.id());
+    return new Cells(
+        IntStream.range(0, cells.size()).mapToObj(i -> populateLetter(answer, cells, i)).toList());
+  }
+
+  public Cells getWordCells(Id id) {
     var idCell = forceFindById(id.getId());
     var direction = id.getDirection();
     return getWhiteCellsFrom(idCell, direction);
   }
 
-  private Collection<Cell> getWhiteCellsFrom(Cell cell, Direction direction) {
+  private Cells getWhiteCellsFrom(Cell cell, Direction direction) {
     var whiteCells = new ArrayList<Cell>();
     whiteCells.add(cell);
     var increment = toIncrementFunction(direction);
@@ -86,7 +98,7 @@ public class Cells implements Iterable<Cell> {
       nextCoordinates = increment.apply(nextCoordinates);
       nextCell = findByCoordinates(nextCoordinates);
     }
-    return whiteCells;
+    return new Cells(whiteCells);
   }
 
   private UnaryOperator<Coordinates> toIncrementFunction(Direction direction) {
@@ -98,5 +110,10 @@ public class Cells implements Iterable<Cell> {
 
   private int toMax(Function<Cell, Integer> function) {
     return values.stream().map(function).max(Comparator.naturalOrder()).orElse(0);
+  }
+
+  private Cell populateLetter(Answer answer, Cells cells, int i) {
+    var cell = IterableUtils.get(cells, i);
+    return answer.letterAt(i).map(cell::withLetter).orElse(cell);
   }
 }

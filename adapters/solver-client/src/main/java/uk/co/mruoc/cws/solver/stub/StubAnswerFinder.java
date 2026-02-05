@@ -5,7 +5,7 @@ import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Answers;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Clues;
-import uk.co.mruoc.cws.solver.JsonMapper;
+import uk.co.mruoc.cws.solver.CrosswordJsonMapper;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.file.FileLoader;
 
@@ -15,10 +15,10 @@ public class StubAnswerFinder implements AnswerFinder {
   private final Answers answers;
 
   public StubAnswerFinder(String answerJsonPath) {
-    this(answerJsonPath, new JsonMapper());
+    this(answerJsonPath, new CrosswordJsonMapper());
   }
 
-  public StubAnswerFinder(String answerJsonPath, JsonMapper mapper) {
+  public StubAnswerFinder(String answerJsonPath, CrosswordJsonMapper mapper) {
     this(toAnswers(answerJsonPath, mapper));
   }
 
@@ -32,7 +32,7 @@ public class StubAnswerFinder implements AnswerFinder {
     return answers.findById(clue.id()).orElse(Answer.noMatch(clue));
   }
 
-  private static Answers toAnswers(String answersJsonPath, JsonMapper mapper) {
+  private static Answers toAnswers(String answersJsonPath, CrosswordJsonMapper mapper) {
     var json = FileLoader.loadContentFromClasspath(answersJsonPath);
     return mapper.toAnswers(json);
   }

@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class ApiAttempt {
   private final long id;
-  private final ApiPuzzle<ApiAttemptClue, ApiAttemptCell> puzzle;
+  private final ApiPuzzle puzzle;
 }
