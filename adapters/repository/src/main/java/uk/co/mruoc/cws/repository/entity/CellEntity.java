@@ -5,6 +5,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import java.util.Optional;
+import java.util.UUID;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +16,7 @@ import lombok.Setter;
 @IdClass(CellEntityId.class)
 @Table(name = "cell")
 public class CellEntity {
-  @Id private long puzzleId;
+  @Id private UUID puzzleId;
   @Id private int x;
   @Id private int y;
   private Integer cellId;

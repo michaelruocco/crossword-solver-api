@@ -3,6 +3,8 @@ package uk.co.mruoc.cws.usecase.attempt;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.UUID;
+
 @Builder
 @Slf4j
 public class AttemptSolverRunnable implements Runnable {
@@ -10,7 +12,7 @@ public class AttemptSolverRunnable implements Runnable {
   private final AttemptFinder finder;
   private final AttemptSolver solver;
   private final AttemptRepository repository;
-  private final long attemptId;
+  private final UUID attemptId;
 
   @Override
   public void run() {

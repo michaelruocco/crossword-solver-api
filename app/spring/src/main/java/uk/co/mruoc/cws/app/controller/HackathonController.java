@@ -10,6 +10,8 @@ import uk.co.mruoc.cws.api.ApiConverter;
 import uk.co.mruoc.cws.api.ApiResult;
 import uk.co.mruoc.cws.usecase.HackathonFacade;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/hackathon-attempts")
@@ -29,7 +31,7 @@ public class HackathonController {
   }
 
   @PostMapping("/{attemptId}")
-  public ApiResult recordAnswers(@PathVariable long attemptId) {
+  public ApiResult recordAnswers(@PathVariable UUID attemptId) {
     var result = facade.recordAnswers(attemptId);
     return converter.toApiResult(result);
   }

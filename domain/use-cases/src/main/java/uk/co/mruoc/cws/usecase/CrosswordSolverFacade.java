@@ -8,6 +8,8 @@ import uk.co.mruoc.cws.entity.Puzzle;
 import uk.co.mruoc.cws.usecase.attempt.AttemptService;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleService;
 
+import java.util.UUID;
+
 @Builder
 public class CrosswordSolverFacade {
 
@@ -15,39 +17,39 @@ public class CrosswordSolverFacade {
   private final AttemptService attemptService;
   private final AnswerDeleter answerDeleter;
 
-  public long createPuzzle(String imageUrl) {
+  public UUID createPuzzle(String imageUrl) {
     return puzzleService.create(imageUrl);
   }
 
-  public long createPuzzle(Image image) {
+  public UUID createPuzzle(Image image) {
     return puzzleService.create(image);
   }
 
-  public Puzzle findPuzzleById(long puzzleId) {
+  public Puzzle findPuzzleById(UUID puzzleId) {
     return puzzleService.findById(puzzleId);
   }
 
-  public long createPuzzleAttempt(long puzzleId) {
+  public UUID createPuzzleAttempt(UUID puzzleId) {
     return attemptService.createAttempt(puzzleId);
   }
 
-  public void updateAttemptAnswer(long attemptId, Answer answer) {
+  public void updateAttemptAnswer(UUID attemptId, Answer answer) {
     attemptService.updateAnswer(attemptId, answer);
   }
 
-  public Attempt findAttemptById(long attemptId) {
+  public Attempt findAttemptById(UUID attemptId) {
     return attemptService.findById(attemptId);
   }
 
-  public void syncSolvePuzzleAttempt(long attemptId) {
+  public void syncSolvePuzzleAttempt(UUID attemptId) {
     attemptService.syncSolveAttempt(attemptId);
   }
 
-  public void asyncSolvePuzzleAttempt(long attemptId) {
+  public void asyncSolvePuzzleAttempt(UUID attemptId) {
     attemptService.asyncSolveAttempt(attemptId);
   }
 
-  public void deleteAttemptAnswer(long attemptId, Id id) {
+  public void deleteAttemptAnswer(UUID attemptId, Id id) {
     answerDeleter.deleteAnswer(attemptId, id);
   }
 }

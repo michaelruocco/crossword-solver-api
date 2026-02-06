@@ -2,32 +2,25 @@ package uk.co.mruoc.cws.repository;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Puzzle;
-import uk.co.mruoc.cws.usecase.IncrementingIdSupplier;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleRepository;
 
 @RequiredArgsConstructor
 @Slf4j
 public class StubPuzzleRepository implements PuzzleRepository {
 
-  private final Map<Long, Puzzle> values;
-  private final Supplier<Long> nextId;
+  private final Map<UUID, Puzzle> values;
 
   public StubPuzzleRepository() {
-    this(new ConcurrentHashMap<>(), new IncrementingIdSupplier());
+    this(new ConcurrentHashMap<>());
   }
 
   @Override
-  public long getNextId() {
-    return nextId.get();
-  }
-
-  @Override
-  public Optional<Puzzle> findById(long id) {
+  public Optional<Puzzle> findById(UUID id) {
     return Optional.ofNullable(values.get(id));
   }
 

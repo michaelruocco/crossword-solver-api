@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.Builder;
@@ -12,9 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Builder
-public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
+public record Attempt(UUID id, @With Puzzle puzzle, @With Answers answers) {
 
-  public long puzzleId() {
+  public UUID puzzleId() {
     return puzzle.getId();
   }
 
@@ -125,7 +126,7 @@ public record Attempt(long id, @With Puzzle puzzle, @With Answers answers) {
 
   public String asString() {
     var lines = new ArrayList<String>();
-    lines.add(String.format("attempt %d for puzzle %d", id, puzzleId()));
+    lines.add(String.format("attempt %s for puzzle %s", id, puzzleId()));
     lines.add(String.format("%d clues", getClues().size()));
     lines.add(String.format("%d confirmed answers", getConfirmedAnswers().size()));
     getClues().stream().map(this::toLine).forEach(lines::add);

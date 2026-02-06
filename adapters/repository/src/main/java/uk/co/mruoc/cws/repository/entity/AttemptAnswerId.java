@@ -1,6 +1,8 @@
 package uk.co.mruoc.cws.repository.entity;
 
 import java.io.Serializable;
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -9,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AttemptAnswerId implements Serializable {
-  private long attempt;
+  private UUID attempt;
   private String clueId;
 }

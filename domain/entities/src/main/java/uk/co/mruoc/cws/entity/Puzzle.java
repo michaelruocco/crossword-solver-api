@@ -1,6 +1,8 @@
 package uk.co.mruoc.cws.entity;
 
 import java.util.Collection;
+import java.util.UUID;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.With;
@@ -8,7 +10,7 @@ import lombok.With;
 @Builder
 @Data
 public class Puzzle {
-  private final Long id;
+  private final UUID id;
   private final String name;
   private final String format;
   private final String hash;

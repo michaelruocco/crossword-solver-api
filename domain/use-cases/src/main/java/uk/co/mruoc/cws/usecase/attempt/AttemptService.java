@@ -4,6 +4,8 @@ import lombok.Builder;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Attempt;
 
+import java.util.UUID;
+
 @Builder
 public class AttemptService {
 
@@ -12,25 +14,25 @@ public class AttemptService {
   private final AttemptUpdater updater;
   private final AsyncAttemptSolver asyncSolver;
 
-  public long createAttempt(long puzzleId) {
+  public UUID createAttempt(UUID puzzleId) {
     return creator.create(puzzleId);
   }
 
-  public void asyncSolveAttempt(long attemptId) {
+  public void asyncSolveAttempt(UUID attemptId) {
     var attempt = findById(attemptId);
     asyncSolver.asyncSolve(attempt);
   }
 
-  public void syncSolveAttempt(long attemptId) {
+  public void syncSolveAttempt(UUID attemptId) {
     var attempt = findById(attemptId);
     asyncSolver.syncSolve(attempt);
   }
 
-  public Attempt findById(long id) {
+  public Attempt findById(UUID id) {
     return finder.findById(id);
   }
 
-  public void updateAnswer(long attemptId, Answer answer) {
+  public void updateAnswer(UUID attemptId, Answer answer) {
     updater.saveAnswer(attemptId, answer);
   }
 }

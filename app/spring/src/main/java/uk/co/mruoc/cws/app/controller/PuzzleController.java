@@ -21,6 +21,8 @@ import uk.co.mruoc.cws.api.ApiPuzzle;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/v1/puzzles")
 @RequiredArgsConstructor
@@ -52,20 +54,20 @@ public class PuzzleController {
   }
 
   @GetMapping("/{puzzleId}")
-  public ApiPuzzle getPuzzle(@PathVariable long puzzleId) {
+  public ApiPuzzle getPuzzle(@PathVariable UUID puzzleId) {
     var puzzle = facade.findPuzzleById(puzzleId);
     return apiConverter.toApiPuzzle(puzzle);
   }
 
   @PostMapping("/{puzzleId}/attempts")
-  public ApiAttempt createAttempt(@PathVariable long puzzleId) {
+  public ApiAttempt createAttempt(@PathVariable UUID puzzleId) {
     var attemptId = facade.createPuzzleAttempt(puzzleId);
     return getAttempt(attemptId);
   }
 
   @PostMapping("/{puzzleId}/attempts/{attemptId}/answers")
   public ApiAttempt updateAttemptAnswer(
-      @PathVariable long attemptId, @RequestBody ApiAnswer apiAnswer) {
+      @PathVariable UUID attemptId, @RequestBody ApiAnswer apiAnswer) {
     var answer = apiConverter.toAnswer(apiAnswer);
     facade.updateAttemptAnswer(attemptId, answer);
     return getAttempt(attemptId);
@@ -73,19 +75,19 @@ public class PuzzleController {
 
   @DeleteMapping("/{puzzleId}/attempts/{attemptId}/answers/{answerId}")
   public ApiAttempt deleteAttemptAnswer(
-      @PathVariable long attemptId, @PathVariable String answerId) {
+      @PathVariable UUID attemptId, @PathVariable String answerId) {
     facade.deleteAttemptAnswer(attemptId, new Id(answerId));
     return getAttempt(attemptId);
   }
 
   @PostMapping("/{puzzleId}/attempts/{attemptId}/automatic-answers")
-  public ApiAttempt updateAttemptAutomaticAnswers(@PathVariable long attemptId) {
+  public ApiAttempt updateAttemptAutomaticAnswers(@PathVariable UUID attemptId) {
     facade.asyncSolvePuzzleAttempt(attemptId);
     return getAttempt(attemptId);
   }
 
   @GetMapping("/{puzzleId}/attempts/{attemptId}")
-  public ApiAttempt getAttempt(@PathVariable long attemptId) {
+  public ApiAttempt getAttempt(@PathVariable UUID attemptId) {
     var attempt = facade.findAttemptById(attemptId);
     return apiConverter.toApiAttempt(attempt);
   }

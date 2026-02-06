@@ -8,6 +8,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.Collection;
+import java.util.UUID;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +18,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "attempt")
 public class AttemptEntity {
-  @Id private long id;
+  @Id private UUID id;
 
   @ManyToOne
   @JoinColumn(name = "puzzleId")

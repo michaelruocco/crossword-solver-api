@@ -1,7 +1,10 @@
 package uk.co.mruoc.cws.app.config;
 
 import java.util.Collection;
+import java.util.UUID;
 import java.util.concurrent.Executor;
+import java.util.function.Supplier;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.task.ThreadPoolTaskExecutorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +22,7 @@ import uk.co.mruoc.cws.usecase.ClueRanker;
 import uk.co.mruoc.cws.usecase.CompositeAnswerFinder;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
 import uk.co.mruoc.cws.usecase.GridExtractor;
+import uk.co.mruoc.cws.usecase.UUIDSupplier;
 import uk.co.mruoc.cws.usecase.attempt.AsyncAttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.AttemptCreator;
 import uk.co.mruoc.cws.usecase.attempt.AttemptFinder;
@@ -61,6 +65,7 @@ public class AppConfig {
     return PuzzleCreator.builder()
         .imageDownloader(new DefaultImageDownloader())
         .validator(new ImageValidator())
+        .idSupplier(new UUIDSupplier())
         .clueExtractor(clueExtractor)
         .gridExtractor(gridExtractor)
         .repository(repository)
@@ -89,7 +94,7 @@ public class AppConfig {
 
   @Bean
   public AttemptCreator attemptCreator(PuzzleFinder finder, AttemptRepository repository) {
-    return AttemptCreator.builder().puzzleFinder(finder).repository(repository).build();
+    return AttemptCreator.builder().puzzleFinder(finder).repository(repository).idSupplier(new UUIDSupplier()).build();
   }
 
   @Bean

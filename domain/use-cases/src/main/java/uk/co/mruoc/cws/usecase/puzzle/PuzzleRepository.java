@@ -1,13 +1,13 @@
 package uk.co.mruoc.cws.usecase.puzzle;
 
 import java.util.Optional;
+import java.util.UUID;
+
 import uk.co.mruoc.cws.entity.Puzzle;
 
 public interface PuzzleRepository {
 
-  long getNextId();
-
-  Optional<Puzzle> findById(long id);
+  Optional<Puzzle> findById(UUID id);
 
   Optional<Puzzle> findByHash(String hash);
 

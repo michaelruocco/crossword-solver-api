@@ -5,13 +5,15 @@ import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.usecase.attempt.AttemptFinder;
 import uk.co.mruoc.cws.usecase.attempt.AttemptRepository;
 
+import java.util.UUID;
+
 @Builder
 public class AnswerDeleter {
 
   private final AttemptFinder finder;
   private final AttemptRepository repository;
 
-  public void deleteAnswer(long attemptId, Id id) {
+  public void deleteAnswer(UUID attemptId, Id id) {
     var attempt = finder.findById(attemptId);
     repository.save(attempt.deleteAnswer(id));
   }

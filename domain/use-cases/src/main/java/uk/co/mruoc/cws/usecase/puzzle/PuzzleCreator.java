@@ -1,6 +1,9 @@
 package uk.co.mruoc.cws.usecase.puzzle;
 
 import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Supplier;
+
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Puzzle;
@@ -16,26 +19,27 @@ public class PuzzleCreator {
 
   private final ImageDownloader imageDownloader;
   private final ImageValidator validator;
+  private final Supplier<UUID> idSupplier;
   private final ClueExtractor clueExtractor;
   private final GridExtractor gridExtractor;
   private final PuzzleRepository repository;
   private final WordsFactory wordsFactory;
 
-  public long create(String imageUrl) {
+  public UUID create(String imageUrl) {
     var image = imageDownloader.downloadImage(imageUrl);
     return create(image);
   }
 
-  public long create(Image image) {
+  public UUID create(Image image) {
     return findIdIfAlreadyExists(image).orElseGet(() -> doCreate(image));
   }
 
-  private Optional<Long> findIdIfAlreadyExists(Image image) {
+  private Optional<UUID> findIdIfAlreadyExists(Image image) {
     var hash = image.getHash();
     return repository.findByHash(hash).map(Puzzle::getId);
   }
 
-  private long doCreate(Image image) {
+  private UUID doCreate(Image image) {
     validator.validate(image);
     var puzzle = toPuzzle(image);
     repository.save(puzzle);
@@ -51,7 +55,7 @@ public class PuzzleCreator {
     var clues = clueExtractor.extractClues(image);
     var grid = gridExtractor.extractGrid(image);
     return Puzzle.builder()
-        .id(repository.getNextId())
+        .id(idSupplier.get())
         .name(image.getName())
         .format(image.getFormat())
         .hash(image.getHash())

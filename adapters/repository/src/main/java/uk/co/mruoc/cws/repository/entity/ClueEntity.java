@@ -9,6 +9,8 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import java.util.Collection;
+import java.util.UUID;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +20,7 @@ import lombok.Setter;
 @IdClass(ClueEntityId.class)
 @Table(name = "clue")
 public class ClueEntity {
-  @Id private long puzzleId;
+  @Id private UUID puzzleId;
   @Id private String clueId;
   private String text;
 

@@ -1,6 +1,8 @@
 package uk.co.mruoc.cws.repository;
 
 import java.util.Optional;
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import uk.co.mruoc.cws.entity.Attempt;
@@ -16,14 +18,9 @@ public class PostgresAttemptRepository implements AttemptRepository {
     this(jpaRepository, new AttemptEntityConverter());
   }
 
-  @Override
-  public long getNextId() {
-    return jpaRepository.getNextId();
-  }
-
   @Transactional(readOnly = true)
   @Override
-  public Optional<Attempt> findById(long id) {
+  public Optional<Attempt> findById(UUID id) {
     return jpaRepository.findById(id).map(entityConverter::toAttempt);
   }
 

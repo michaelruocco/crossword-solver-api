@@ -1,6 +1,8 @@
 package uk.co.mruoc.cws.repository;
 
 import java.util.Optional;
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import uk.co.mruoc.cws.entity.Puzzle;
@@ -16,14 +18,9 @@ public class PostgresPuzzleRepository implements PuzzleRepository {
     this(jpaRepository, new PuzzleEntityConverter());
   }
 
-  @Override
-  public long getNextId() {
-    return jpaRepository.getNextId();
-  }
-
   @Transactional(readOnly = true)
   @Override
-  public Optional<Puzzle> findById(long id) {
+  public Optional<Puzzle> findById(UUID id) {
     return jpaRepository.findById(id).map(entityConverter::toPuzzle);
   }
 

@@ -8,6 +8,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.Collection;
+import java.util.UUID;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +19,7 @@ import lombok.Setter;
 @Table(name = "puzzle")
 public class PuzzleEntity {
 
-  @Id private long id;
+  @Id private UUID id;
   private String name;
   private String format;
 

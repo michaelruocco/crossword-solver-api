@@ -1,6 +1,8 @@
 package uk.co.mruoc.cws.usecase;
 
 import java.util.Collection;
+import java.util.UUID;
+
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Result;
@@ -27,7 +29,7 @@ public class HackathonFacade {
     log.info("result {}", result);
   }
 
-  public Result recordAnswers(long attemptId) {
+  public Result recordAnswers(UUID attemptId) {
     var attempt = solverFacade.findAttemptById(attemptId);
     log.info("recording answers for attempt {}", attempt.asString());
     return hackathonClient.recordAnswers(attempt);

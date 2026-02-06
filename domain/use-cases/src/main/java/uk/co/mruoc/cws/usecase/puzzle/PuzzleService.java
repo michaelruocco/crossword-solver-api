@@ -4,21 +4,23 @@ import lombok.Builder;
 import uk.co.mruoc.cws.entity.Puzzle;
 import uk.co.mruoc.cws.usecase.Image;
 
+import java.util.UUID;
+
 @Builder
 public class PuzzleService {
 
   private final PuzzleCreator creator;
   private final PuzzleFinder finder;
 
-  public long create(String imageUrl) {
+  public UUID create(String imageUrl) {
     return creator.create(imageUrl);
   }
 
-  public long create(Image image) {
+  public UUID create(Image image) {
     return creator.create(image);
   }
 
-  public Puzzle findById(Long id) {
+  public Puzzle findById(UUID id) {
     return finder.findById(id);
   }
 }
