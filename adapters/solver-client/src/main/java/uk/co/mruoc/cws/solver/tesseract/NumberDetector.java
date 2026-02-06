@@ -3,7 +3,9 @@ package uk.co.mruoc.cws.solver.tesseract;
 import static net.sourceforge.tess4j.ITessAPI.TessOcrEngineMode.OEM_LSTM_ONLY;
 import static net.sourceforge.tess4j.ITessAPI.TessPageSegMode.PSM_SINGLE_WORD;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,8 +52,17 @@ public class NumberDetector {
   }
 
   private static Tesseract buildTesseract() {
-    var dataFolder = new File("./tessdata");
-    return buildTesseract(dataFolder.getAbsolutePath());
+    try (var resourceStream =
+        NumberDetector.class.getResourceAsStream("/tessdata/eng.traineddata")) {
+      Objects.requireNonNull(resourceStream);
+      var dataFolder = Files.createTempDirectory("tessdata");
+      System.out.println("created temp folder " + dataFolder.toAbsolutePath());
+      System.out.println("got file  " + dataFolder.resolve("eng.traineddata").toAbsolutePath());
+      Files.copy(resourceStream, dataFolder.resolve("eng.traineddata"));
+      return buildTesseract(dataFolder.toAbsolutePath().toString());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private static Tesseract buildTesseract(String dataFolderPath) {

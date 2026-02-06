@@ -9,12 +9,9 @@ import uk.co.mruoc.cws.usecase.GridExtractor;
 @Configuration
 public class TesseractSolverClientConfig {
 
-  // TODO make tessdata folder path a configuration parameter
   @Bean
   public NumberDetector numberDetector() {
-    var path =
-        "/Users/michaelruocco/git/github/michaelruocco/crossword-solver/adapters/solver-client/tessdata";
-    return new NumberDetector(path);
+    return new NumberDetector();
   }
 
   @Bean
