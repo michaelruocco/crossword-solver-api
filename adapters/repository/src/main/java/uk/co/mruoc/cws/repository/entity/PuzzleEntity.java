@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.Collection;
 import java.util.UUID;
 import lombok.Getter;
@@ -15,7 +16,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "puzzle")
+@Table(
+    name = "puzzle",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "unique_puzzle_hash",
+            columnNames = {"hash"}))
 public class PuzzleEntity {
 
   @Id private UUID id;
