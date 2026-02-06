@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.app.controller;
 
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.co.mruoc.cws.api.ApiConverter;
 import uk.co.mruoc.cws.api.ApiResult;
 import uk.co.mruoc.cws.usecase.HackathonFacade;
-
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController

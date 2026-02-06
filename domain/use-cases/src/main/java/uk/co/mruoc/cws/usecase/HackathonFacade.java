@@ -2,7 +2,6 @@ package uk.co.mruoc.cws.usecase;
 
 import java.util.Collection;
 import java.util.UUID;
-
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Result;

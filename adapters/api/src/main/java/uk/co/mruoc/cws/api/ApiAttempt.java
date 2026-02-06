@@ -1,9 +1,8 @@
 package uk.co.mruoc.cws.api;
 
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.UUID;
 
 @Builder
 @Data

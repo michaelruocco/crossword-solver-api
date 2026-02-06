@@ -1,9 +1,8 @@
 package uk.co.mruoc.cws.usecase.attempt;
 
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.cws.entity.Attempt;
-
-import java.util.UUID;
 
 @RequiredArgsConstructor
 public class AttemptFinder {

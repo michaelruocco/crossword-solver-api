@@ -3,7 +3,6 @@ package uk.co.mruoc.cws.usecase.puzzle;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
-
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Puzzle;

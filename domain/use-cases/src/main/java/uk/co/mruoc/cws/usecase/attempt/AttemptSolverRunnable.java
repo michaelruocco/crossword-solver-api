@@ -1,9 +1,8 @@
 package uk.co.mruoc.cws.usecase.attempt;
 
+import java.util.UUID;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.UUID;
 
 @Builder
 @Slf4j

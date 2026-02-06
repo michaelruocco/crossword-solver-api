@@ -1,9 +1,8 @@
 package uk.co.mruoc.cws.usecase.puzzle;
 
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.cws.entity.Puzzle;
-
-import java.util.UUID;
 
 @RequiredArgsConstructor
 public class PuzzleFinder {

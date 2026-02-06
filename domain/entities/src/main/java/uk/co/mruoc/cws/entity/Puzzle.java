@@ -2,7 +2,6 @@ package uk.co.mruoc.cws.entity;
 
 import java.util.Collection;
 import java.util.UUID;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.With;

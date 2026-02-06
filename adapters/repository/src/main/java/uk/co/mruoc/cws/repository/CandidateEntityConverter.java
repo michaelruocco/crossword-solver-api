@@ -1,20 +1,24 @@
 package uk.co.mruoc.cws.repository;
 
 import java.util.Collection;
+import java.util.UUID;
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Candidates;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.repository.entity.CandidateAnswerEntity;
 import uk.co.mruoc.cws.repository.entity.CandidateClueEntity;
+import uk.co.mruoc.cws.usecase.UUIDSupplier;
 
 @RequiredArgsConstructor
 public class CandidateEntityConverter {
 
   private final CandidateClueEntityIdFactory idFactory;
+  private final Supplier<UUID> idSupplier;
 
   public CandidateEntityConverter() {
-    this(new CandidateClueEntityIdFactory());
+    this(new CandidateClueEntityIdFactory(), new UUIDSupplier());
   }
 
   public Candidates toCandidates(CandidateClueEntity entity) {
@@ -56,6 +60,7 @@ public class CandidateEntityConverter {
 
   private CandidateAnswerEntity toAnswerEntity(String clueId, Answer answer) {
     var entity = new CandidateAnswerEntity();
+    entity.setId(idSupplier.get());
     entity.setValue(answer.value());
     entity.setScore(answer.confidenceScore());
     entity.setClueId(clueId);

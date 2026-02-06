@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.usecase;
 
+import java.util.UUID;
 import lombok.Builder;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Attempt;
@@ -7,8 +8,6 @@ import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.entity.Puzzle;
 import uk.co.mruoc.cws.usecase.attempt.AttemptService;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleService;
-
-import java.util.UUID;
 
 @Builder
 public class CrosswordSolverFacade {

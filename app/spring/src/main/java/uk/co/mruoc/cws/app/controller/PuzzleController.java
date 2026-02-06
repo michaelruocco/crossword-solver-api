@@ -1,6 +1,7 @@
 package uk.co.mruoc.cws.app.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,8 +21,6 @@ import uk.co.mruoc.cws.api.ApiCreatePuzzleRequest;
 import uk.co.mruoc.cws.api.ApiPuzzle;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/puzzles")

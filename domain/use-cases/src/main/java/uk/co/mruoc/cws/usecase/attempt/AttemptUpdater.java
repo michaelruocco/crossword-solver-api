@@ -1,9 +1,8 @@
 package uk.co.mruoc.cws.usecase.attempt;
 
+import java.util.UUID;
 import lombok.Builder;
 import uk.co.mruoc.cws.entity.Answer;
-
-import java.util.UUID;
 
 @Builder
 public class AttemptUpdater {

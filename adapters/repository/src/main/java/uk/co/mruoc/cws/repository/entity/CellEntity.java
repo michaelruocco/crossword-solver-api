@@ -6,7 +6,6 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import java.util.Optional;
 import java.util.UUID;
-
 import lombok.Getter;
 import lombok.Setter;
 

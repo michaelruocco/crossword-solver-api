@@ -2,7 +2,6 @@ package uk.co.mruoc.cws.repository;
 
 import java.util.Optional;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import uk.co.mruoc.cws.entity.Attempt;

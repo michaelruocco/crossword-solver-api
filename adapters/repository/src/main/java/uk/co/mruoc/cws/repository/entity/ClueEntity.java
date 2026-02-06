@@ -10,7 +10,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.UUID;
-
 import lombok.Getter;
 import lombok.Setter;
 

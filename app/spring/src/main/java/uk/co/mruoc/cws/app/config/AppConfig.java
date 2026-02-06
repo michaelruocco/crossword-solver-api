@@ -1,10 +1,7 @@
 package uk.co.mruoc.cws.app.config;
 
 import java.util.Collection;
-import java.util.UUID;
 import java.util.concurrent.Executor;
-import java.util.function.Supplier;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.task.ThreadPoolTaskExecutorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -94,7 +91,11 @@ public class AppConfig {
 
   @Bean
   public AttemptCreator attemptCreator(PuzzleFinder finder, AttemptRepository repository) {
-    return AttemptCreator.builder().puzzleFinder(finder).repository(repository).idSupplier(new UUIDSupplier()).build();
+    return AttemptCreator.builder()
+        .puzzleFinder(finder)
+        .repository(repository)
+        .idSupplier(new UUIDSupplier())
+        .build();
   }
 
   @Bean

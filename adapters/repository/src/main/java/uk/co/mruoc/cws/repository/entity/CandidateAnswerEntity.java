@@ -1,10 +1,9 @@
 package uk.co.mruoc.cws.repository.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,9 +12,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "candidate_clue_answer")
 public class CandidateAnswerEntity {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  @Id private UUID id;
 
   private String value;
   private int score;

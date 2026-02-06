@@ -1,11 +1,10 @@
 package uk.co.mruoc.cws.usecase;
 
+import java.util.UUID;
 import lombok.Builder;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.usecase.attempt.AttemptFinder;
 import uk.co.mruoc.cws.usecase.attempt.AttemptRepository;
-
-import java.util.UUID;
 
 @Builder
 public class AnswerDeleter {

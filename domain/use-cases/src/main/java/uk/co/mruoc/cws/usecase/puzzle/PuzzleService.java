@@ -1,10 +1,9 @@
 package uk.co.mruoc.cws.usecase.puzzle;
 
+import java.util.UUID;
 import lombok.Builder;
 import uk.co.mruoc.cws.entity.Puzzle;
 import uk.co.mruoc.cws.usecase.Image;
-
-import java.util.UUID;
 
 @Builder
 public class PuzzleService {
