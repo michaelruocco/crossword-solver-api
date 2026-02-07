@@ -10,7 +10,6 @@ dependencies {
     implementation project(":hackathon-api-client")
     implementation project(":solver-client")
     implementation "software.amazon.awssdk:bedrockruntime:${awsSdkVersion}"
-    implementation "software.amazon.awssdk:textract:${awsSdkVersion}"
     implementation "software.amazon.awssdk:url-connection-client:${awsSdkVersion}"
     implementation "tools.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "net.sourceforge.tess4j:tess4j:${tesseractVersion}"

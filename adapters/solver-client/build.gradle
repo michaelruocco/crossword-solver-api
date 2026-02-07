@@ -8,8 +8,6 @@ dependencies {
     implementation project(":image-utils")
     implementation "net.sourceforge.tess4j:tess4j:${tesseractVersion}"
     implementation "org.apache.commons:commons-text:${commonsText}"
-    implementation "org.seleniumhq.selenium:selenium-java:4.40.0"
-    implementation "com.openai:openai-java:${openAiVersion}"
     implementation "com.github.michaelruocco:file-loader:7.0.4"
     implementation "io.github.resilience4j:resilience4j-retry:${resilience4jVersion}"
     implementation "software.amazon.awssdk:bedrockruntime:${awsSdkVersion}"
@@ -20,7 +18,6 @@ dependencies {
     implementation "tools.jackson.core:jackson-databind:${jacksonVersion}"
 
     testFixturesImplementation project(":use-cases")
-    testFixturesImplementation "com.openai:openai-java:${openAiVersion}"
     testFixturesImplementation "org.apache.commons:commons-text:${commonsText}"
     testFixturesImplementation "software.amazon.awssdk:bedrockruntime:${awsSdkVersion}"
 }

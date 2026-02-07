@@ -26,7 +26,6 @@ subprojects {
         commonsIoVersion = "2.18.0"
         commonsText = "1.15.0"
         resilience4jVersion = "2.3.0"
-        openAiVersion = "4.17.0"
         awaitilityVersion = "4.3.0"
         awsSdkVersion = "2.41.22"
         springBootVersion = "4.0.2"
