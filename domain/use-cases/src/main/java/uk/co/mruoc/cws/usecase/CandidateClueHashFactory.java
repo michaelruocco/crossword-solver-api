@@ -1,15 +1,14 @@
-package uk.co.mruoc.cws.repository;
+package uk.co.mruoc.cws.usecase;
 
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.cws.entity.Clue;
-import uk.co.mruoc.cws.usecase.HashFactory;
 
 @RequiredArgsConstructor
-public class CandidateClueEntityIdFactory {
+public class CandidateClueHashFactory {
 
   private final HashFactory hashFactory;
 
-  public CandidateClueEntityIdFactory() {
+  public CandidateClueHashFactory() {
     this(new HashFactory());
   }
 

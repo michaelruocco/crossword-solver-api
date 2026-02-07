@@ -9,8 +9,14 @@ project(":use-cases").projectDir = file("domain/use-cases")
 include "api"
 project(":api").projectDir = file("adapters/api")
 
-include "repository"
-project(":repository").projectDir = file("adapters/repository")
+include "spring-common"
+project(":spring-common").projectDir = file("adapters/spring-common")
+
+include "postgres-jpa-repository"
+project(":postgres-jpa-repository").projectDir = file("adapters/repository/postgres-jpa")
+
+include "stub-repository"
+project(":stub-repository").projectDir = file("adapters/repository/stub")
 
 include "image-utils"
 project(":image-utils").projectDir = file("adapters/image-utils")
@@ -24,7 +30,10 @@ project(":hackathon-api-client").projectDir = file("adapters/hackathon-api-clien
 include "solver-client"
 project(":solver-client").projectDir = file("adapters/solver-client")
 
-include "crossword-solver-api-spring-app"
-project(":crossword-solver-api-spring-app").projectDir = file("app/spring")
+include "spring-app"
+project(":spring-app").projectDir = file("app/spring")
+
+include "spring-lambda-app"
+project(":spring-lambda-app").projectDir = file("app/spring-lambda")
 
 include "code-coverage-report"

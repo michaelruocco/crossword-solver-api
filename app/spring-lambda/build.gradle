@@ -8,7 +8,7 @@ plugins {
     id "crossword-solver-api.java-conventions"
     id "org.springframework.boot" version "${springBootVersion}"
     id "com.gorylenko.gradle-git-properties" version "2.5.5"
-    id 'io.spring.dependency-management' version '1.1.7'
+    id 'io.spring.dependency-management' version "1.1.7"
 }
 
 ext {
@@ -21,11 +21,21 @@ configurations {
     integrationTestRuntimeOnly.exclude module: "slf4j-simple"
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2024.0.0"
+    }
+}
+
 dependencies {
-    implementation project(":postgres-jpa-repository")
+    implementation project(":stub-repository")
     implementation project(":spring-common")
+    implementation project(":use-cases")
+    implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
     implementation "org.springframework.boot:spring-boot-starter-actuator"
-    runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
+    implementation "org.springframework.cloud:spring-cloud-function-context"
+    implementation "org.springframework.cloud:spring-cloud-function-adapter-aws"
+    implementation "com.amazonaws:aws-lambda-java-core:1.2.3"
 
     integrationTestImplementation testFixtures(project(":api"))
     integrationTestImplementation project(":rest-client")
@@ -46,5 +56,5 @@ springBoot {
 }
 
 bootRun {
-    args = ["--spring.profiles.active=local"]
+    args = ["--spring.profiles.active=lambda"]
 }

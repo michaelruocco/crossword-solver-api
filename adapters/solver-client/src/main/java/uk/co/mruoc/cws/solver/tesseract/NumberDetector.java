@@ -56,8 +56,6 @@ public class NumberDetector {
         NumberDetector.class.getResourceAsStream("/tessdata/eng.traineddata")) {
       Objects.requireNonNull(resourceStream);
       var dataFolder = Files.createTempDirectory("tessdata");
-      System.out.println("created temp folder " + dataFolder.toAbsolutePath());
-      System.out.println("got file  " + dataFolder.resolve("eng.traineddata").toAbsolutePath());
       Files.copy(resourceStream, dataFolder.resolve("eng.traineddata"));
       return buildTesseract(dataFolder.toAbsolutePath().toString());
     } catch (IOException e) {

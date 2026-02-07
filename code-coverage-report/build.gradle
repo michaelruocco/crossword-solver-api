@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-    jacocoAggregation project(':crossword-solver-api-spring-app')
+    jacocoAggregation project(':spring-app')
 }
 
 reporting {

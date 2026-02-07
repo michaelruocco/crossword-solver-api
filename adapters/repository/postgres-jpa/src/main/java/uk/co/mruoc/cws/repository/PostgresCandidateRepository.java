@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import uk.co.mruoc.cws.entity.Candidates;
 import uk.co.mruoc.cws.entity.Clue;
+import uk.co.mruoc.cws.usecase.CandidateClueHashFactory;
 import uk.co.mruoc.cws.usecase.CandidateRepository;
 
 @Slf4j
@@ -13,11 +14,11 @@ import uk.co.mruoc.cws.usecase.CandidateRepository;
 public class PostgresCandidateRepository implements CandidateRepository {
 
   private final PostgresJpaCandidateRepository jpaRepository;
-  private final CandidateClueEntityIdFactory idFactory;
+  private final CandidateClueHashFactory idFactory;
   private final CandidateEntityConverter converter;
 
   public PostgresCandidateRepository(PostgresJpaCandidateRepository jpaRepository) {
-    this(jpaRepository, new CandidateClueEntityIdFactory(), new CandidateEntityConverter());
+    this(jpaRepository, new CandidateClueHashFactory(), new CandidateEntityConverter());
   }
 
   @Override

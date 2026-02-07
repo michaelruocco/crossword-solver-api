@@ -9,16 +9,17 @@ import uk.co.mruoc.cws.entity.Candidates;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.repository.entity.CandidateAnswerEntity;
 import uk.co.mruoc.cws.repository.entity.CandidateClueEntity;
+import uk.co.mruoc.cws.usecase.CandidateClueHashFactory;
 import uk.co.mruoc.cws.usecase.UUIDSupplier;
 
 @RequiredArgsConstructor
 public class CandidateEntityConverter {
 
-  private final CandidateClueEntityIdFactory idFactory;
+  private final CandidateClueHashFactory idFactory;
   private final Supplier<UUID> idSupplier;
 
   public CandidateEntityConverter() {
-    this(new CandidateClueEntityIdFactory(), new UUIDSupplier());
+    this(new CandidateClueHashFactory(), new UUIDSupplier());
   }
 
   public Candidates toCandidates(CandidateClueEntity entity) {
