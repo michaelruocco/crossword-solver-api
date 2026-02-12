@@ -11,7 +11,9 @@ import uk.co.mruoc.cws.solver.stub.StubGridExtractor;
 import uk.co.mruoc.cws.usecase.GridExtractor;
 import uk.co.mruoc.cws.usecase.ImageDownloader;
 import uk.co.mruoc.cws.usecase.StubImageDownloader;
+import uk.co.mruoc.junit.TesseractInstalled;
 
+@TesseractInstalled
 @Slf4j
 class TesseractGridExtractorIT {
 

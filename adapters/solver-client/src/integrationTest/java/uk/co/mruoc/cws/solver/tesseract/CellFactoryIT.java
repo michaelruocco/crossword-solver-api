@@ -8,7 +8,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import uk.co.mruoc.cws.entity.Coordinates;
 import uk.co.mruoc.cws.image.ImageConverter;
+import uk.co.mruoc.junit.TesseractInstalled;
 
+@TesseractInstalled
 public class CellFactoryIT {
 
   private final CellFactory processor = new CellFactory(NumberDetectorFactory.build());

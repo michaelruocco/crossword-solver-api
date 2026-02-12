@@ -20,4 +20,5 @@ dependencies {
     testFixturesImplementation project(":use-cases")
     testFixturesImplementation "org.apache.commons:commons-text:${commonsText}"
     testFixturesImplementation "software.amazon.awssdk:bedrockruntime:${awsSdkVersion}"
+    testFixturesImplementation "net.sourceforge.tess4j:tess4j:${tesseractVersion}"
 }

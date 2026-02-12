@@ -14,7 +14,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import uk.co.mruoc.cws.usecase.UrlConverter;
+import uk.co.mruoc.junit.TesseractInstalled;
 
+@TesseractInstalled
 @Slf4j
 class GridFactoryIT {
 
