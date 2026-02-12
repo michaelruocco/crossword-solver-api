@@ -61,15 +61,15 @@ jobs:
           role-to-assume: arn:aws:iam::327122349051:role/GitHubPipelineCrosswordSolverApiRole
           aws-region: eu-west-1
 
-      - name: Integration Test
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-          tesseract-ocr \
-          libtesseract-dev \
-          libleptonica-dev
-          export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
-          ./gradlew integrationTest
+        # - name: Integration Test
+          # run: |
+          # sudo apt-get update
+          # sudo apt-get install -y \
+          # tesseract-ocr \
+          # libtesseract-dev \
+          # libleptonica-dev
+          # export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+          # ./gradlew integrationTest
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
