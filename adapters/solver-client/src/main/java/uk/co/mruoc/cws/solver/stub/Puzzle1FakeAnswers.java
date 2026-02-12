@@ -46,8 +46,8 @@ public class Puzzle1FakeAnswers extends FakeAnswers {
     addAnswer(map, "??L??", new Answer("26A", "RELIC", 98));
     addAnswer(map, "RY?", new Answer("26D", "RYE", 95));
     addAnswer(map, "E?E?", new Answer("29A", "EWER", 95));
-    addAnswer(map, "E?C?", Answer.noMatchBuilder().id(new Id("23D")).build());
-    addAnswer(map, "E???", Answer.noMatchBuilder().id(new Id("23D")).build());
+    addAnswer(map, "E?C?", Answer.noMatch(new Id("23D")));
+    addAnswer(map, "E???", Answer.noMatch(new Id("23D")));
     addAnswer(map, "??C?", new Answer("23D", "SECT", 95));
     return map;
   }

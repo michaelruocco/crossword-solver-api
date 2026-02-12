@@ -104,5 +104,5 @@ jobs:
           OSSRH_PGP_SECRET_KEY_PASSWORD: ${{ secrets.OSSRH_PGP_SECRET_KEY_PASSWORD }}
         run: |
           ./gradlew release -Prelease.customUsername=${{ github.actor }} -Prelease.customPassword=${{ github.token }}
-          ./gradlew publishToMavenCentralPortal
+          ./gradlew publishMavenJavaPublicationToMavenCentral
           ./gradlew currentVersion

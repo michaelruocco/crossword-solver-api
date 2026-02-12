@@ -52,7 +52,7 @@ public class FindAnswerResponseConverter {
           .build();
     } catch (NumberFormatException e) {
       log.debug(e.getMessage(), e);
-      return Answer.noMatchBuilder().id(id).build();
+      return Answer.noMatch(id);
     }
   }
 

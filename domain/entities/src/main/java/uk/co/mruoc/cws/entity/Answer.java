@@ -14,11 +14,11 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
   }
 
   public static Answer noMatch(Clue clue) {
-    return noMatchBuilder().id(clue.id()).build();
+    return noMatch(clue.id());
   }
 
-  public static Answer.AnswerBuilder noMatchBuilder() {
-    return Answer.builder().value("NO_MATCH").confidenceScore(0).confirmed(false);
+  public static Answer noMatch(Id id) {
+    return Answer.builder().value("NO_MATCH").confidenceScore(0).confirmed(false).id(id).build();
   }
 
   public boolean hasSameValue(Answer otherAnswer) {
