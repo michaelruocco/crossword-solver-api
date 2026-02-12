@@ -11,8 +11,8 @@ import uk.co.mruoc.cws.usecase.GridExtractor;
 public class TesseractSolverClientConfig {
 
   @Bean
-  public NumberDetector numberDetector(@Value("${tesseract.data.path}") String dataPath) {
-    return new NumberDetector(dataPath);
+  public NumberDetector numberDetector(@Value("${tessdata.prefix}") String tessDataPrefix) {
+    return new NumberDetector(tessDataPrefix);
   }
 
   @Bean

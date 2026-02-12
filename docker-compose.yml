@@ -1,4 +1,21 @@
 services:
+  crossword-solver-api:
+    image: crossword-solver-api
+    container_name: crossword-solver-api
+    profiles: [ "docker-api" ]
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://crossword-solver-db:5432/crossword-solver-db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    restart: on-failure
+    depends_on:
+      - crossword-solver-db
+
   crossword-solver-db:
     image: postgres:18-alpine
     container_name: crossword-solver-db

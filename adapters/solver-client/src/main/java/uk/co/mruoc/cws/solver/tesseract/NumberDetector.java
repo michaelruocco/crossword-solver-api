@@ -17,12 +17,8 @@ public class NumberDetector {
   private final Tesseract tesseract;
   private final MatConverter converter;
 
-  public NumberDetector() {
-    this(buildTesseract());
-  }
-
-  public NumberDetector(String dataFolderPath) {
-    this(buildTesseract(dataFolderPath));
+  public NumberDetector(String tessDataPrefix) {
+    this(buildTesseract(tessDataPrefix));
   }
 
   public NumberDetector(Tesseract tesseract) {
@@ -48,10 +44,10 @@ public class NumberDetector {
     }
   }
 
-  private static Tesseract buildTesseract(String dataFolderPath) {
+  private static Tesseract buildTesseract(String tessDataPrefix) {
     var tesseract = buildTesseract();
-    log.info("setting up tesseract with data folder path {} ", dataFolderPath);
-    tesseract.setDatapath(dataFolderPath);
+    log.info("setting up tesseract with tess data prefix {} ", tessDataPrefix);
+    tesseract.setDatapath(tessDataPrefix);
     return tesseract;
   }
 

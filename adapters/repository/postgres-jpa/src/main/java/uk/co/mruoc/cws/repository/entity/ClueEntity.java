@@ -26,7 +26,10 @@ public class ClueEntity {
   @ElementCollection
   @CollectionTable(
       name = "clue_lengths",
-      joinColumns = {@JoinColumn(name = "puzzle_id"), @JoinColumn(name = "clue_id")})
+      joinColumns = {
+        @JoinColumn(name = "puzzle_id", referencedColumnName = "puzzleId"),
+        @JoinColumn(name = "clue_id", referencedColumnName = "clueId")
+      })
   @Column(name = "length")
   private Collection<Integer> lengths;
 }
