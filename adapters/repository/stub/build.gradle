@@ -6,3 +6,5 @@ dependencies {
     implementation project(":entities")
     implementation project(":use-cases")
 }
+
+apply from: rootProject.file("publish.gradle")

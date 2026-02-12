@@ -8,3 +8,5 @@ dependencies {
     api "org.springframework:spring-webflux:7.0.4"
     implementation "tools.jackson.core:jackson-databind:${jacksonVersion}"
 }
+
+apply from: rootProject.file("publish.gradle")

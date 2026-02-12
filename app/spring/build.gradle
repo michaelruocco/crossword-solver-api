@@ -65,3 +65,5 @@ bootRun {
         args += "--tesseract.data.path=${rootProject.projectDir}/adapters/solver-client/tessdata"
     }
 }
+
+apply from: rootProject.file("publish.gradle")

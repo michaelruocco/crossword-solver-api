@@ -1,3 +1,5 @@
 plugins {
     id "crossword-solver-api.java-conventions"
 }
+
+apply from: rootProject.file("publish.gradle")
