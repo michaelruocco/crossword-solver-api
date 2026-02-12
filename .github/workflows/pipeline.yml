@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 25
 
       - name: Setup SonarCloud Cache
         uses: actions/cache@v4
@@ -51,8 +51,17 @@ jobs:
       - name: Build
         run: ./gradlew clean spotlessCheck lintGradle assemble
 
-      - name: Test
+      - name: Unit Test
         run: ./gradlew test
+
+      - name: Assume AWS role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::327122349051:role/GitHubPipelineCrosswordSolverApiRole
+          aws-region: eu-west-1
+
+      - name: Integration Test
+        run: ./gradlew integrationTest
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
