@@ -9,7 +9,7 @@ public class ClueNotFoundForIdException extends RuntimeException {
   public ClueNotFoundForIdException(Id id, Attempt attempt) {
     super(
         String.format(
-            "clue not found for id %s in attempt %d on puzzle %d",
+            "clue not found for id %s in attempt %s on puzzle %s",
             id, attempt.id(), attempt.puzzleId()));
   }
 }

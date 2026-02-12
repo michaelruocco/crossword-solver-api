@@ -6,11 +6,11 @@ java {
     withSourcesJar()
 }
 
-publishing {
+/*publishing {
     repositories {
         maven {
             name = "MavenCentral"
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
             credentials {
                 username = System.getenv("OSSRH_USERNAME")
                 password = System.getenv("OSSRH_PASSWORD")
@@ -47,19 +47,19 @@ publishing {
             }
         }
     }
-}
+}*/
 
 signing {
     def signingKey = System.getenv("OSSRH_PGP_SECRET_KEY")
     def signingPassword = System.getenv("OSSRH_PGP_SECRET_KEY_PASSWORD")
     useInMemoryPgpKeys(signingKey, signingPassword)
-    sign publishing.publications.mavenJava
+    //sign publishing.publications.mavenJava
 }
 
-gradle.taskGraph.whenReady { graph ->
+/*gradle.taskGraph.whenReady { graph ->
     if (graph.hasTask(":publishMavenJavaPublicationToMavenCentral")) {
         tasks.withType(Sign).configureEach {
             enabled = true
         }
     }
-}
+}*/

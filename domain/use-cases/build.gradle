@@ -8,5 +8,3 @@ dependencies {
 
     testImplementation testFixtures(project(":entities"))
 }
-
-apply from: rootProject.file("publish.gradle")

@@ -65,9 +65,9 @@ public class GridDimensions {
   private MatOfPoint2f getDestinationPoints(int width, int height) {
     return new MatOfPoint2f(
         new Point(0, 0),
-        new Point(width - 1, 0),
-        new Point(width - 1, height - 1),
-        new Point(0, height - 1));
+        new Point(width - 1d, 0),
+        new Point(width - 1d, height - 1d),
+        new Point(0, height - 1d));
   }
 
   private List<Integer> getColumnWidths() {

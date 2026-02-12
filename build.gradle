@@ -5,6 +5,7 @@ plugins {
     id "org.sonarqube" version "7.2.2.6593"
     id "pl.allegro.tech.build.axion-release" version "1.21.1"
     id "com.bmuschko.docker-remote-api" version "9.4.0"
+    id "org.danilopianini.publish-on-central" version "9.1.12"
 }
 
 scmVersion {
@@ -42,8 +43,6 @@ subprojects {
         tesseractVersion = "5.18.0"
 
         junitVersion = "6.0.2"
-
-        gitUrl = "https://github.com/michaelruocco/crossword-solver-api"
     }
 
     configurations.all {
@@ -51,6 +50,48 @@ subprojects {
             if (details.requested.group == "org.springframework.boot") {
                 details.useVersion "${springBootVersion}"
             }
+        }
+    }
+
+    plugins.withId("java-library") { // Only apply to Java library modules
+        apply plugin: "org.danilopianini.publish-on-central"
+
+        java {
+            withSourcesJar()
+            withJavadocJar()
+        }
+
+        publishOnCentral {
+            repoOwner = "michaelruocco"
+            licenseName = "MIT License"
+            licenseUrl = "https://opensource.org/licenses/MIT"
+            projectUrl = "https://github.com/michaelruocco/crossword-solver-api"
+            projectLongName.set("${rootProject.name}-${project.name}")
+            projectDescription.set("${rootProject.name}-${project.name}")
+        }
+
+        publishing {
+            publications {
+                withType(MavenPublication).configureEach { pub ->
+                    pub.suppressPomMetadataWarningsFor("testFixturesApiElements")
+                    pub.suppressPomMetadataWarningsFor("testFixturesRuntimeElements")
+                    pub.pom {
+                        developers {
+                            developer {
+                                id.set("mruoc")
+                                name.set("Michael Ruocco")
+                                email.set("michael.ruocco@hotmail.com")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        signing {
+            def signingKey = System.getenv("OSSRH_PGP_SECRET_KEY")
+            def signingPassword = System.getenv("OSSRH_PGP_SECRET_KEY_PASSWORD")
+            useInMemoryPgpKeys(signingKey, signingPassword)
         }
     }
 }
