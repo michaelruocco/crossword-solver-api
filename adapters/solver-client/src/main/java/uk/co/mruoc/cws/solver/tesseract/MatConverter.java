@@ -75,9 +75,9 @@ public class MatConverter {
     outerCorners.drawOnto(cornersDebug);
     MatLogger.debug(cornersDebug, "outer-corners");
 
-    var M = outerCorners.perspectiveTransform(1.15);
+    var transform = outerCorners.perspectiveTransform(1.15);
     var warped = new Mat();
-    Imgproc.warpPerspective(input, warped, M, outerCorners.maxSize());
+    Imgproc.warpPerspective(input, warped, transform, outerCorners.maxSize());
     MatLogger.debug(warped, "warped");
     return warped;
   }
@@ -129,7 +129,6 @@ public class MatConverter {
 
     var thinned = new Mat();
     Imgproc.erode(bridged, thinned, toKernel(1, 17));
-    // MatLogger.debug(thinned, "horizontal-grid-lines");
     return thinned;
   }
 
