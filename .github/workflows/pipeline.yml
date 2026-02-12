@@ -6,6 +6,7 @@ on:
       - 'crossword-solver-api-*'
 
 permissions:
+  id-token: write
   checks: write
   contents: write
   pull-requests: write
