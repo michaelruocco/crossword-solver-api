@@ -39,7 +39,7 @@ testing {
             targets {
                 configureEach {
                     testTask.configure {
-                        systemProperty "org.slf4j.simpleLogger.defaultLogLevel", "debug"
+                        systemProperty "org.slf4j.simpleLogger.defaultLogLevel", "info"
                         testLogging {
                             events = ["passed", "failed", "skipped"]
                             showStandardStreams = true
