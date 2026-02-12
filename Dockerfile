@@ -58,7 +58,7 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 ENV TESSDATA_PREFIX=/usr/local/share/tessdata
 
 WORKDIR /app
-COPY app/spring/build/libs/spring-app.jar app.jar
+COPY app/spring/build/libs/spring-app-*.jar app.jar
 
 EXPOSE 8080
 
