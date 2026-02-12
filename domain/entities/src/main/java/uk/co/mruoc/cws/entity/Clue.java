@@ -16,7 +16,7 @@ public record Clue(
   private static final String UNKNOWN = "?";
 
   public int numericId() {
-    return id.getId();
+    return id.getNumber();
   }
 
   public Direction direction() {
@@ -27,14 +27,6 @@ public record Clue(
     char[] chars = pattern().toCharArray();
     chars[index] = letter;
     return withPattern(new String(chars));
-  }
-
-  @Override
-  public String pattern() {
-    if (StringUtils.isEmpty(pattern)) {
-      return UNKNOWN.repeat(totalLength());
-    }
-    return pattern;
   }
 
   public int totalLength() {

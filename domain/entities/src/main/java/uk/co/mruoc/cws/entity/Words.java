@@ -16,34 +16,30 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class Words {
 
-  private final Collection<Word> words;
+  private final Collection<Word> values;
   private final Collection<Intersection> intersections;
 
   public Stream<Word> stream() {
-    return words.stream();
+    return values.stream();
   }
 
   public Collection<Id> getIntersectingIds(Id id) {
     return getIntersectingWords(findById(id)).stream().map(Word::id).toList();
   }
 
-  public Coordinates getCoordinates(int id) {
-    return findByNumericId(id).coordinates();
-  }
-
-  public Words(Collection<Word> words) {
-    this(words, buildIntersections(words));
+  public Words(Collection<Word> values) {
+    this(values, buildIntersections(values));
   }
 
   private Word findByNumericId(int id) {
-    return words.stream()
+    return values.stream()
         .filter(word -> word.numericId() == id)
         .findFirst()
         .orElseThrow(() -> new WordNotFoundForNumericIdException(id));
   }
 
   public Word findById(Id id) {
-    return words.stream()
+    return values.stream()
         .filter(word -> word.hasId(id))
         .findFirst()
         .orElseThrow(() -> new WordNotFoundForIdException(id));
@@ -63,10 +59,10 @@ public class Words {
     return intersections.stream().filter(intersection -> intersection.contains(id)).toList();
   }
 
-  private static Collection<Intersection> buildIntersections(Collection<Word> words) {
+  private static Collection<Intersection> buildIntersections(Collection<Word> values) {
     var intersections = new HashSet<Intersection>();
-    for (var word : words) {
-      var otherWords = toOtherWords(word, words);
+    for (var word : values) {
+      var otherWords = toOtherWords(word, values);
       for (var otherWord : otherWords) {
         word.findIntersectionBetween(otherWord).ifPresent(intersections::add);
       }
@@ -74,8 +70,8 @@ public class Words {
     return Collections.unmodifiableCollection(intersections);
   }
 
-  private static Collection<Word> toOtherWords(Word word, Collection<Word> words) {
-    var copy = new ArrayList<>(words);
+  private static Collection<Word> toOtherWords(Word word, Collection<Word> values) {
+    var copy = new ArrayList<>(values);
     copy.remove(word);
     return Collections.unmodifiableCollection(copy);
   }

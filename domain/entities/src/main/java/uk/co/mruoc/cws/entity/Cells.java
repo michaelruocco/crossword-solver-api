@@ -82,7 +82,7 @@ public class Cells implements Iterable<Cell> {
   }
 
   public Cells getWordCells(Id id) {
-    var idCell = forceFindById(id.getId());
+    var idCell = forceFindById(id.getNumber());
     var direction = id.getDirection();
     return getWhiteCellsFrom(idCell, direction);
   }

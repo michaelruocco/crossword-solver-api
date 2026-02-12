@@ -115,10 +115,9 @@ public record Attempt(UUID id, @With Puzzle puzzle, @With Answers answers) {
     for (var intersection : intersections) {
       var intersectingId = intersection.toIntersectingId(answer.id());
       var intersectingAnswer = confirmedAnswers.findById(intersectingId);
-      if (intersectingAnswer.isPresent()) {
-        if (answer.conflictsWith(intersectingAnswer.get(), intersection)) {
-          return false;
-        }
+      if (intersectingAnswer.isPresent()
+          && answer.conflictsWith(intersectingAnswer.get(), intersection)) {
+        return false;
       }
     }
     return true;

@@ -13,7 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 @Builder(toBuilder = true)
 public record Word(Id id, int length, Coordinates coordinates) {
   public int numericId() {
-    return id.getId();
+    return id.getNumber();
   }
 
   public int x() {

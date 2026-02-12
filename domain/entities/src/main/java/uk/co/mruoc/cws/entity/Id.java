@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Id {
 
-  private final int id;
+  private final int number;
   private final Direction direction;
 
   public static Id across(int id) {
@@ -28,14 +28,14 @@ public class Id {
   @Override
   public String toString() {
     if (Objects.isNull(direction)) {
-      return Integer.toString(id);
+      return Integer.toString(number);
     }
-    return String.format("%d%s", id, direction.getId());
+    return String.format("%d%s", number, direction.getId());
   }
 
   private static int toNumericId(String value) {
     try {
-      var digits = value.replaceAll("[^0-9]", "");
+      var digits = value.replaceAll("\\D", "");
       log.debug("parsing numeric id using numbers {} from {}", digits, value);
       return Integer.parseInt(digits);
     } catch (NumberFormatException e) {

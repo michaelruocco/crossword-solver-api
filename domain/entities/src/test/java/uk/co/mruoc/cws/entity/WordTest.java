@@ -23,7 +23,7 @@ class WordTest {
     var intersection = across.findIntersectionBetween(down).orElseThrow();
 
     assertThat(intersection.acrossIndex()).isEqualTo(3);
-    assertThat(intersection.downIndex()).isEqualTo(1);
+    assertThat(intersection.downIndex()).isOne();
   }
 
   @Test
@@ -42,7 +42,7 @@ class WordTest {
 
     var intersection = across.findIntersectionBetween(down).orElseThrow();
 
-    assertThat(intersection.acrossIndex()).isEqualTo(0);
+    assertThat(intersection.acrossIndex()).isZero();
     assertThat(intersection.downIndex()).isEqualTo(4);
   }
 
@@ -62,7 +62,7 @@ class WordTest {
 
     var intersection = across.findIntersectionBetween(down).orElseThrow();
 
-    assertThat(intersection.acrossIndex()).isEqualTo(0);
+    assertThat(intersection.acrossIndex()).isZero();
     assertThat(intersection.downIndex()).isEqualTo(4);
   }
 

@@ -78,14 +78,6 @@ public class MatConverter {
     var M = outerCorners.perspectiveTransform(1.15);
     var warped = new Mat();
     Imgproc.warpPerspective(input, warped, M, outerCorners.maxSize());
-
-    /*var outerCorners = orderCorners(maxContour.toArray());
-    var cornersDebug = input.clone();
-    outerCorners.drawOnto(cornersDebug);
-    MatLogger.debug(cornersDebug, "outer-corners");
-    var M = outerCorners.perspectiveTransform(1.15);
-    var warped = new Mat();
-    Imgproc.warpPerspective(input, warped, M, outerCorners.maxSize());*/
     MatLogger.debug(warped, "warped");
     return warped;
   }
@@ -154,22 +146,7 @@ public class MatConverter {
 
     var thinned = new Mat();
     Imgproc.erode(bridged, thinned, toKernel(17, 1));
-    // MatLogger.debug(thinned, "vertical-grid-lines");
     return thinned;
-  }
-
-  public Corners toCornersOfLargestContour(Mat input) {
-    var gray = toGrayscale(input);
-    var binary = toBinary(gray, 5);
-    var largestContour = toLargestContour(binary);
-    return toCorners(largestContour);
-  }
-
-  public Corners toCorners(MatOfPoint2f contour) {
-    var corners = new Point[4];
-    var rect = Imgproc.minAreaRect(contour);
-    rect.points(corners);
-    return orderCorners(corners);
   }
 
   public Mat toGrayscale(Mat input) {

@@ -31,7 +31,7 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
   public boolean conflictsWith(Answer other, Intersection intersection) {
     int thisIndex = intersection.toIndex(id.getDirection());
     int otherIndex = intersection.toIntersectingIndex(id.getDirection());
-    var conflicts =
+    boolean conflicts =
         letterAt(thisIndex)
             .flatMap(thisLetter -> other.letterAt(otherIndex).map(thisLetter::equals))
             .orElse(false);
@@ -53,7 +53,7 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
   }
 
   public int numericId() {
-    return id.getId();
+    return id.getNumber();
   }
 
   public Direction direction() {
@@ -79,10 +79,8 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
   public boolean matches(String pattern) {
     for (var i = 0; i < pattern.length(); i++) {
       var c = pattern.charAt(i);
-      if (Character.isAlphabetic(c)) {
-        if (value.charAt(i) != c) {
-          return false;
-        }
+      if (Character.isAlphabetic(c) && value.charAt(i) != c) {
+        return false;
       }
     }
     return true;

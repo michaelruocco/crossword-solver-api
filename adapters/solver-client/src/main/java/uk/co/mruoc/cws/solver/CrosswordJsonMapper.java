@@ -24,7 +24,7 @@ public class CrosswordJsonMapper {
     try {
       return mapper.writeValueAsString(json);
     } catch (JacksonException e) {
-      throw new RuntimeException(e);
+      throw new JsonMappingException(e);
     }
   }
 
@@ -34,7 +34,7 @@ public class CrosswordJsonMapper {
       var textNode = root.path("content").get(0).path("text");
       return textNode.stringValue();
     } catch (JacksonException e) {
-      throw new RuntimeException(e);
+      throw new JsonMappingException(e);
     }
   }
 
@@ -42,7 +42,7 @@ public class CrosswordJsonMapper {
     try {
       return new Clues(mapper.readValue(json, Clue[].class));
     } catch (JacksonException e) {
-      throw new RuntimeException(e);
+      throw new JsonMappingException(e);
     }
   }
 
@@ -50,7 +50,7 @@ public class CrosswordJsonMapper {
     try {
       return new Cells(mapper.readValue(json, Cell[].class));
     } catch (JacksonException e) {
-      throw new RuntimeException(e);
+      throw new JsonMappingException(e);
     }
   }
 
@@ -58,7 +58,7 @@ public class CrosswordJsonMapper {
     try {
       return new Answers(mapper.readValue(json, Answer[].class));
     } catch (JacksonException e) {
-      throw new RuntimeException(e);
+      throw new JsonMappingException(e);
     }
   }
 

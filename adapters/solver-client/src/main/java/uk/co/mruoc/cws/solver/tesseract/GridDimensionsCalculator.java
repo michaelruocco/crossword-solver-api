@@ -88,12 +88,12 @@ public class GridDimensionsCalculator {
   }
 
   private List<Integer> toHorizontalCoordinates(Mat input) {
-    var coordinates = toCoordinates(input, (rect) -> rect.y);
+    var coordinates = toCoordinates(input, rect -> rect.y);
     return cluster(input, coordinates);
   }
 
   private List<Integer> toVerticalCoordinates(Mat input) {
-    var coordinates = toCoordinates(input, (rect) -> rect.x);
+    var coordinates = toCoordinates(input, rect -> rect.x);
     return cluster(input, coordinates);
   }
 
