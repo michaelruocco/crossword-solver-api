@@ -13,7 +13,7 @@ import uk.co.mruoc.junit.TesseractInstalled;
 @TesseractInstalled
 public class CellFactoryIT {
 
-  private final CellFactory processor = new CellFactory(NumberDetectorFactory.build());
+  private final CellFactory factory = new CellFactory(NumberDetectorFactory.build());
 
   private final ImageConverter imageConverter = new ImageConverter();
   private final MatConverter matConverter = new MatConverter();
@@ -39,7 +39,7 @@ public class CellFactoryIT {
     var bytes = imageConverter.toBytes(image);
     var input = matConverter.toMat(bytes);
 
-    var cell = processor.toCell(input, 1, 2);
+    var cell = factory.toCell(input, 1, 2);
 
     assertThat(cell.black()).isFalse();
     assertThat(cell.hasId()).isTrue();
