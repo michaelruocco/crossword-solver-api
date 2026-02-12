@@ -33,10 +33,6 @@ public class CellFactory {
   private final MatConverter converter;
   private final NumberDetector detector;
 
-  public CellFactory() {
-    this(new NumberDetector());
-  }
-
   public CellFactory(NumberDetector numberDetector) {
     this(new MatConverter(), numberDetector);
   }

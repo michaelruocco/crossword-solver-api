@@ -28,7 +28,7 @@ public class WordDeserializer extends StdDeserializer<Word> {
 
   private static Direction toDirectionIfPresent(JsonNode node) {
     return Optional.ofNullable(node.get("direction"))
-        .map(directionNode -> Direction.valueOf(directionNode.asText()))
+        .map(directionNode -> Direction.valueOf(directionNode.stringValue()))
         .orElse(null);
   }
 

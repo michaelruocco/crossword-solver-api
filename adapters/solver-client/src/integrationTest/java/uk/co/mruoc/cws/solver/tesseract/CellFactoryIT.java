@@ -11,7 +11,7 @@ import uk.co.mruoc.cws.image.ImageConverter;
 
 public class CellFactoryIT {
 
-  private final CellFactory processor = new CellFactory();
+  private final CellFactory processor = new CellFactory(NumberDetectorFactory.build());
 
   private final ImageConverter imageConverter = new ImageConverter();
   private final MatConverter matConverter = new MatConverter();

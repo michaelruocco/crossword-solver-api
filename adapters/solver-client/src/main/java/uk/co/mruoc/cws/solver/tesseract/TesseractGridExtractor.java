@@ -10,10 +10,6 @@ public class TesseractGridExtractor implements GridExtractor {
 
   private final GridFactory gridFactory;
 
-  public TesseractGridExtractor() {
-    this(new NumberDetector());
-  }
-
   public TesseractGridExtractor(NumberDetector numberDetector) {
     this(new GridFactory(numberDetector));
   }

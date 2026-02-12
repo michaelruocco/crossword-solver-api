@@ -17,7 +17,7 @@ class TesseractGridExtractorIT {
 
   private final ImageDownloader downloader = new StubImageDownloader();
 
-  private final GridExtractor extractor = new TesseractGridExtractor();
+  private final GridExtractor extractor = new TesseractGridExtractor(NumberDetectorFactory.build());
 
   @ParameterizedTest
   @MethodSource("imageUrls")

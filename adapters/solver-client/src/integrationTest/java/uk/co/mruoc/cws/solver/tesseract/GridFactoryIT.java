@@ -21,7 +21,7 @@ class GridFactoryIT {
   private static final ImageDirectory OUTPUT_DIRECTORY =
       new ImageDirectory("integration-test-files/output-grid");
 
-  private final GridFactory factory = new GridFactory();
+  private final GridFactory factory = new GridFactory(NumberDetectorFactory.build());
   private final GridImageFactory imageFactory = new GridImageFactory();
   private final UrlConverter urlConverter = new UrlConverter();
 

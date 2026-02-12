@@ -3,9 +3,6 @@ package uk.co.mruoc.cws.solver.tesseract;
 import static net.sourceforge.tess4j.ITessAPI.TessOcrEngineMode.OEM_LSTM_ONLY;
 import static net.sourceforge.tess4j.ITessAPI.TessPageSegMode.PSM_SINGLE_WORD;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,22 +48,15 @@ public class NumberDetector {
     }
   }
 
-  private static Tesseract buildTesseract() {
-    try (var resourceStream =
-        NumberDetector.class.getResourceAsStream("/tessdata/eng.traineddata")) {
-      Objects.requireNonNull(resourceStream);
-      var dataFolder = Files.createTempDirectory("tessdata");
-      Files.copy(resourceStream, dataFolder.resolve("eng.traineddata"));
-      return buildTesseract(dataFolder.toAbsolutePath().toString());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
   private static Tesseract buildTesseract(String dataFolderPath) {
-    var tesseract = new Tesseract();
+    var tesseract = buildTesseract();
     log.info("setting up tesseract with data folder path {} ", dataFolderPath);
     tesseract.setDatapath(dataFolderPath);
+    return tesseract;
+  }
+
+  private static Tesseract buildTesseract() {
+    var tesseract = new Tesseract();
     tesseract.setVariable("tessedit_char_whitelist", "0123456789");
     tesseract.setVariable("user_defined_dpi", "300");
     tesseract.setPageSegMode(PSM_SINGLE_WORD);

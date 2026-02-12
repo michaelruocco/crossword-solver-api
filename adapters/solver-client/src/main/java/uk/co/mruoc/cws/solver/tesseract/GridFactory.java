@@ -20,10 +20,6 @@ public class GridFactory {
   private final GridDimensionsCalculator calculator;
   private final CellFactory cellFactory;
 
-  public GridFactory() {
-    this(new NumberDetector());
-  }
-
   public GridFactory(NumberDetector numberDetector) {
     this(new GridExtractor(), new GridDimensionsCalculator(), new CellFactory(numberDetector));
   }

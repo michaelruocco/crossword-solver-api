@@ -9,9 +9,6 @@ project(":use-cases").projectDir = file("domain/use-cases")
 include "api"
 project(":api").projectDir = file("adapters/api")
 
-include "spring-common"
-project(":spring-common").projectDir = file("adapters/spring-common")
-
 include "postgres-jpa-repository"
 project(":postgres-jpa-repository").projectDir = file("adapters/repository/postgres-jpa")
 
@@ -32,8 +29,5 @@ project(":solver-client").projectDir = file("adapters/solver-client")
 
 include "spring-app"
 project(":spring-app").projectDir = file("app/spring")
-
-include "spring-lambda-app"
-project(":spring-lambda-app").projectDir = file("app/spring-lambda")
 
 include "code-coverage-report"

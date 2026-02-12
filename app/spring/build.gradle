@@ -22,8 +22,19 @@ configurations {
 }
 
 dependencies {
+    implementation project(":entities")
+    implementation project(":use-cases")
+    implementation project(":api")
+    implementation project(":image-utils")
+    implementation project(":hackathon-api-client")
+    implementation project(":solver-client")
     implementation project(":postgres-jpa-repository")
-    implementation project(":spring-common")
+    implementation project(":stub-repository")
+    implementation "software.amazon.awssdk:bedrockruntime:${awsSdkVersion}"
+    implementation "software.amazon.awssdk:url-connection-client:${awsSdkVersion}"
+    implementation "tools.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "net.sourceforge.tess4j:tess4j:${tesseractVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
 
@@ -45,6 +56,12 @@ springBoot {
     buildInfo()
 }
 
+tasks.named("bootRun") {
+    jvmArgs += "--enable-native-access=ALL-UNNAMED"
+}
+
 bootRun {
-    args = ["--spring.profiles.active=local"]
+    doFirst {
+        args += "--tesseract.data.path=${rootProject.projectDir}/adapters/solver-client/tessdata"
+    }
 }

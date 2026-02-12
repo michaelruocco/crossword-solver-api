@@ -1,0 +1,34 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 17MB
+      max-request-size: 17MB
+  datasource:
+    url: jdbc:postgresql://localhost:5433/crossword-solver-db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+bedrock:
+  client:
+    region: eu-west-1
+    connectionTimeout: 30s
+    socketTimeout: 180s
+    apiCallAttemptTimeout: 2m
+    apiCallTimeout: 4m
+  conversation:
+    modelId: eu.anthropic.claude-3-7-sonnet-20250219-v1:0
+    temperature: 0.2
+    maxTokens: 2024
+
+hackathon.base-url: https://hackathon.caci.co.uk/api
+
+management.endpoints.web.exposure.include: health,info
