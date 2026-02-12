@@ -89,8 +89,8 @@ subprojects {
         }
 
         signing {
-            def signingKey = System.getenv("OSSRH_PGP_SECRET_KEY")
-            def signingPassword = System.getenv("OSSRH_PGP_SECRET_KEY_PASSWORD")
+            def signingKey = System.getenv("MAVEN_CENTRAL_PGP_SECRET_KEY")
+            def signingPassword = System.getenv("MAVEN_CENTRAL_PGP_SECRET_KEY_PASSWORD")
             useInMemoryPgpKeys(signingKey, signingPassword)
         }
     }
