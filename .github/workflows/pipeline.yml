@@ -62,12 +62,15 @@ jobs:
           aws-region: eu-west-1
 
       - name: Integration Test
-        run: ./gradlew integrationTest
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr
+          ./gradlew integrationTest
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
-          files: "build/test-results/**/*.xml"
+          files: "**/**/build/test-results/**/*.xml"
 
       - name: Sonar Analysis
         env:
