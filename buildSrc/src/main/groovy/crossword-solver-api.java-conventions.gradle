@@ -27,6 +27,7 @@ testing {
     suites {
         withType(JvmTestSuite) {
             useJUnitJupiter(junitVersion)
+
             dependencies {
                 runtimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
                 runtimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
@@ -39,6 +40,10 @@ testing {
             targets {
                 configureEach {
                     testTask.configure {
+                        def mockitoJar = configurations.testRuntimeClasspath.find { it.name.startsWith("mockito-core") }
+                        if (mockitoJar) {
+                            jvmArgs += "-javaagent:${mockitoJar}"
+                        }
                         systemProperty "org.slf4j.simpleLogger.defaultLogLevel", "info"
                         testLogging {
                             events = ["passed", "failed", "skipped"]
