@@ -71,8 +71,9 @@ public class GreedyAttemptSolver implements AttemptSolver {
   }
 
   private Attempt unconfirmIntersectingClues(Attempt attempt, Clues clues) {
+    var candidateAttempt = attempt;
     for (var clue : clues) {
-      return unconfirmIntersectingClue(attempt, clue);
+      candidateAttempt = unconfirmIntersectingClue(candidateAttempt, clue);
     }
     throw new SolverException(String.format("no clues to retry for attempt %s", attempt.id()));
   }
