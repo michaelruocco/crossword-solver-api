@@ -37,6 +37,9 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
+    runtimeOnly "software.amazon.awssdk:sso:${awsSdkVersion}"
+    runtimeOnly "software.amazon.awssdk:ssooidc:${awsSdkVersion}"
+
 
     integrationTestImplementation testFixtures(project(":api"))
     integrationTestImplementation project(":rest-client")
@@ -62,6 +65,6 @@ tasks.named("bootRun") {
 
 bootRun {
     doFirst {
-        args += "--tesseract.data.path=${rootProject.projectDir}/adapters/solver-client/tessdata"
+        args += "--tessdata.prefix=${rootProject.projectDir}/adapters/solver-client/tessdata"
     }
 }
