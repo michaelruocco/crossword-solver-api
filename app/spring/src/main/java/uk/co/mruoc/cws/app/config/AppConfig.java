@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import uk.co.mruoc.cws.entity.WordsFactory;
 import uk.co.mruoc.cws.image.DefaultImageDownloader;
+import uk.co.mruoc.cws.solver.tesseract.OpenCvGridImageFactory;
 import uk.co.mruoc.cws.usecase.AnswerDeleter;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.cws.usecase.CandidateLoader;
@@ -48,6 +49,7 @@ public class AppConfig {
         .puzzleService(puzzleService)
         .attemptService(attemptService)
         .answerDeleter(answerDeleter)
+        .gridImageFactory(new OpenCvGridImageFactory())
         .build();
   }
 

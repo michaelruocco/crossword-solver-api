@@ -56,7 +56,8 @@ public class BedrockSolverClientConfig {
 
   @Bean
   public AnswerFinder bedrockAnswerFinder(PromptTextExecutor promptTextExecutor) {
-    return new CachingAnswerFinder(new BedrockAnswerFinder(promptTextExecutor));
+    return new BedrockAnswerFinder(promptTextExecutor);
+    //return new CachingAnswerFinder();
   }
 
   @Bean

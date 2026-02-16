@@ -2,6 +2,7 @@ package uk.co.mruoc.cws.solver.tesseract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static uk.co.mruoc.cws.image.ImageUrlBuilder.toUrl;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,9 +39,5 @@ class GridDimensionsCalculatorIT {
         Arguments.of(toUrl("puzzle9.jpg"), 13, 29),
         Arguments.of(toUrl("puzzle14.jpg"), 11, 23),
         Arguments.of(toUrl("puzzle24.jpg"), 15, 15));
-  }
-
-  private static String toUrl(String filename) {
-    return String.format("https://hackathon.caci.co.uk/images/%s", filename);
   }
 }

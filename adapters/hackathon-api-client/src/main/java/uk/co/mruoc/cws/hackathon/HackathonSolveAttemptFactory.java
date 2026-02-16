@@ -17,27 +17,25 @@ public class HackathonSolveAttemptFactory {
 
   private final ObjectMapper mapper;
   private final String teamName;
+  private final AttemptAnswerReplacer answerReplacer;
 
   public HackathonSolveAttemptFactory(ObjectMapper mapper) {
-    this(mapper, "Michael Ruocco");
+    this(mapper, "Michael Ruocco", new AttemptAnswerReplacer());
   }
 
   public String toHackathonAttemptJson(Attempt attempt) {
-    var hackathonAttempt = toHackathonAttempt(attempt);
+    var replacedAttempt = answerReplacer.replaceAnswersIfRequired(attempt);
+    var hackathonAttempt = toHackathonAttempt(replacedAttempt);
     return mapper.writeValueAsString(hackathonAttempt);
   }
 
   public HackathonSolveAttempt toHackathonAttempt(Attempt attempt) {
     return HackathonSolveAttempt.builder()
-        .imageName(toImageName(attempt.puzzle()))
+        .imageName(attempt.puzzle().getNameAndFormat())
         .teamName(teamName)
         .down(toAnswers(attempt, DOWN))
         .across(toAnswers(attempt, ACROSS))
         .build();
-  }
-
-  private static String toImageName(Puzzle puzzle) {
-    return String.format("%s%s", puzzle.getName(), puzzle.getFormat());
   }
 
   private static Map<String, String> toAnswers(Attempt attempt, Direction direction) {

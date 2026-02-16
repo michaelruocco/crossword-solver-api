@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.usecase;
 
+import java.awt.image.BufferedImage;
 import java.util.UUID;
 import lombok.Builder;
 import uk.co.mruoc.cws.entity.Answer;
@@ -15,6 +16,7 @@ public class CrosswordSolverFacade {
   private final PuzzleService puzzleService;
   private final AttemptService attemptService;
   private final AnswerDeleter answerDeleter;
+  private final GridImageFactory gridImageFactory;
 
   public UUID createPuzzle(String imageUrl) {
     return puzzleService.create(imageUrl);
@@ -28,12 +30,22 @@ public class CrosswordSolverFacade {
     return puzzleService.findById(puzzleId);
   }
 
+  public BufferedImage findPuzzleGridImage(UUID puzzleId) {
+    var puzzle = findPuzzleById(puzzleId);
+    return gridImageFactory.toImage(puzzle.getGrid());
+  }
+
   public UUID createPuzzleAttempt(UUID puzzleId) {
     return attemptService.createAttempt(puzzleId);
   }
 
   public void updateAttemptAnswer(UUID attemptId, Answer answer) {
     attemptService.updateAnswer(attemptId, answer);
+  }
+
+  public BufferedImage findAttemptGridImage(UUID attemptId) {
+    var attempt = findAttemptById(attemptId);
+    return gridImageFactory.toImage(attempt.getGrid());
   }
 
   public Attempt findAttemptById(UUID attemptId) {

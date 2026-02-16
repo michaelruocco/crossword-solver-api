@@ -15,9 +15,9 @@ public class AttemptSolverRunnable implements Runnable {
 
   @Override
   public void run() {
-    var attempt = finder.findById(attemptId);
-    var solvedAttempt = solver.solve(attempt);
-    log.info("solved attempt {}", solvedAttempt.asString());
-    repository.save(solvedAttempt);
+      var attempt = finder.findById(attemptId);
+      var solvedAttempt = solver.solve(attempt);
+      log.info("solved attempt {}", solvedAttempt.asString());
+      repository.save(solvedAttempt);
   }
 }

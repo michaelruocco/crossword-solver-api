@@ -48,4 +48,8 @@ public class Puzzle {
   public Cells getWordCells(Id id) {
     return grid.getWordCells(id);
   }
+
+  public String getNameAndFormat() {
+    return String.format("%s%s", name, format);
+  }
 }
