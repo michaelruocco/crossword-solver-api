@@ -34,13 +34,14 @@ public class CandidateEntityConverter {
     var entity = new CandidateClueEntity();
     entity.setClueId(id);
     entity.setText(clue.text());
+    entity.setType(clue.type());
     entity.setPattern(clue.pattern());
     entity.setAnswers(toAnswerEntities(id, candidates));
     return entity;
   }
 
   private Clue toClue(CandidateClueEntity entity) {
-    return Clue.builder().text(entity.getText()).pattern(entity.getPattern()).build();
+    return Clue.builder().text(entity.getText()).type(entity.getType()).pattern(entity.getPattern()).build();
   }
 
   private Collection<Answer> toAnswers(Collection<CandidateAnswerEntity> entities) {

@@ -3,36 +3,36 @@ package uk.co.mruoc.cws.solver.bedrock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.services.bedrockruntime.BedrockRuntimeClient;
-import uk.co.mruoc.cws.entity.Puzzle;
+import uk.co.mruoc.cws.entity.Clues;
 import uk.co.mruoc.cws.solver.DeterminePuzzleTypePromptTextFactory;
-import uk.co.mruoc.cws.usecase.PuzzleType;
-import uk.co.mruoc.cws.usecase.PuzzleTypePolicy;
+import uk.co.mruoc.cws.entity.ClueType;
+import uk.co.mruoc.cws.usecase.ClueTypePolicy;
 
 @Slf4j
 @RequiredArgsConstructor
-public class BedrockPuzzleTypePolicy implements PuzzleTypePolicy {
+public class BedrockClueTypePolicy implements ClueTypePolicy {
 
     private final PromptTextExecutor promptTextExecutor;
     private final DeterminePuzzleTypePromptTextFactory promptTextFactory;
 
-    public BedrockPuzzleTypePolicy(BedrockRuntimeClient client) {
+    public BedrockClueTypePolicy(BedrockRuntimeClient client) {
         this(client, new DefaultBedrockConversationConfig());
     }
 
-    public BedrockPuzzleTypePolicy(
+    public BedrockClueTypePolicy(
             BedrockRuntimeClient client, BedrockConversationConfig conversationConfig) {
         this(new PromptTextExecutor(client, conversationConfig));
     }
 
-    public BedrockPuzzleTypePolicy(PromptTextExecutor promptTextExecutor) {
+    public BedrockClueTypePolicy(PromptTextExecutor promptTextExecutor) {
         this(promptTextExecutor, new DeterminePuzzleTypePromptTextFactory());
     }
 
     @Override
-    public PuzzleType determinePuzzleType(Puzzle puzzle) {
-        var promptText = promptTextFactory.toPromptText(puzzle.getClues());
+    public ClueType determineClueType(Clues clues) {
+        var promptText = promptTextFactory.toPromptText(clues);
         var result = promptTextExecutor.execute(promptText);
-        log.debug("puzzle type result {} for puzzle {} with id {}", result, puzzle.getNameAndFormat(), puzzle.getId());
-        return PuzzleType.valueOf(result);
+        log.debug("determined clue type {}", result);
+        return ClueType.valueOf(result);
     }
 }

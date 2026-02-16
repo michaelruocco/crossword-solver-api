@@ -10,6 +10,7 @@ public record Clue(
     @With Id id,
     String text,
     Collection<Integer> lengths,
+    @With ClueType type,
     @With String pattern,
     @With Candidates candidates) {
 
