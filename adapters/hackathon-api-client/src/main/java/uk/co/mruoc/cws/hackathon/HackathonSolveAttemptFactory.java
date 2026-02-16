@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import tools.jackson.databind.ObjectMapper;
 import uk.co.mruoc.cws.entity.Attempt;
 import uk.co.mruoc.cws.entity.Direction;
-import uk.co.mruoc.cws.entity.Puzzle;
 
 @RequiredArgsConstructor
 public class HackathonSolveAttemptFactory {

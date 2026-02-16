@@ -6,12 +6,12 @@ import uk.co.mruoc.cws.entity.Clues;
 @Builder
 public class CluesFactory {
 
-    private final ClueExtractor clueExtractor;
-    private final ClueTypePolicy clueTypePolicy;
+  private final ClueExtractor clueExtractor;
+  private final ClueTypePolicy clueTypePolicy;
 
-    public Clues build(Image image) {
-        var clues = clueExtractor.extractClues(image);
-        var type = clueTypePolicy.determineClueType(clues);
-        return clues.withType(type);
-    }
+  public Clues build(Image image) {
+    var clues = clueExtractor.extractClues(image);
+    var type = clueTypePolicy.determineClueType(clues);
+    return clues.withType(type);
+  }
 }

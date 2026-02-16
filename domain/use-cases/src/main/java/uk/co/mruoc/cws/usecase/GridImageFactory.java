@@ -1,10 +1,9 @@
 package uk.co.mruoc.cws.usecase;
 
-import uk.co.mruoc.cws.entity.Grid;
-
 import java.awt.image.BufferedImage;
+import uk.co.mruoc.cws.entity.Grid;
 
 public interface GridImageFactory {
 
-    BufferedImage toImage(Grid grid);
+  BufferedImage toImage(Grid grid);
 }

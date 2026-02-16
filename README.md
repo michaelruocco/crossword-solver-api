@@ -49,7 +49,7 @@ spinning up a postgres instance you can run
 * Fix pipeline running integration tests, need tesseract built from source
 * Clean up tesseract / grid extractor by splitting into its own module
 * Fix sonar issues
-* A docker build and push to build pipeline
+* Add docker build and push to build pipeline
 * Add cryptic puzzle detection and solving
 * Try to figure out how to ensure tricky clues get answered correctly:
     * Ram (3) -> TAP/TOP -> TUP

@@ -20,8 +20,10 @@ import uk.co.mruoc.cws.entity.ClueType;
 public class CandidateClueEntity {
   @Id private String clueId;
   private String text;
+
   @Enumerated(EnumType.STRING)
   private ClueType type;
+
   private String pattern;
 
   @OneToMany(cascade = CascadeType.ALL)

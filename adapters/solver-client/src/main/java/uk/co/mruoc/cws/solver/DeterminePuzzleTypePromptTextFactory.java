@@ -1,13 +1,12 @@
 package uk.co.mruoc.cws.solver;
 
+import static uk.co.mruoc.file.FileLoader.loadContentFromClasspath;
+
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Clues;
-
-import java.util.stream.Collectors;
-
-import static uk.co.mruoc.file.FileLoader.loadContentFromClasspath;
 
 @RequiredArgsConstructor
 @Slf4j

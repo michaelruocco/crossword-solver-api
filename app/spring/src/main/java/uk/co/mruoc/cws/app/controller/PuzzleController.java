@@ -1,9 +1,5 @@
 package uk.co.mruoc.cws.app.controller;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +20,8 @@ import uk.co.mruoc.cws.api.ApiAttempt;
 import uk.co.mruoc.cws.api.ApiConverter;
 import uk.co.mruoc.cws.api.ApiCreatePuzzleRequest;
 import uk.co.mruoc.cws.api.ApiPuzzle;
-import uk.co.mruoc.cws.entity.Grid;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
-
-import javax.imageio.ImageIO;
 
 @RestController
 @RequestMapping("/v1/puzzles")
@@ -114,7 +107,8 @@ public class PuzzleController {
   }
 
   @GetMapping("/{puzzleId}/attempts/{attemptId}/grid-images")
-  public ResponseEntity<byte[]> getAttemptGridImage(@PathVariable UUID puzzleId, @PathVariable UUID attemptId) {
+  public ResponseEntity<byte[]> getAttemptGridImage(
+      @PathVariable UUID puzzleId, @PathVariable UUID attemptId) {
     log.info("getting grid image of attempt {} for puzzle {}", attemptId, puzzleId);
     var gridImage = facade.findAttemptGridImage(attemptId);
     return imageResponseFactory.toResponse(gridImage);

@@ -61,7 +61,8 @@ public class AppConfig {
   }
 
   @Bean
-  public PuzzleCreator puzzleCreator(CluesFactory cluesFactory, GridExtractor gridExtractor, PuzzleRepository repository) {
+  public PuzzleCreator puzzleCreator(
+      CluesFactory cluesFactory, GridExtractor gridExtractor, PuzzleRepository repository) {
     return PuzzleCreator.builder()
         .imageDownloader(new DefaultImageDownloader())
         .validator(new ImageValidator())
@@ -176,8 +177,8 @@ public class AppConfig {
   @Bean
   public CluesFactory cluesFactory(ClueExtractor clueExtractor, ClueTypePolicy clueTypePolicy) {
     return CluesFactory.builder()
-            .clueExtractor(clueExtractor)
-            .clueTypePolicy(clueTypePolicy)
-            .build();
+        .clueExtractor(clueExtractor)
+        .clueTypePolicy(clueTypePolicy)
+        .build();
   }
 }

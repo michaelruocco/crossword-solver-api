@@ -41,7 +41,11 @@ public class CandidateEntityConverter {
   }
 
   private Clue toClue(CandidateClueEntity entity) {
-    return Clue.builder().text(entity.getText()).type(entity.getType()).pattern(entity.getPattern()).build();
+    return Clue.builder()
+        .text(entity.getText())
+        .type(entity.getType())
+        .pattern(entity.getPattern())
+        .build();
   }
 
   private Collection<Answer> toAnswers(Collection<CandidateAnswerEntity> entities) {

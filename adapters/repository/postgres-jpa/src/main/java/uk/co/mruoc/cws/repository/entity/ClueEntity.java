@@ -25,6 +25,7 @@ public class ClueEntity {
   @Id private UUID puzzleId;
   @Id private String clueId;
   private String text;
+
   @Enumerated(EnumType.STRING)
   private ClueType type;
 

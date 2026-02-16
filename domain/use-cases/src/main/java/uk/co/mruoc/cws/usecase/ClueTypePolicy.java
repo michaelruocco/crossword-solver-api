@@ -5,5 +5,5 @@ import uk.co.mruoc.cws.entity.Clues;
 
 public interface ClueTypePolicy {
 
-    ClueType determineClueType(Clues clues);
+  ClueType determineClueType(Clues clues);
 }

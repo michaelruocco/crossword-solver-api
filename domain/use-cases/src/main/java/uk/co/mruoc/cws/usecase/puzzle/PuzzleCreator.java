@@ -5,11 +5,8 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
-import uk.co.mruoc.cws.entity.Clues;
 import uk.co.mruoc.cws.entity.Puzzle;
 import uk.co.mruoc.cws.entity.WordsFactory;
-import uk.co.mruoc.cws.usecase.ClueExtractor;
-import uk.co.mruoc.cws.usecase.ClueTypePolicy;
 import uk.co.mruoc.cws.usecase.CluesFactory;
 import uk.co.mruoc.cws.usecase.GridExtractor;
 import uk.co.mruoc.cws.usecase.Image;
@@ -66,6 +63,4 @@ public class PuzzleCreator {
         .words(wordsFactory.toWords(clues, grid.cells()))
         .build();
   }
-
-
 }
