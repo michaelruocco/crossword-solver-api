@@ -71,8 +71,8 @@ directly on your local machine if you wish, as this saves the need to install te
 
 To do this, you need to build the docker image by running:
 
-```bash
-docker build -t crossword-solver-api .
+```gradle
+./gradlew buildImage
 ```
 
 Then you can run the application container and database by running:

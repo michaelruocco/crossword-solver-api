@@ -4,7 +4,7 @@ spring:
       max-file-size: 17MB
       max-request-size: 17MB
   datasource:
-    url: jdbc:postgresql://localhost:5433/crossword-solver-db
+    url: jdbc:postgresql://localhost:5432/crossword-solver-db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver

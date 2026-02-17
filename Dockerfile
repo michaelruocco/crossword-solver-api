@@ -52,13 +52,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=tesseract-builder /usr/local/bin/tesseract /usr/local/bin/
 COPY --from=tesseract-builder /usr/local/lib/ /usr/local/lib/
 COPY --from=tesseract-builder /usr/local/share/ /usr/local/share/
-COPY adapters/solver-client/tessdata/eng.traineddata /usr/local/share/tessdata/
+COPY tessdata/eng.traineddata /usr/local/share/tessdata/
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 ENV TESSDATA_PREFIX=/usr/local/share/tessdata
 
 WORKDIR /app
-COPY app/spring/build/libs/spring-app-*.jar app.jar
+COPY app.jar app.jar
 
 EXPOSE 8080
 
