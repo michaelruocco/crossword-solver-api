@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 @Builder(toBuilder = true)
 public record Clue(
     @With Id id,
-    String text,
+    @With String text,
     Collection<Integer> lengths,
     @With ClueType type,
     @With String pattern,
@@ -28,6 +28,15 @@ public record Clue(
     char[] chars = pattern().toCharArray();
     chars[index] = letter;
     return withPattern(new String(chars));
+  }
+
+  public Clue normalizeHyphens() {
+    var updatedText =
+        StringUtils.replaceEach(
+            text,
+            new String[] {"–", "—", "‐", "‑", "−", "⁃", "‒"},
+            new String[] {"-", "-", "-", "-", "-", "-", "-"});
+    return withText(updatedText);
   }
 
   public int totalLength() {

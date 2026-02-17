@@ -1,0 +1,254 @@
+[
+  {
+    "id": 3,
+    "direction": "ACROSS",
+    "value": "MOSES",
+    "confidenceScore": 95,
+    "confirmed": false
+  },
+  {
+    "id": 8,
+    "direction": "ACROSS",
+    "value": "COPIED",
+    "confidenceScore": 90,
+    "confirmed": false
+  },
+  {
+    "id": 9,
+    "direction": "ACROSS",
+    "value": "ORANGE",
+    "confidenceScore": 96,
+    "confirmed": false
+  },
+  {
+    "id": 10,
+    "direction": "ACROSS",
+    "value": "MAPLE",
+    "confidenceScore": 85,
+    "confirmed": false
+  },
+  {
+    "id": 13,
+    "direction": "ACROSS",
+    "value": "STRAP",
+    "confidenceScore": 82,
+    "confirmed": false
+  },
+  {
+    "id": 16,
+    "direction": "ACROSS",
+    "value": "OFTEN",
+    "confidenceScore": 95,
+    "confirmed": false
+  },
+  {
+    "id": 18,
+    "direction": "ACROSS",
+    "value": "RATINGS",
+    "confidenceScore": 90,
+    "confirmed": false
+  },
+  {
+    "id": 19,
+    "direction": "ACROSS",
+    "value": "APPLE",
+    "confidenceScore": 90,
+    "confirmed": false
+  },
+  {
+    "id": 20,
+    "direction": "ACROSS",
+    "value": "CREST",
+    "confidenceScore": 60,
+    "confirmed": false
+  },
+  {
+    "id": 21,
+    "direction": "ACROSS",
+    "value": "SINATRA",
+    "confidenceScore": 82,
+    "confirmed": false
+  },
+  {
+    "id": 22,
+    "direction": "ACROSS",
+    "value": "BRASS",
+    "confidenceScore": 80,
+    "confirmed": false
+  },
+  {
+    "id": 24,
+    "direction": "ACROSS",
+    "value": "ROGER",
+    "confidenceScore": 75,
+    "confirmed": false
+  },
+  {
+    "id": 27,
+    "direction": "ACROSS",
+    "value": "CATCH",
+    "confidenceScore": 70,
+    "confirmed": false
+  },
+  {
+    "id": 30,
+    "direction": "ACROSS",
+    "value": "FLEECE",
+    "confidenceScore": 90,
+    "confirmed": false
+  },
+  {
+    "id": 31,
+    "direction": "ACROSS",
+    "value": "POPEYE",
+    "confidenceScore": 87,
+    "confirmed": false
+  },
+  {
+    "id": 32,
+    "direction": "LIGHT",
+    "value": "DEMO",
+    "confidenceScore": 78,
+    "confirmed": false
+  },
+  {
+    "id": 1,
+    "direction": "DOWN",
+    "value": "CACTUS",
+    "confidenceScore": 69,
+    "confirmed": false
+  },
+  {
+    "id": 2,
+    "direction": "DOWN",
+    "value": "COPPER",
+    "confidenceScore": 95,
+    "confirmed": false
+  },
+  {
+    "id": 3,
+    "direction": "DOWN",
+    "value": "MADAM",
+    "confidenceScore": 95,
+    "confirmed": false
+  },
+  {
+    "id": 4,
+    "direction": "DOWN",
+    "value": "STRIP",
+    "confidenceScore": 70,
+    "confirmed": false
+  },
+  {
+    "id": 5,
+    "direction": "DOWN",
+    "value": "STOVE",
+    "confidenceScore": 89,
+    "confirmed": false
+  },
+  {
+    "id": 6,
+    "direction": "DOWN",
+    "value": "TENANT",
+    "confidenceScore": 90,
+    "confirmed": false
+  },
+  {
+    "id": 7,
+    "direction": "DOWN",
+    "value": "KEEPON",
+    "confidenceScore": 100,
+    "confirmed": false
+  },
+  {
+    "id": 11,
+    "direction": "DOWN",
+    "value": "ANTONIA",
+    "confidenceScore": 95,
+    "confirmed": false
+  },
+  {
+    "id": 12,
+    "direction": "DOWN",
+    "value": "LUNATIC",
+    "confidenceScore": 89,
+    "confirmed": false
+  },
+  {
+    "id": 14,
+    "direction": "DOWN",
+    "value": "TAPER",
+    "confidenceScore": 79,
+    "confirmed": false
+  },
+  {
+    "id": 15,
+    "direction": "DOWN",
+    "value": "PRESS",
+    "confidenceScore": 80,
+    "confirmed": false
+  },
+  {
+    "id": 16,
+    "direction": "DOWN",
+    "value": "OSCAR",
+    "confidenceScore": 81,
+    "confirmed": false
+  },
+  {
+    "id": 17,
+    "direction": "DOWN",
+    "value": "ELSIE",
+    "confidenceScore": 67,
+    "confirmed": false
+  },
+  {
+    "id": 22,
+    "direction": "DOWN",
+    "value": "BOFFIN",
+    "confidenceScore": 90,
+    "confirmed": false
+  },
+  {
+    "id": 23,
+    "direction": "DOWN",
+    "value": "ASSENT",
+    "confidenceScore": 70,
+    "confirmed": false
+  },
+  {
+    "id": 25,
+    "direction": "DOWN",
+    "value": "GREENS",
+    "confidenceScore": 80,
+    "confirmed": false
+  },
+  {
+    "id": 26,
+    "direction": "DOWN",
+    "value": "RELENT",
+    "confidenceScore": 90,
+    "confirmed": false
+  },
+  {
+    "id": 27,
+    "direction": "DOWN",
+    "value": "CREEL",
+    "confidenceScore": 89,
+    "confirmed": false
+  },
+  {
+    "id": 28,
+    "direction": "DOWN",
+    "value": "TWANG",
+    "confidenceScore": 89,
+    "confirmed": false
+  },
+  {
+    "id": 29,
+    "direction": "DOWN",
+    "value": "HOPIT",
+    "confidenceScore": 89,
+    "confirmed": false
+  }
+]

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -46,6 +47,14 @@ public class Clues implements Iterable<Clue> {
 
   public Clue forceFind(Id id) {
     return find(id).orElseThrow(() -> new ClueNotFoundForIdException(id));
+  }
+
+  public ClueType forceGetType() {
+    return stream().map(Clue::type).filter(Objects::nonNull).findFirst().orElseThrow();
+  }
+
+  public Clues normalizeTextHyphens() {
+    return new Clues(stream().map(Clue::normalizeHyphens).toList());
   }
 
   public Optional<Clue> find(Id id) {

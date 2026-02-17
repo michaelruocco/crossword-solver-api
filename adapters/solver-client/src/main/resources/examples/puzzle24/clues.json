@@ -97,27 +97,10 @@
   },
   {
     "id": 27,
-    "text": "Fisherman's net caught on film (5)",
+    "text": "Suitable partner for marriage? There is a drawback here (5)",
     "direction": "ACROSS",
     "lengths": [
       5
-    ]
-  },
-  {
-    "id": 28,
-    "text": "The plucky way some people speak! (5)",
-    "direction": "ACROSS",
-    "lengths": [
-      5
-    ]
-  },
-  {
-    "id": 29,
-    "text": "Hit work is included, so go away! (3, 2)",
-    "direction": "ACROSS",
-    "lengths": [
-      3,
-      2
     ]
   },
   {
@@ -138,7 +121,7 @@
   },
   {
     "id": 32,
-    "text": "Female riot on plane journey of little importance (5)",
+    "text": "Female not on plane journey of little importance (5)",
     "direction": "ACROSS",
     "lengths": [
       5
@@ -146,7 +129,7 @@
   },
   {
     "id": 1,
-    "text": "Caught part of a play by American – it's set in the desert (6)",
+    "text": "Caught part of a play by American - it's set in the desert (6)",
     "direction": "DOWN",
     "lengths": [
       6
@@ -279,6 +262,31 @@
     "direction": "DOWN",
     "lengths": [
       6
+    ]
+  },
+  {
+    "id": 27,
+    "text": "Fisherman's net caught on film (5)",
+    "direction": "DOWN",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 28,
+    "text": "The plucky way some people speak! (5)",
+    "direction": "DOWN",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 29,
+    "text": "Hit work is included, so go away! (3, 2)",
+    "direction": "DOWN",
+    "lengths": [
+      3,
+      2
     ]
   }
 ]

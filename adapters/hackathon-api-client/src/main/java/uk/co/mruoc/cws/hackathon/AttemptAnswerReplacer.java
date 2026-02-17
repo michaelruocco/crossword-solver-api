@@ -46,7 +46,8 @@ public class AttemptAnswerReplacer {
         "INOCULATE",
         "puzzle9.jpg-24D-ESMERALDA",
         "ESMERELDA",
-        // "puzzle9.jpg-41D-RECITAL", "?", need to find alternative answer for this one
+        "puzzle9.jpg-41D-RECITAL",
+        "REVIVAL",
         "puzzle14.jpg-25D-ADVOCAAT",
         "ADVOCAT");
   }
