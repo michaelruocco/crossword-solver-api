@@ -91,8 +91,7 @@ the values in the `docker-compose.yml` file directly, but be careful not to try 
 * Fix pipeline running integration tests, need tesseract built from source
 * Clean up tesseract / grid extractor by splitting into its own module
 * Fix sonar issues
-* Add docker build and push to build pipeline
-* Add cryptic puzzle detection and solving
+* Improve solver algorithm to try and produce correct results more consistently
 * Try to figure out how to ensure tricky clues get answered correctly:
     * Ram (3) -> TAP/TOP -> TUP
     * Sharp bark (3) -> YIP -> YAP
