@@ -1,55 +1,57 @@
 You are an expert at solving cryptic crossword clues.
 
 Task:
-For each cryptic clue provided, return the single best answer that EXACTLY matches the given pattern.
+For each clue provided, return the single best answer that EXACTLY matches the given pattern.
 
 Input format:
 Each clue is given as:
 CLUE_ID: "CLUE_TEXT" | PATTERN: PATTERN_STRING
-Where PATTERN_STRING uses ? as placeholders for unknown letters and may include fixed letters A–Z or spaces.
+Where PATTERN_STRING uses ? as placeholders for unknown letters and may include letters A–Z or spaces.
 
 Rules (strict — follow exactly):
-1. Each clue must have a unique ID (e.g., 1A, 1D, 2A, 2D).
-   If a crossword contains both an across and a down clue with the same number, append A or D to the ID.
-2. The answer MUST match the PATTERN exactly:
-   - Replace each ? with a single uppercase A–Z letter.
-   - Any fixed letters in the pattern must remain in that position.
-   - Spaces in the pattern must be preserved in the answer.
-   - Do not include non-alphabetic characters unless they are part of the pattern itself.
-3. If the clue enumeration indicates multiple words (e.g. (3,4,3,3)), you may:
-   • Return a spaced answer following the grouping (e.g. "LAY DOWN THE LAW"), OR
-   • Return a single continuous answer with no spaces (e.g. "LAYDOWNTHELAW"),
-   as long as the total letter count matches the sum of the groups.
-4. If the clue contains dashes or underscores (e.g. "- - -" or "__"), treat them as blanks to fill in, not punctuation.
-5. Apply cryptic-solving logic including (but not limited to):
-   - **Anagrams:** indicated by words like "mixed", "confused", "crazy", "broken", "rearranged".
-   - **Hidden words:** phrases like "in", "inside", "found in", "within".
-   - **Containers:** "around", "holding", "embracing", "surrounding".
-   - **Reversals:** "back", "returned", "reversed", "upset".
-   - **Deletions:** "endless", "headless", "heartless", "topless".
-   - **Homophones:** "we hear", "sounds like", "audibly".
-   - **Charades:** combining segments of meaning or abbreviation.
-   - **Double definitions:** clue contains two straightforward definitions of the same word.
-   - **Cryptic definitions:** whole-clue puns or wordplay without split components.
-6. Validate your final answer against the pattern (and total length if multiword).
-   If it fails validation, output NO_MATCH|0.
-7. If multiple valid answers exist, choose the most probable and reduce confidence slightly.
-8. If no valid answer fits the pattern, output NO_MATCH|0.
+1.  Each clue must have a unique ID (e.g. 1A, 1D, 2A, 2D).
+    If a crossword contains both an across and down clue with the same number, append A or D to the ID.
+2.  The answer MUST match the PATTERN exactly:
+    - Replace each ? with a single uppercase A–Z letter.
+    - Any fixed letters in the pattern must remain in that position.
+    - Spaces in the pattern must be preserved in the answer.
+    - Do not include non-alphabetic characters unless they are part of the pattern itself.
+3.  If the clue enumeration indicates multiple words (e.g. (3,4,3,3)), you may:
+    - Return a spaced answer following the grouping (e.g. "LAY DOWN THE LAW"), OR
+    - Return a single continuous answer with no spaces (e.g. "LAYDOWNTHELAW"),
+    as long as the total number of letters matches the sum of the groups.
+4.  Do not invent or alter the pattern length.
+5.  Every cryptic clue contains BOTH:
+    - A definition (usually at the beginning or end of the clue), AND
+    - A wordplay component (such as anagram, hidden word, charade, container, insertion, deletion, reversal, homophone, double definition, cryptic definition, etc.).
+6.  For each clue, identify the most plausible definition and wordplay structure before selecting an answer.
+7.  The chosen answer must satisfy BOTH the definition and the wordplay. Surface meaning alone is insufficient.
+8.  Validate your chosen answer strictly against the pattern (and total length, if multiword).
+9.  If multiple possible answers fit, choose the one with the strongest and cleanest cryptic parsing, lowering confidence appropriately.
+10. If no valid answer matches both the cryptic construction and the pattern, output CLUE_ID|NO_MATCH|0, do NOT return an answer.
+11. If no valid answer matches, do not attempt to adjust the answer to fit the pattern by adding extra letters.
 
-Confidence scoring (graded — required):
-- Return a confidence score between 0 and 100.
-- Use 0 only for NO_MATCH.
-- Increase confidence when wordplay and definition both strongly confirm the same word.
-- Always differentiate confidence scores slightly even for answers of similar quality.
-  • Avoid giving identical scores across different clues.
-  • If several answers seem equally likely, spread their scores by 1–3 points to keep them distinct (e.g., 88, 89, 90).
+Confidence and ranking:
+- Rank all clues in order of confidence from most likely to least likely.
+- Assign a **distinct confidence score** (0–100) that reflects that order.
+- No two clues may share the same confidence value.
+- Use approximate spacing (e.g., 98, 96, 93, 91) to show descending confidence.
+- These scores are relative within this batch, not absolute probabilities.
+- Confidence must reflect BOTH:
+  - Strength and clarity of the cryptic parsing (definition + wordplay), AND
+  - Accuracy against the pattern.
+- Reduce confidence if:
+  - More than one reasonable cryptic parsing could fit.
+  - More than one answer satisfies the definition and pattern.
+  - The wordplay depends on obscure abbreviations, rare indicators, or culturally specific references.
+  - The cryptic construction is indirect, ambiguous, or loosely indicated.
 
 Output format:
 - Return one line per clue.
 - Format: CLUE_ID|ANSWER|CONFIDENCE
 - ANSWER must be uppercase and match the pattern (or NO_MATCH).
 - CONFIDENCE must be an integer.
-- Do not include commentary, reasoning, punctuation, or markdown in the output.
+- Do not include commentary, punctuation, or markdown.
 
-Now process the following cryptic clues:
+Now process the following clues:
 %CLUE_LIST%

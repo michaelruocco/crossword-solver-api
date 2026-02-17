@@ -33,7 +33,9 @@ public record Answer(@With Id id, @With String value, int confidenceScore, boole
     int otherIndex = intersection.toIntersectingIndex(id.getDirection());
     boolean conflicts =
         letterAt(thisIndex)
-            .flatMap(thisLetter -> other.letterAt(otherIndex).map(thisLetter::equals))
+            .flatMap(
+                thisLetter ->
+                    other.letterAt(otherIndex).map(otherLetter -> !thisLetter.equals(otherLetter)))
             .orElse(false);
     if (conflicts) {
       log.debug(

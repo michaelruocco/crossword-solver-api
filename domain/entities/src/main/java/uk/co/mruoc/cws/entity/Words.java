@@ -31,13 +31,6 @@ public class Words {
     this(values, buildIntersections(values));
   }
 
-  private Word findByNumericId(int id) {
-    return values.stream()
-        .filter(word -> word.numericId() == id)
-        .findFirst()
-        .orElseThrow(() -> new WordNotFoundForNumericIdException(id));
-  }
-
   public Word findById(Id id) {
     return values.stream()
         .filter(word -> word.hasId(id))

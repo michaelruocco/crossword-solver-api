@@ -14,6 +14,10 @@ Instructions:
 - If clue text contains 3 hyphens i.e. --- or - - - always include a single space between each hyphen
 - Ensure clues are listed in numerical order, Across first then Down.
 - Ignore any grid data — only extract text clues.
+- Note that Across and Down clues often share the same ID numbers - ensure both are captured correctly
+- If clues with same ID number appear in both directions, include both as separate entries
+- In cases where Down clues appear in a second column or wrap to additional columns, carefully preserve all clues
+- Double-check that no clues are accidentally overwritten when they share the same ID number
 
 Output format:
 

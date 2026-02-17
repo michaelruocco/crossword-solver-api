@@ -17,8 +17,8 @@ Rules (strict — follow exactly):
    - Spaces in the pattern must be preserved in the answer.
    - Do not include non-alphabetic characters unless they are part of the pattern itself.
 3. If the clue enumeration indicates multiple words (e.g. (3,4,3,3)), you may:
-   • Return a spaced answer following the grouping (e.g. "LAY DOWN THE LAW"), OR
-   • Return a single continuous answer with no spaces (e.g. "LAYDOWNTHELAW"),
+   - Return a spaced answer following the grouping (e.g. "LAY DOWN THE LAW"), OR
+   - Return a single continuous answer with no spaces (e.g. "LAYDOWNTHELAW"),
    as long as the total number of letters matches the sum of the groups.
 4. Do not invent or alter the pattern length.
 5. Validate your chosen answer against the pattern (and total length, if multiword).

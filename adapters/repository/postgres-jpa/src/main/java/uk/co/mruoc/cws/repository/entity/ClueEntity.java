@@ -4,6 +4,8 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
@@ -12,6 +14,7 @@ import java.util.Collection;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import uk.co.mruoc.cws.entity.ClueType;
 
 @Getter
 @Setter
@@ -22,6 +25,9 @@ public class ClueEntity {
   @Id private UUID puzzleId;
   @Id private String clueId;
   private String text;
+
+  @Enumerated(EnumType.STRING)
+  private ClueType type;
 
   @ElementCollection
   @CollectionTable(

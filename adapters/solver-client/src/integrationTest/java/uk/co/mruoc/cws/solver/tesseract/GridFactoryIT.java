@@ -24,7 +24,7 @@ class GridFactoryIT {
       new ImageDirectory("integration-test-files/output-grid");
 
   private final GridFactory factory = new GridFactory(NumberDetectorFactory.build());
-  private final GridImageFactory imageFactory = new GridImageFactory();
+  private final OpenCvGridImageFactory imageFactory = new OpenCvGridImageFactory();
   private final UrlConverter urlConverter = new UrlConverter();
 
   @BeforeAll

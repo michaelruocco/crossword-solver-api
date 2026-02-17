@@ -1,6 +1,7 @@
 package uk.co.mruoc.cws.solver.tesseract;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.co.mruoc.cws.image.ImageUrlBuilder.toUrl;
 
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
@@ -44,9 +45,5 @@ class TesseractGridExtractorIT {
         Arguments.of(toUrl("puzzle9.jpg")),
         Arguments.of(toUrl("puzzle14.jpg")),
         Arguments.of(toUrl("puzzle24.jpg")));
-  }
-
-  private static String toUrl(String filename) {
-    return String.format("https://hackathon.caci.co.uk/images/%s", filename);
   }
 }

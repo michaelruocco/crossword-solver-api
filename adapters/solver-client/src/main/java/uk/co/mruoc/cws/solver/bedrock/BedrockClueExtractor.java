@@ -41,7 +41,7 @@ public class BedrockClueExtractor implements ClueExtractor {
   @Override
   public Clues extractClues(Image image) {
     var bytes = compressor.compressAndResize(image.getBufferedImage());
-    return extractClues(bytes);
+    return extractClues(bytes).normalizeTextHyphens();
   }
 
   private Clues extractClues(byte[] bytes) {

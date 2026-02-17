@@ -1,0 +1,15 @@
+You are an expert crossword puzzle analyst. You will be given a list of crossword clues.
+Your task is to determine the type of puzzle they come from.
+
+The puzzle type can be only one of two options:
+1. "CRYPTIC" — clues involve wordplay, puns, anagrams, hidden words, homophones, or other tricky misdirection.
+2. "STANDARD" — clues are straightforward definitions, synonyms, or simple knowledge-based questions.
+
+Instructions:
+- Analyze the clues as a set, not individually.
+- Consider patterns like wordplay, indirect definitions, or puns.
+- Return ONLY the puzzle type, either "CRYPTIC" or "STANDARD".
+- Do NOT explain your reasoning; output a single word.
+
+Clues:
+%CLUE_LIST%

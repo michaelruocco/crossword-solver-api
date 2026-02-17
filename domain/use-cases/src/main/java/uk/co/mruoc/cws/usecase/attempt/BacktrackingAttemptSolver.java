@@ -56,6 +56,10 @@ public class BacktrackingAttemptSolver implements AttemptSolver {
 
     log.info("selected candidates {}", candidates.get().asString());
     var answers = candidates.get().sortByScore().stream().filter(passAttempt::accepts).toList();
+    if (answers.isEmpty()) {
+      log.info("no valid answers found for candidates {}", candidates.get().asString());
+      return inputAttempt;
+    }
 
     if (!wasParked && shouldPark(answers)) {
       log.info("parking clue id {}", answers.getFirst().id());

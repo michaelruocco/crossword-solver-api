@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,10 +32,11 @@ public class PuzzleController {
   private final CrosswordSolverFacade facade;
   private final ApiConverter apiConverter;
   private final MultipartFileConverter multipartFileConverter;
+  private final ImageResponseFactory imageResponseFactory;
 
   @Autowired
   public PuzzleController(CrosswordSolverFacade facade) {
-    this(facade, new ApiConverter(), new MultipartFileConverter());
+    this(facade, new ApiConverter(), new MultipartFileConverter(), new ImageResponseFactory());
   }
 
   @PostMapping
@@ -56,6 +58,13 @@ public class PuzzleController {
   public ApiPuzzle getPuzzle(@PathVariable UUID puzzleId) {
     var puzzle = facade.findPuzzleById(puzzleId);
     return apiConverter.toApiPuzzle(puzzle);
+  }
+
+  @GetMapping("/{puzzleId}/grid-images")
+  public ResponseEntity<byte[]> getPuzzleGridImage(@PathVariable UUID puzzleId) {
+    log.info("getting grid image of puzzle {}", puzzleId);
+    var gridImage = facade.findPuzzleGridImage(puzzleId);
+    return imageResponseFactory.toResponse(gridImage);
   }
 
   @PostMapping("/{puzzleId}/attempts")
@@ -95,5 +104,13 @@ public class PuzzleController {
     log.info("getting attempt {} for puzzle {}", attemptId, puzzleId);
     var attempt = facade.findAttemptById(attemptId);
     return apiConverter.toApiAttempt(attempt);
+  }
+
+  @GetMapping("/{puzzleId}/attempts/{attemptId}/grid-images")
+  public ResponseEntity<byte[]> getAttemptGridImage(
+      @PathVariable UUID puzzleId, @PathVariable UUID attemptId) {
+    log.info("getting grid image of attempt {} for puzzle {}", attemptId, puzzleId);
+    var gridImage = facade.findAttemptGridImage(attemptId);
+    return imageResponseFactory.toResponse(gridImage);
   }
 }

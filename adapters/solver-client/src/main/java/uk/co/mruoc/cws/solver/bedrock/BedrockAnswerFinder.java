@@ -8,6 +8,7 @@ import uk.co.mruoc.cws.entity.Answers;
 import uk.co.mruoc.cws.entity.Candidates;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Clues;
+import uk.co.mruoc.cws.solver.DelegatingFindAnswerPromptTextFactory;
 import uk.co.mruoc.cws.solver.FindAnswerPromptTextFactory;
 import uk.co.mruoc.cws.solver.FindAnswerResponseConverter;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
@@ -29,7 +30,10 @@ public class BedrockAnswerFinder implements AnswerFinder {
   }
 
   public BedrockAnswerFinder(PromptTextExecutor promptTextExecutor) {
-    this(promptTextExecutor, new FindAnswerPromptTextFactory(), new FindAnswerResponseConverter());
+    this(
+        promptTextExecutor,
+        new DelegatingFindAnswerPromptTextFactory(),
+        new FindAnswerResponseConverter());
   }
 
   @Override

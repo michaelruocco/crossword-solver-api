@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Puzzle;
 import uk.co.mruoc.cws.entity.WordsFactory;
-import uk.co.mruoc.cws.usecase.ClueExtractor;
+import uk.co.mruoc.cws.usecase.CluesFactory;
 import uk.co.mruoc.cws.usecase.GridExtractor;
 import uk.co.mruoc.cws.usecase.Image;
 import uk.co.mruoc.cws.usecase.ImageDownloader;
@@ -19,7 +19,7 @@ public class PuzzleCreator {
   private final ImageDownloader imageDownloader;
   private final ImageValidator validator;
   private final Supplier<UUID> idSupplier;
-  private final ClueExtractor clueExtractor;
+  private final CluesFactory cluesFactory;
   private final GridExtractor gridExtractor;
   private final PuzzleRepository repository;
   private final WordsFactory wordsFactory;
@@ -51,7 +51,7 @@ public class PuzzleCreator {
         image.getName(),
         image.getHash(),
         image.getSizeInMB());
-    var clues = clueExtractor.extractClues(image);
+    var clues = cluesFactory.build(image);
     var grid = gridExtractor.extractGrid(image);
     return Puzzle.builder()
         .id(idSupplier.get())

@@ -60,6 +60,7 @@ public class PuzzleEntityConverter {
     return Clue.builder()
         .id(new Id(entity.getClueId()))
         .text(entity.getText())
+        .type(entity.getType())
         .lengths(entity.getLengths())
         .build();
   }
@@ -82,6 +83,7 @@ public class PuzzleEntityConverter {
     entity.setPuzzleId(puzzle.getId());
     entity.setClueId(clue.id().toString());
     entity.setText(clue.text());
+    entity.setType(clue.type());
     entity.setLengths(clue.lengths());
     return entity;
   }

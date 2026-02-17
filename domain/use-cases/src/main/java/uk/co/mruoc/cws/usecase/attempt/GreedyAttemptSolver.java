@@ -1,5 +1,7 @@
 package uk.co.mruoc.cws.usecase.attempt;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,7 @@ import uk.co.mruoc.cws.entity.Answers;
 import uk.co.mruoc.cws.entity.Attempt;
 import uk.co.mruoc.cws.entity.Clue;
 import uk.co.mruoc.cws.entity.Clues;
+import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.entity.ValidAnswerPredicate;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.cws.usecase.ClueRanker;
@@ -60,53 +63,59 @@ public class GreedyAttemptSolver implements AttemptSolver {
     var answers = getAnswers(selectedClues).confirmAll();
     if (answers.isEmpty()) {
       log.info("unconfirming answers intersecting with clues {}", selectedClues.ids());
-      return retryIntersectingClues(attempt, selectedClues);
+      return unconfirmIntersectingClues(attempt, selectedClues);
     }
     log.debug("got {} valid best scoring answers", answers.size());
     logAnswers(answers, selectedClues);
     return attempt.saveAnswers(answers);
   }
 
-  // TODO split this into its own class and each branch into its own method
-  private Attempt retryIntersectingClues(Attempt attempt, Clues clues) {
+  private Attempt unconfirmIntersectingClues(Attempt attempt, Clues clues) {
+    var candidateAttempt = attempt;
     for (var clue : clues) {
-      var intersectingIds = attempt.getIntersectingIds(clue.id());
-      if (intersectingIds.isEmpty()) {
-        throw new RuntimeException(
-            String.format("no intersecting ids to retry for clue %s", clue.id().toString()));
-      } else if (intersectingIds.size() == 1) {
-        log.info("one intersecting id found {}", intersectingIds);
-        var intersectingId = intersectingIds.stream().findFirst().orElseThrow();
-        var updatedClue =
-            clue.withPattern(patternFactory.build(clue, attempt.unconfirmAnswer(intersectingId)));
-        var updatedAnswer = getAnswer(updatedClue);
-        if (updatedAnswer.isPresent()) {
-          return attempt.saveAnswer(updatedAnswer.get().confirm());
+      candidateAttempt = unconfirmIntersectingClue(candidateAttempt, clue);
+    }
+    return candidateAttempt;
+  }
+
+  private Attempt unconfirmIntersectingClue(Attempt attempt, Clue clue) {
+    var intersectingIds = new ArrayList<>(attempt.getIntersectingIds(clue.id()));
+    log.info("found intersecting ids {} for {}", intersectingIds, clue.id());
+    return switch (intersectingIds.size()) {
+      case 0 -> throw new NoIntersectingIdsToRetryException(attempt, clue);
+      case 1 -> unconfirm(attempt, clue, intersectingIds.getFirst());
+      default -> unconfirm(attempt, clue, intersectingIds);
+    };
+  }
+
+  private Attempt unconfirm(Attempt attempt, Clue clue, Id intersectingId) {
+    var updatedPattern = patternFactory.build(clue, attempt.unconfirmAnswer(intersectingId));
+    var updatedClue = clue.withPattern(updatedPattern);
+    return getAnswer(updatedClue)
+        .map(updatedAnswer -> attempt.saveAnswer(updatedAnswer.confirm()))
+        .orElse(attempt);
+  }
+
+  private Attempt unconfirm(Attempt attempt, Clue clue, Collection<Id> intersectingIds) {
+    var candidateAttempt = attempt;
+    for (var intersectingId : intersectingIds) {
+      candidateAttempt = candidateAttempt.unconfirmAnswer(intersectingId);
+      var updatedClue = patternFactory.addPatternToClue(clue, candidateAttempt);
+      var updatedAnswer = getAnswer(updatedClue);
+      if (updatedAnswer.isPresent()) {
+        logAnswer(updatedAnswer.get(), updatedClue);
+        candidateAttempt = candidateAttempt.saveAnswer(updatedAnswer.get().confirm());
+        var intersectingClue = candidateAttempt.getClue(intersectingId);
+        var updatedIntersectingClue =
+            patternFactory.addPatternToClue(intersectingClue, candidateAttempt);
+        var updatedIntersectingAnswer = getAnswer(updatedIntersectingClue);
+        if (updatedIntersectingAnswer.isPresent()) {
+          logAnswer(updatedIntersectingAnswer.get(), updatedIntersectingClue);
+          return candidateAttempt.saveAnswer(updatedIntersectingAnswer.get().confirm());
         }
-        return attempt;
-      } else {
-        var candidateAttempt = attempt;
-        for (var intersectingId : intersectingIds) {
-          candidateAttempt = candidateAttempt.unconfirmAnswer(intersectingId);
-          var updatedClue = patternFactory.addPatternToClue(clue, candidateAttempt);
-          var updatedAnswer = getAnswer(updatedClue);
-          if (updatedAnswer.isPresent()) {
-            logAnswer(updatedAnswer.get(), updatedClue);
-            candidateAttempt = candidateAttempt.saveAnswer(updatedAnswer.get().confirm());
-            var intersectingClue = candidateAttempt.getClue(intersectingId);
-            var updatedIntersectingClue =
-                patternFactory.addPatternToClue(intersectingClue, candidateAttempt);
-            var updatedIntersectingAnswer = getAnswer(updatedIntersectingClue);
-            if (updatedIntersectingAnswer.isPresent()) {
-              logAnswer(updatedIntersectingAnswer.get(), updatedIntersectingClue);
-              return candidateAttempt.saveAnswer(updatedIntersectingAnswer.get().confirm());
-            }
-          }
-        }
-        return candidateAttempt.removeUnconfirmedAnswers();
       }
     }
-    throw new RuntimeException("no clues to retry");
+    return candidateAttempt.removeUnconfirmedAnswers();
   }
 
   private Answers getAnswers(Clues selectedClues) {

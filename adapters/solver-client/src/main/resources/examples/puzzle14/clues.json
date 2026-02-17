@@ -1,0 +1,308 @@
+[
+  {
+    "id": 1,
+    "text": "Which film is largely set in Rick's Café? (10)",
+    "direction": "ACROSS",
+    "lengths": [
+      10
+    ]
+  },
+  {
+    "id": 7,
+    "text": "What item of regalia appeared on the halfpenny? (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 8,
+    "text": "What are bricks made from dried earth and straw called? (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 9,
+    "text": "Which London football club is nicknamed the Gunners? (7)",
+    "direction": "ACROSS",
+    "lengths": [
+      7
+    ]
+  },
+  {
+    "id": 10,
+    "text": "What is Disney's Little Mermaid called? (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 11,
+    "text": "In the Samuel Beckett play, who are Vladimir and Estragon waiting for? (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 13,
+    "text": "What is the largest city of Nigeria? (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 16,
+    "text": "Which city is at the mouth of the rivers Taff and Ely? (7)",
+    "direction": "ACROSS",
+    "lengths": [
+      7
+    ]
+  },
+  {
+    "id": 18,
+    "text": "Which large bird's name means 'horned head'? (9)",
+    "direction": "ACROSS",
+    "lengths": [
+      9
+    ]
+  },
+  {
+    "id": 20,
+    "text": "Who voiced Rocky in Chicken Run? (3, 6)",
+    "direction": "ACROSS",
+    "lengths": [
+      3,
+      6
+    ]
+  },
+  {
+    "id": 22,
+    "text": "Which blue cheese is often served with port? (7)",
+    "direction": "ACROSS",
+    "lengths": [
+      7
+    ]
+  },
+  {
+    "id": 24,
+    "text": "Which group sang Merry Xmas Everybody? (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 27,
+    "text": "Which birds travel in gaggles? (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 28,
+    "text": "Which county separates Cornwall from Somerset? (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 29,
+    "text": "In the title of a romantic comedy film, Tom Hanks and Meg Ryan were 'sleepless' in which US city? (7)",
+    "direction": "ACROSS",
+    "lengths": [
+      7
+    ]
+  },
+  {
+    "id": 31,
+    "text": "What is an angle less than 90 degrees called? (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 32,
+    "text": "Which county is situated in the province of Munster on Ireland's west coast? (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 33,
+    "text": "In which US state is Mount St Helens located? (10)",
+    "direction": "ACROSS",
+    "lengths": [
+      10
+    ]
+  },
+  {
+    "id": 1,
+    "text": "Which 1988 film stars Tom Cruise as a bartender? (8)",
+    "direction": "DOWN",
+    "lengths": [
+      8
+    ]
+  },
+  {
+    "id": 2,
+    "text": "Skiing and which other sport make a biathlon? (8)",
+    "direction": "DOWN",
+    "lengths": [
+      8
+    ]
+  },
+  {
+    "id": 3,
+    "text": "Which Indian region underwent partition in 1947? (6)",
+    "direction": "DOWN",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 4,
+    "text": "Which tycoon fronts The Apprentice? (4, 5)",
+    "direction": "DOWN",
+    "lengths": [
+      4,
+      5
+    ]
+  },
+  {
+    "id": 5,
+    "text": "What is Touchstone's profession in As You Like It? (5)",
+    "direction": "DOWN",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 6,
+    "text": "What meat is traditionally used in a Viennese schnitzel? (4)",
+    "direction": "DOWN",
+    "lengths": [
+      4
+    ]
+  },
+  {
+    "id": 12,
+    "text": "Which weed do children weave into a chain? (5)",
+    "direction": "DOWN",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 14,
+    "text": "In sequence, the chemical symbols for gold and radium form which word? (4)",
+    "direction": "DOWN",
+    "lengths": [
+      4
+    ]
+  },
+  {
+    "id": 15,
+    "text": "What is the collective noun for a group of porpoises? (6)",
+    "direction": "DOWN",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 17,
+    "text": "Which Joe sang the Auf Wiedersehen, Pet theme tune? (5)",
+    "direction": "DOWN",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 18,
+    "text": "What footwear do French children leave out for Père Noel to fill with gifts? (5)",
+    "direction": "DOWN",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 19,
+    "text": "France's largest cathedral is sited in which city? (6)",
+    "direction": "DOWN",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 20,
+    "text": "What is the easternmost state of the USA? (5)",
+    "direction": "DOWN",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 21,
+    "text": "Which Roman poet is renowned for love poems? (4)",
+    "direction": "DOWN",
+    "lengths": [
+      4
+    ]
+  },
+  {
+    "id": 23,
+    "text": "Which anniversary is china associated with? (9)",
+    "direction": "DOWN",
+    "lengths": [
+      9
+    ]
+  },
+  {
+    "id": 25,
+    "text": "What is the alcoholic ingredient of a snowball cocktail? (8)",
+    "direction": "DOWN",
+    "lengths": [
+      8
+    ]
+  },
+  {
+    "id": 26,
+    "text": "Which scientist won the 1921 Nobel Prize for physics? (8)",
+    "direction": "DOWN",
+    "lengths": [
+      8
+    ]
+  },
+  {
+    "id": 28,
+    "text": "In the Roman Catholic and Anglican Churches, what is the title of an ordained minister who ranks immediately above a priest? (6)",
+    "direction": "DOWN",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 29,
+    "text": "What is Thailand's former name? (4)",
+    "direction": "DOWN",
+    "lengths": [
+      4
+    ]
+  },
+  {
+    "id": 30,
+    "text": "Oranjestad is the capital of which Caribbean island? (5)",
+    "direction": "DOWN",
+    "lengths": [
+      5
+    ]
+  }
+]

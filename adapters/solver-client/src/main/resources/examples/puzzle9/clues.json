@@ -1,0 +1,448 @@
+[
+  {
+    "id": 3,
+    "text": "Useful tools (8)",
+    "direction": "ACROSS",
+    "lengths": [
+      8
+    ]
+  },
+  {
+    "id": 7,
+    "text": "Lure, entice (6)",
+    "direction": "ACROSS",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 8,
+    "text": "Type of tree (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 9,
+    "text": "Tennis venue (9)",
+    "direction": "ACROSS",
+    "lengths": [
+      9
+    ]
+  },
+  {
+    "id": 10,
+    "text": "Pursue (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 11,
+    "text": "Departed (4)",
+    "direction": "ACROSS",
+    "lengths": [
+      4
+    ]
+  },
+  {
+    "id": 13,
+    "text": "Short jacket (6)",
+    "direction": "ACROSS",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 16,
+    "text": "Sprint (4)",
+    "direction": "ACROSS",
+    "lengths": [
+      4
+    ]
+  },
+  {
+    "id": 17,
+    "text": "Skiing event (6)",
+    "direction": "ACROSS",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 19,
+    "text": "Hindu retreat (6)",
+    "direction": "ACROSS",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 22,
+    "text": "Glam rock singer (5, 6)",
+    "direction": "ACROSS",
+    "lengths": [
+      5,
+      6
+    ]
+  },
+  {
+    "id": 23,
+    "text": "Fast (6)",
+    "direction": "ACROSS",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 25,
+    "text": "Royal chair (6)",
+    "direction": "ACROSS",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 26,
+    "text": "Yachting trophy (8, 3)",
+    "direction": "ACROSS",
+    "lengths": [
+      8,
+      3
+    ]
+  },
+  {
+    "id": 30,
+    "text": "Precede (6)",
+    "direction": "ACROSS",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 31,
+    "text": "- - -Waller-Bridge, Fleabag star (6)",
+    "direction": "ACROSS",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 32,
+    "text": "Brutal insensitivity (11)",
+    "direction": "ACROSS",
+    "lengths": [
+      11
+    ]
+  },
+  {
+    "id": 34,
+    "text": "Shock (6)",
+    "direction": "ACROSS",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 36,
+    "text": "Danish king of England (6)",
+    "direction": "ACROSS",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 38,
+    "text": "Zodiac sign of Cancer (4)",
+    "direction": "ACROSS",
+    "lengths": [
+      4
+    ]
+  },
+  {
+    "id": 40,
+    "text": "Promenade (6)",
+    "direction": "ACROSS",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 43,
+    "text": "Nervous (4)",
+    "direction": "ACROSS",
+    "lengths": [
+      4
+    ]
+  },
+  {
+    "id": 44,
+    "text": "Carla - - -, model turned musician (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 45,
+    "text": "Stubborn (9)",
+    "direction": "ACROSS",
+    "lengths": [
+      9
+    ]
+  },
+  {
+    "id": 46,
+    "text": "Keith Lemon creator, - - -Francis (5)",
+    "direction": "ACROSS",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 47,
+    "text": "Pictures (6)",
+    "direction": "ACROSS",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 48,
+    "text": "Considered (8)",
+    "direction": "ACROSS",
+    "lengths": [
+      8
+    ]
+  },
+  {
+    "id": 1,
+    "text": "Ancient city (7)",
+    "direction": "DOWN",
+    "lengths": [
+      7
+    ]
+  },
+  {
+    "id": 2,
+    "text": "Azure (3, 4)",
+    "direction": "DOWN",
+    "lengths": [
+      3,
+      4
+    ]
+  },
+  {
+    "id": 3,
+    "text": "Suffer (7)",
+    "direction": "DOWN",
+    "lengths": [
+      7
+    ]
+  },
+  {
+    "id": 4,
+    "text": "Subtle difference (6)",
+    "direction": "DOWN",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 5,
+    "text": "US state (7)",
+    "direction": "DOWN",
+    "lengths": [
+      7
+    ]
+  },
+  {
+    "id": 6,
+    "text": "Shrill cry (7)",
+    "direction": "DOWN",
+    "lengths": [
+      7
+    ]
+  },
+  {
+    "id": 12,
+    "text": "Canadian province (4, 6)",
+    "direction": "DOWN",
+    "lengths": [
+      4,
+      6
+    ]
+  },
+  {
+    "id": 13,
+    "text": "Commercial enterprise (8)",
+    "direction": "DOWN",
+    "lengths": [
+      8
+    ]
+  },
+  {
+    "id": 14,
+    "text": "Woolly mammal (5)",
+    "direction": "DOWN",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 15,
+    "text": "A A Milne character (3)",
+    "direction": "DOWN",
+    "lengths": [
+      3
+    ]
+  },
+  {
+    "id": 16,
+    "text": "Musical note (3)",
+    "direction": "DOWN",
+    "lengths": [
+      3
+    ]
+  },
+  {
+    "id": 18,
+    "text": "Comedian, - - - Flanagan (5)",
+    "direction": "DOWN",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 20,
+    "text": "Copy (9)",
+    "direction": "DOWN",
+    "lengths": [
+      9
+    ]
+  },
+  {
+    "id": 21,
+    "text": "Angela - - -, former German Chancellor (6)",
+    "direction": "DOWN",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 24,
+    "text": "Quasimodo's love (9)",
+    "direction": "DOWN",
+    "lengths": [
+      9
+    ]
+  },
+  {
+    "id": 27,
+    "text": "Immunised (10)",
+    "direction": "DOWN",
+    "lengths": [
+      10
+    ]
+  },
+  {
+    "id": 28,
+    "text": "Remnant (6)",
+    "direction": "DOWN",
+    "lengths": [
+      6
+    ]
+  },
+  {
+    "id": 29,
+    "text": "Recover, get back (8)",
+    "direction": "DOWN",
+    "lengths": [
+      8
+    ]
+  },
+  {
+    "id": 31,
+    "text": "Hysteria (5)",
+    "direction": "DOWN",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 33,
+    "text": "Diving apparatus (5)",
+    "direction": "DOWN",
+    "lengths": [
+      5
+    ]
+  },
+  {
+    "id": 35,
+    "text": "Computer port (1, 1, 1)",
+    "direction": "DOWN",
+    "lengths": [
+      1,
+      1,
+      1
+    ]
+  },
+  {
+    "id": 37,
+    "text": "Turkish leader (3)",
+    "direction": "DOWN",
+    "lengths": [
+      3
+    ]
+  },
+  {
+    "id": 38,
+    "text": "Shoe mender (7)",
+    "direction": "DOWN",
+    "lengths": [
+      7
+    ]
+  },
+  {
+    "id": 39,
+    "text": "Funny (7)",
+    "direction": "DOWN",
+    "lengths": [
+      7
+    ]
+  },
+  {
+    "id": 40,
+    "text": "Egyptian monument (7)",
+    "direction": "DOWN",
+    "lengths": [
+      7
+    ]
+  },
+  {
+    "id": 41,
+    "text": "Performance (7)",
+    "direction": "DOWN",
+    "lengths": [
+      7
+    ]
+  },
+  {
+    "id": 42,
+    "text": "Mixed with water (7)",
+    "direction": "DOWN",
+    "lengths": [
+      7
+    ]
+  },
+  {
+    "id": 43,
+    "text": "One or the other (6)",
+    "direction": "DOWN",
+    "lengths": [
+      6
+    ]
+  }
+]

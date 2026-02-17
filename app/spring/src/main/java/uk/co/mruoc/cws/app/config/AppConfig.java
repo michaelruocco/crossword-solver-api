@@ -10,12 +10,15 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import uk.co.mruoc.cws.entity.WordsFactory;
 import uk.co.mruoc.cws.image.DefaultImageDownloader;
+import uk.co.mruoc.cws.solver.tesseract.OpenCvGridImageFactory;
 import uk.co.mruoc.cws.usecase.AnswerDeleter;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.cws.usecase.CandidateLoader;
 import uk.co.mruoc.cws.usecase.CandidateRepository;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
 import uk.co.mruoc.cws.usecase.ClueRanker;
+import uk.co.mruoc.cws.usecase.ClueTypePolicy;
+import uk.co.mruoc.cws.usecase.CluesFactory;
 import uk.co.mruoc.cws.usecase.CompositeAnswerFinder;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
 import uk.co.mruoc.cws.usecase.GridExtractor;
@@ -48,6 +51,7 @@ public class AppConfig {
         .puzzleService(puzzleService)
         .attemptService(attemptService)
         .answerDeleter(answerDeleter)
+        .gridImageFactory(new OpenCvGridImageFactory())
         .build();
   }
 
@@ -58,12 +62,12 @@ public class AppConfig {
 
   @Bean
   public PuzzleCreator puzzleCreator(
-      ClueExtractor clueExtractor, GridExtractor gridExtractor, PuzzleRepository repository) {
+      CluesFactory cluesFactory, GridExtractor gridExtractor, PuzzleRepository repository) {
     return PuzzleCreator.builder()
         .imageDownloader(new DefaultImageDownloader())
         .validator(new ImageValidator())
         .idSupplier(new UUIDSupplier())
-        .clueExtractor(clueExtractor)
+        .cluesFactory(cluesFactory)
         .gridExtractor(gridExtractor)
         .repository(repository)
         .wordsFactory(new WordsFactory())
@@ -168,5 +172,13 @@ public class AppConfig {
   public AnswerFinder compositeAnswerFinder(Collection<AnswerFinder> finders) {
     log.info("creating composite answer finder with child finders {}", finders);
     return new CompositeAnswerFinder(finders);
+  }
+
+  @Bean
+  public CluesFactory cluesFactory(ClueExtractor clueExtractor, ClueTypePolicy clueTypePolicy) {
+    return CluesFactory.builder()
+        .clueExtractor(clueExtractor)
+        .clueTypePolicy(clueTypePolicy)
+        .build();
   }
 }

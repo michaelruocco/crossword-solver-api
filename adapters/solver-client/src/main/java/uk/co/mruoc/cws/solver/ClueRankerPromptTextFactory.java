@@ -14,7 +14,7 @@ public class ClueRankerPromptTextFactory {
   private final String rankCluesTemplate;
 
   public ClueRankerPromptTextFactory() {
-    this(new ClueListConverter(), loadContentFromClasspath("prompts/rank-clues.txt"));
+    this(new ClueListConverter(), loadContentFromClasspath("prompts/rank-clues-standard.txt"));
   }
 
   public String toPromptText(Clues clues) {

@@ -1,32 +1,54 @@
-You are an expert at solving standard (non-cryptic) crossword clues.
+You are an expert at solving cryptic crossword clues.
 
 Task:
-Determine the single best answer to the following crossword clue that EXACTLY matches the given pattern.
+Determine the single best answer to the following cryptic crossword clue that EXACTLY matches the given pattern.
 
 Clue ID: %CLUE_ID%
 Clue: "%CLUE%"
 Pattern: %PATTERN%
 
 Rules (strict):
-1. Each clue must have a unique ID (e.g., 1A, 1D, 2A, 2D).
-   The output must begin with this same ID.
-2. The answer must match the pattern exactly:
-   - Replace each ? with a single uppercase A–Z letter.
-   - Preserve any fixed letters or spaces in the pattern.
-   - Do not include punctuation or extra characters.
-3. If the enumeration indicates multiple words (e.g. (3,4,3,3)), you may:
-   • Return the answer spaced according to the grouping, OR
-   • Return it as one continuous string with no spaces,
-   as long as the total number of letters matches the total required by the enumeration.
-4. If the clue includes dashes or underscores (e.g. "- - -" or "__"), interpret them as blanks to fill in.
-5. Validate your answer strictly against the pattern (and total length if multiword).
-   If it does not match, output NO_MATCH|0.
-6. If multiple valid answers exist, choose the most common or likely one and reduce confidence accordingly.
-7. If no valid answer matches the pattern, output NO_MATCH|0.
+1.  Each clue must have a unique ID (e.g., 1A, 1D, 2A, 2D). The output must begin with this same ID.
+2.  The answer must match the pattern exactly:
+    - Replace each ? with a single uppercase A–Z letter.
+    - Preserve any fixed letters or spaces in the pattern.
+    - Do not include punctuation or extra characters.
+3.  If the enumeration indicates multiple words (e.g. (3,4,3,3)), you may:
+    • Return the answer spaced according to the grouping, OR
+    • Return it as one continuous string with no spaces,
+    as long as the total number of letters matches the total required by the enumeration.
+4.  If the clue includes dashes or underscores (e.g. "- - -" or "__"), interpret them as blanks to fill in.
+5.  Every cryptic clue contains BOTH:
+    • A definition (usually at the beginning or end of the clue), AND
+    • A wordplay component (e.g., anagram, hidden word, charade, container, deletion, reversal, homophone, double definition, cryptic definition, etc.).
+    The answer must satisfy BOTH the definition and the wordplay.
+6.  Identify the most plausible definition and wordplay structure before selecting an answer.
+7.  Validate your answer strictly against the pattern (and total length if multiword).
+    If it does not match, output CLUE_ID|NO_MATCH|0.
+8.  If multiple valid answers exist, choose the one that best satisfies BOTH definition and wordplay and reduce confidence accordingly.
+9.  If no valid answer matches both the cryptic construction and the pattern, output CLUE_ID|NO_MATCH|0, do NOT return an answer.
+10. Do not rely on surface meaning alone; cryptic clues often misdirect. The literal reading may be deceptive.
 
-Confidence:
+Confidence scoring (graded — required):
 - Return an integer confidence score from 0 to 100.
 - Use 0 only for NO_MATCH.
+- Do not use only 0 or 100 unless the case is absolute.
+- Use this guideline:
+  - 100 → Only if absolutely certain it is the single possible correct answer and both definition and wordplay parse cleanly
+  - 90–99 → Very high confidence (clear cryptic construction, strong match to definition and pattern)
+  - 70–89 → High confidence (good cryptic fit but minor ambiguity in parsing or alternative wordplay possible)
+  - 50–69 → Moderate confidence (answer fits pattern and likely definition but wordplay less certain)
+  - 30–49 → Low confidence (possible parsing but weak or speculative wordplay)
+  - 1–29 → Very low confidence (weak cryptic justification or forced interpretation)
+  - 0 → Only if NO valid answer fits the pattern
+- Reduce confidence if:
+  - More than one reasonable cryptic parsing could fit.
+  - More than one answer satisfies the definition and pattern.
+  - The wordplay depends on obscure abbreviations, rare indicators, or culturally specific references.
+  - The cryptic construction is indirect or loosely indicated.
+- Confidence must reflect both:
+  - Strength of the cryptic parsing, AND
+  - Accuracy against the pattern.
 
 Output format (single line only):
 CLUE_ID|ANSWER|CONFIDENCE

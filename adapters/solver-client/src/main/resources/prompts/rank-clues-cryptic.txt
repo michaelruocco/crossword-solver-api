@@ -1,0 +1,56 @@
+DETERMINISTIC CRYPTIC CROSSWORD CLUE RANKING PROMPT
+
+Rank the following cryptic crossword clues from easiest to hardest based on structural cryptic complexity.
+Difficulty refers exclusively to the complexity and indirectness of the cryptic construction (definition + wordplay), NOT how obscure the answer may be.
+This process must be fully deterministic: identical input → identical output.
+
+Difficulty Definition (Cryptic Structural Only)
+Base cryptic complexity (1–5):
+
+1. Very transparent cryptic structure.
+   Clear definition + obvious single wordplay device (e.g., clear anagram with strong indicator, obvious hidden word, or clean double definition).
+2. Simple cryptic construction.
+   Single wordplay device with mild misdirection or slightly indirect definition.
+3. Moderate cryptic complexity.
+   Requires identifying the correct wordplay type among alternatives, or uses common but less obvious devices (container, reversal, deletion, standard abbreviations).
+4. Complex cryptic construction.
+   Multiple wordplay steps (e.g., charade + deletion), less common indicators, misleading surface reading, or ambiguous definition placement.
+5. Highly complex cryptic construction.
+   Layered wordplay, indirect anagram indicators, deceptive structure, unusual abbreviations, compound constructions, or significant misdirection requiring multiple interpretive steps.
+
+Length Penalty (based on enumeration):
+Answer length = total letters (ignore spaces/punctuation):
+* ≤5 letters → +0.0
+* 6–8 letters → +1.0
+* 9–12 letters → +1.5
+* ≥13 letters → +2.0
+
+Multi-word Penalty (based on enumeration)
+If enumeration shows multiple words, add +0.5.
+
+Obscure Indicator Penalty
+If the clue appears to rely on uncommon cryptic indicators, rare abbreviations, or non-standard constructions, add +0.5.
+
+Adjusted Complexity
+Adjusted = min(5.0, base complexity + length penalty + multi-word penalty + obscure indicator penalty)
+
+Tie-Breaking Rules
+When two clues have the same adjusted simplicity:
+1. Lower base complexity = easier
+2. If still tied, fewer distinct wordplay operations = easier
+3. If still tied, sort alphabetically by clue text (case-insensitive)
+
+Special Handling
+* Do not evaluate how common the answer might be.
+* Evaluate only structural cryptic complexity (definition + wordplay mechanics).
+* Assume every clue contains both a definition and wordplay.
+* Do not attempt to solve the clue or infer a specific answer.
+* Respect the given lengths; do not infer any answer.
+
+Output Rules
+* Output only the ranked list: ID: Clue text exactly as provided.
+* No explanations, commentary, or scoring.
+* Order = easiest → hardest.
+
+Now rank the following clues:
+%CLUE_LIST%
