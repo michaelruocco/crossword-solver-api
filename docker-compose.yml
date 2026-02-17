@@ -1,6 +1,6 @@
 services:
   crossword-solver-api:
-    image: crossword-solver-api
+    image: local-crossword-solver-api:latest
     container_name: crossword-solver-api
     profiles: [ "docker-api" ]
     ports:
@@ -20,7 +20,7 @@ services:
     image: postgres:18-alpine
     container_name: crossword-solver-db
     ports:
-      - 5433:5432
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: crossword-solver-db
