@@ -55,7 +55,7 @@ public class GridFactory {
   private Cell toCell(Mat grid, GridDimensions dimensions, int x, int y) {
     var cellMat = dimensions.toCell(grid, x, y);
     var cell = cellFactory.toCell(cellMat, x, y);
-    log.debug("cell {}", cell);
+    log.info("cell {}", cell);
     return cell;
   }
 }
