@@ -4,11 +4,13 @@ import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.opencv.core.Mat;
 import uk.co.mruoc.cws.entity.Cell;
 import uk.co.mruoc.cws.entity.Cells;
 import uk.co.mruoc.cws.entity.Grid;
 
+@Slf4j
 @RequiredArgsConstructor
 public class GridFactory {
 
@@ -52,6 +54,8 @@ public class GridFactory {
 
   private Cell toCell(Mat grid, GridDimensions dimensions, int x, int y) {
     var cellMat = dimensions.toCell(grid, x, y);
-    return cellFactory.toCell(cellMat, x, y);
+    var cell = cellFactory.toCell(cellMat, x, y);
+    log.debug("cell {}", cell);
+    return cell;
   }
 }
