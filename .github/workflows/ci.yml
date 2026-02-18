@@ -1,0 +1,93 @@
+name: pipeline
+
+on:
+  push:
+    branches-ignore:
+      - 'crossword-solver-api-*'
+
+permissions:
+  id-token: write
+  checks: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: michaelruocco/tesseract-java:5.5.1-jre25-ci
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Setup SonarCloud Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Setup Gradle Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle
+
+      - name: Print Current Version
+        run: ./gradlew currentVersion
+
+      - name: Check Dependency Versions
+        run: ./gradlew dependencyUpdates
+
+      - name: Build
+        run: ./gradlew clean spotlessCheck lintGradle assemble
+
+      - name: Unit Test
+        run: ./gradlew test unitCoverage
+
+      - name: Assume AWS role
+        uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7
+        with:
+          role-to-assume: arn:aws:iam::327122349051:role/GitHubPipelineCrosswordSolverApiRole
+          aws-region: eu-west-1
+
+      - name: Integration Test
+        run: ./gradlew integrationTest
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@27d65e188ec43221b20d26de30f4892fad91df2f
+        with:
+          files: "**/**/build/test-results/**/*.xml"
+
+      - name: Sonar Analysis
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonar
+
+      - name: Codecov Coverage
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de
+        with:
+          files: ./code-coverage-report/build/reports/jacoco/unitCoverage/unitCoverage.xml,./code-coverage-report/build/reports/jacoco/integrationCoverage/integrationCoverage.xml
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Codacy Coverage
+        uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699
+        with:
+          project-token: ${{ secrets.CODACY_TOKEN }}
+          coverage-reports: ./code-coverage-report/build/reports/jacoco/unitCoverage/unitCoverage.xml,./code-coverage-report/build/reports/jacoco/integrationCoverage/integrationCoverage.xml
