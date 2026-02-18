@@ -1,0 +1,44 @@
+name: release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    container:
+      image: michaelruocco/tesseract-java:5.5.1-jre25
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Release
+        env:
+          MAVEN_CENTRAL_PORTAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_PORTAL_USERNAME }}
+          MAVEN_CENTRAL_PORTAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PORTAL_PASSWORD }}
+          MAVEN_CENTRAL_PGP_SECRET_KEY: ${{ secrets.MAVEN_CENTRAL_PGP_SECRET_KEY }}
+          MAVEN_CENTRAL_PGP_SECRET_KEY_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PGP_SECRET_KEY_PASSWORD }}
+        run: |
+          ./gradlew release -Prelease.customUsername=${{ github.actor }} -Prelease.customPassword=${{ github.token }}
+          ./gradlew publishAllPublicationsToProjectLocalRepository zipMavenCentralPortalPublication releaseMavenCentralPortalPublication
+
+      - name: Build Image
+        run: ./gradlew buildImage
+
+      - name: Push Image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: ./gradlew pushImage
