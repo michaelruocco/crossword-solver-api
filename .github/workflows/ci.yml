@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: michaelruocco/tesseract-java:5.5.1-jre25
+      image: michaelruocco/tesseract-java:5.5.1-jre25-ci
 
     steps:
       - name: Checkout
