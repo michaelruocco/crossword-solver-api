@@ -60,7 +60,7 @@ jobs:
         run: ./gradlew test unitCoverage
 
       - name: Assume AWS role
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7
         with:
           role-to-assume: arn:aws:iam::327122349051:role/GitHubPipelineCrosswordSolverApiRole
           aws-region: eu-west-1
@@ -69,7 +69,7 @@ jobs:
         run: ./gradlew integrationTest
 
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action@27d65e188ec43221b20d26de30f4892fad91df2f
         with:
           files: "**/**/build/test-results/**/*.xml"
 
@@ -80,14 +80,14 @@ jobs:
         run: ./gradlew sonar
 
       - name: Codecov Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de
         with:
           files: ./code-coverage-report/build/reports/jacoco/unitCoverage/unitCoverage.xml,./code-coverage-report/build/reports/jacoco/integrationCoverage/integrationCoverage.xml
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Codacy Coverage
-        uses: codacy/codacy-coverage-reporter-action@v1
+        uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699
         with:
           project-token: ${{ secrets.CODACY_TOKEN }}
           coverage-reports: ./code-coverage-report/build/reports/jacoco/unitCoverage/unitCoverage.xml,./code-coverage-report/build/reports/jacoco/integrationCoverage/integrationCoverage.xml

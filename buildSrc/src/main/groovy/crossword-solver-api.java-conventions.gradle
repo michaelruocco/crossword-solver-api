@@ -23,6 +23,12 @@ dependencies {
     testFixturesImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
 testing {
     suites {
         withType(JvmTestSuite) {
