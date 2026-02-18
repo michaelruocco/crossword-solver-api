@@ -88,7 +88,6 @@ the values in the `docker-compose.yml` file directly, but be careful not to try 
 
 ## TODO
 
-* Fix pipeline running integration tests, need tesseract built from source
 * Clean up tesseract / grid extractor by splitting into its own module
 * Fix sonar issues
 * Improve solver algorithm to try and produce correct results more consistently
