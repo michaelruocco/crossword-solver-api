@@ -10,10 +10,12 @@ import uk.co.mruoc.cws.entity.Coordinates;
 import uk.co.mruoc.cws.entity.Grid;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.entity.Puzzle;
+import uk.co.mruoc.cws.entity.PuzzleSummary;
 import uk.co.mruoc.cws.entity.WordsFactory;
 import uk.co.mruoc.cws.repository.entity.CellEntity;
 import uk.co.mruoc.cws.repository.entity.ClueEntity;
 import uk.co.mruoc.cws.repository.entity.PuzzleEntity;
+import uk.co.mruoc.cws.repository.entity.PuzzleSummaryProjection;
 
 @RequiredArgsConstructor
 public class PuzzleEntityConverter {
@@ -22,6 +24,22 @@ public class PuzzleEntityConverter {
 
   public PuzzleEntityConverter() {
     this(new WordsFactory());
+  }
+
+  public Collection<PuzzleSummary> toPuzzleSummaries(Collection<PuzzleSummaryProjection> entities) {
+    return entities.stream().map(this::toPuzzleSummary).toList();
+  }
+
+  public PuzzleSummary toPuzzleSummary(PuzzleSummaryProjection entity) {
+    return PuzzleSummary.builder()
+        .id(entity.getId())
+        .name(entity.getName())
+        .attemptCount(entity.getAttemptCount())
+        .build();
+  }
+
+  public Collection<Puzzle> toPuzzles(Collection<PuzzleEntity> entities) {
+    return entities.stream().map(this::toPuzzle).toList();
   }
 
   public Puzzle toPuzzle(PuzzleEntity entity) {

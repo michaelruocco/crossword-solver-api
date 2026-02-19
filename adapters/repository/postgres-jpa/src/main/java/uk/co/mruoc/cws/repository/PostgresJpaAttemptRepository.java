@@ -7,5 +7,5 @@ import uk.co.mruoc.cws.repository.entity.AttemptEntity;
 
 @Repository
 public interface PostgresJpaAttemptRepository extends CrudRepository<AttemptEntity, UUID> {
-  // intentionally blank
+  long countByPuzzleId(UUID puzzleId);
 }

@@ -39,6 +39,7 @@ import uk.co.mruoc.cws.usecase.puzzle.PuzzleCreator;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleFinder;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleRepository;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleService;
+import uk.co.mruoc.cws.usecase.puzzle.PuzzleSummaryRepository;
 
 @Configuration
 @Slf4j
@@ -75,8 +76,12 @@ public class AppConfig {
   }
 
   @Bean
-  public PuzzleFinder puzzleFinder(PuzzleRepository repository) {
-    return new PuzzleFinder(repository);
+  public PuzzleFinder puzzleFinder(
+      PuzzleRepository puzzleRepository, PuzzleSummaryRepository summaryRepository) {
+    return PuzzleFinder.builder()
+        .puzzleRepository(puzzleRepository)
+        .summaryRepository(summaryRepository)
+        .build();
   }
 
   @Bean

@@ -28,4 +28,9 @@ public class StubAttemptRepository implements AttemptRepository {
   public void save(Attempt attempt) {
     values.put(attempt.id(), attempt);
   }
+
+  @Override
+  public long getAttemptCount(UUID puzzleId) {
+    return values.values().stream().filter(attempt -> attempt.puzzleId().equals(puzzleId)).count();
+  }
 }

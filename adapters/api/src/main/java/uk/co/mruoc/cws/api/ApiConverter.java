@@ -1,9 +1,11 @@
 package uk.co.mruoc.cws.api;
 
+import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Attempt;
 import uk.co.mruoc.cws.entity.Puzzle;
+import uk.co.mruoc.cws.entity.PuzzleSummary;
 import uk.co.mruoc.cws.entity.Result;
 
 @RequiredArgsConstructor
@@ -22,6 +24,10 @@ public class ApiConverter {
         new ApiResultConverter());
   }
 
+  public Collection<ApiPuzzleSummary> toApiSummaries(Collection<PuzzleSummary> summaries) {
+    return summaries.stream().map(this::toApiSummary).toList();
+  }
+
   public ApiPuzzle toApiPuzzle(Puzzle puzzle) {
     return puzzleConverter.toApiPuzzle(puzzle);
   }
@@ -36,5 +42,13 @@ public class ApiConverter {
 
   public ApiResult toApiResult(Result result) {
     return resultConverter.toApiResult(result);
+  }
+
+  private ApiPuzzleSummary toApiSummary(PuzzleSummary summary) {
+    return ApiPuzzleSummary.builder()
+        .id(summary.getId())
+        .name(summary.getName())
+        .attemptCount(summary.getAttemptCount())
+        .build();
   }
 }

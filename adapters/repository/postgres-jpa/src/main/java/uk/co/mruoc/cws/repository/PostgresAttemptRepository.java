@@ -27,4 +27,9 @@ public class PostgresAttemptRepository implements AttemptRepository {
   public void save(Attempt attempt) {
     jpaRepository.save(entityConverter.toEntity(attempt));
   }
+
+  @Override
+  public long getAttemptCount(UUID puzzleId) {
+    return jpaRepository.countByPuzzleId(puzzleId);
+  }
 }
