@@ -25,7 +25,7 @@ public class ApiConverter {
   }
 
   public Collection<ApiPuzzleSummary> toApiSummaries(Collection<PuzzleSummary> summaries) {
-    return summaries.stream().map(this::toApiSummary).toList();
+    return puzzleConverter.toApiSummaries(summaries);
   }
 
   public ApiPuzzle toApiPuzzle(Puzzle puzzle) {
@@ -42,13 +42,5 @@ public class ApiConverter {
 
   public ApiResult toApiResult(Result result) {
     return resultConverter.toApiResult(result);
-  }
-
-  private ApiPuzzleSummary toApiSummary(PuzzleSummary summary) {
-    return ApiPuzzleSummary.builder()
-        .id(summary.getId())
-        .name(summary.getName())
-        .attemptCount(summary.getAttemptCount())
-        .build();
   }
 }

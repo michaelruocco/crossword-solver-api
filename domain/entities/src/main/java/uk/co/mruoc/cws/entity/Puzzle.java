@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.entity;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.UUID;
 import lombok.Builder;
@@ -16,6 +17,8 @@ public class Puzzle {
   @With private final Clues clues;
   private final Words words;
   private final Grid grid;
+  private final Instant createdAt;
+  private final long attemptCount;
 
   public boolean hasClue(Id id) {
     return clues.hasClue(id);

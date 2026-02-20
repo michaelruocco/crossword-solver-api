@@ -26,7 +26,7 @@ import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
 
 @RestController
-@RequestMapping("/v1/puzzles")
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 @Slf4j
 public class PuzzleController {
@@ -54,7 +54,7 @@ public class PuzzleController {
     return apiConverter.toApiPuzzle(puzzle);
   }
 
-  @PostMapping(path = "/puzzles/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(path = "/puzzle-files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ApiPuzzle createPuzzle(@RequestParam("file") MultipartFile file) {
     var image = multipartFileConverter.toImage(file);
     var puzzleId = facade.createPuzzle(image);

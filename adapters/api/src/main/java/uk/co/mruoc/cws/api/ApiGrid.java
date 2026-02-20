@@ -9,6 +9,7 @@ import lombok.With;
 @Data
 public class ApiGrid {
   @With private final Collection<ApiCell> cells;
-  private final int columnWidth;
-  private final int rowHeight;
+
+  private final int columnCount;
+  private final int rowCount;
 }

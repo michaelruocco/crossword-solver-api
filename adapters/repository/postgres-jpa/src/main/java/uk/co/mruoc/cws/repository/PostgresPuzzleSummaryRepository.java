@@ -19,6 +19,6 @@ public class PostgresPuzzleSummaryRepository implements PuzzleSummaryRepository 
   @Transactional(readOnly = true)
   @Override
   public Collection<PuzzleSummary> findAllSummaries() {
-    return entityConverter.toPuzzleSummaries(jpaRepository.findAllSummaries());
+    return entityConverter.toPuzzleSummaries(jpaRepository.findAllByOrderByCreatedAtDesc());
   }
 }

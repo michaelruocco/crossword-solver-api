@@ -34,6 +34,7 @@ public class PuzzleEntityConverter {
     return PuzzleSummary.builder()
         .id(entity.getId())
         .name(entity.getName())
+        .createdAt(entity.getCreatedAt())
         .attemptCount(entity.getAttemptCount())
         .build();
   }
@@ -50,6 +51,8 @@ public class PuzzleEntityConverter {
         .name(entity.getName())
         .format(entity.getFormat())
         .hash(entity.getHash())
+        .createdAt(entity.getCreatedAt())
+        .attemptCount(entity.getAttemptCount())
         .clues(clues)
         .grid(new Grid(cells, entity.getColumnWidth(), entity.getRowHeight()))
         .words(wordsFactory.toWords(clues, cells))
@@ -62,6 +65,7 @@ public class PuzzleEntityConverter {
     entity.setName(puzzle.getName());
     entity.setFormat(puzzle.getFormat());
     entity.setHash(puzzle.getHash());
+    entity.setCreatedAt(puzzle.getCreatedAt());
     entity.setClues(toClueEntities(puzzle));
     entity.setCells(toCellEntities(puzzle));
     var grid = puzzle.getGrid();
