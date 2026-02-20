@@ -1,7 +1,6 @@
 package uk.co.mruoc.cws.api;
 
 import java.util.Collection;
-import uk.co.mruoc.cws.api.ApiPuzzle.ApiPuzzleBuilder;
 import uk.co.mruoc.cws.entity.Answers;
 import uk.co.mruoc.cws.entity.Attempt;
 import uk.co.mruoc.cws.entity.Cell;
@@ -22,26 +21,27 @@ public class ApiPuzzleConverter {
   public ApiPuzzle toApiPuzzle(Attempt attempt) {
     var puzzle = attempt.puzzle();
     var answers = attempt.getConfirmedAnswers();
-    return toApiPuzzleBuilder(puzzle)
+    return ApiPuzzle.builder()
+        .id(puzzle.getId())
+        .name(puzzle.getName())
+        .hash(puzzle.getHash())
+        .createdAt(puzzle.getCreatedAt())
+        .attemptCount(puzzle.getAttemptCount())
         .clues(addAnswers(toApiClues(puzzle.getClues()), answers))
         .grid(toApiGrid(attempt.getGrid()))
         .build();
   }
 
   public ApiPuzzle toApiPuzzle(Puzzle puzzle) {
-    return toApiPuzzleBuilder(puzzle)
-        .clues(toApiClues(puzzle.getClues()))
-        .grid(toApiGrid(puzzle.getGrid()))
-        .build();
-  }
-
-  private ApiPuzzleBuilder toApiPuzzleBuilder(Puzzle puzzle) {
     return ApiPuzzle.builder()
         .id(puzzle.getId())
         .name(puzzle.getName())
         .hash(puzzle.getHash())
         .createdAt(puzzle.getCreatedAt())
-        .attemptCount(puzzle.getAttemptCount());
+        .attemptCount(puzzle.getAttemptCount())
+        .clues(toApiClues(puzzle.getClues()))
+        .grid(toApiGrid(puzzle.getGrid()))
+        .build();
   }
 
   private ApiClues addAnswers(ApiClues clues, Answers answers) {
