@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.app.config;
 
+import java.time.Clock;
 import java.util.Collection;
 import java.util.concurrent.Executor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,10 +40,16 @@ import uk.co.mruoc.cws.usecase.puzzle.PuzzleCreator;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleFinder;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleRepository;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleService;
+import uk.co.mruoc.cws.usecase.puzzle.PuzzleSummaryRepository;
 
 @Configuration
 @Slf4j
 public class AppConfig {
+
+  @Bean
+  public Clock clock() {
+    return Clock.systemUTC();
+  }
 
   @Bean
   public CrosswordSolverFacade facade(
@@ -62,7 +69,10 @@ public class AppConfig {
 
   @Bean
   public PuzzleCreator puzzleCreator(
-      CluesFactory cluesFactory, GridExtractor gridExtractor, PuzzleRepository repository) {
+      CluesFactory cluesFactory,
+      GridExtractor gridExtractor,
+      PuzzleRepository repository,
+      Clock clock) {
     return PuzzleCreator.builder()
         .imageDownloader(new DefaultImageDownloader())
         .validator(new ImageValidator())
@@ -71,12 +81,17 @@ public class AppConfig {
         .gridExtractor(gridExtractor)
         .repository(repository)
         .wordsFactory(new WordsFactory())
+        .clock(clock)
         .build();
   }
 
   @Bean
-  public PuzzleFinder puzzleFinder(PuzzleRepository repository) {
-    return new PuzzleFinder(repository);
+  public PuzzleFinder puzzleFinder(
+      PuzzleRepository puzzleRepository, PuzzleSummaryRepository summaryRepository) {
+    return PuzzleFinder.builder()
+        .puzzleRepository(puzzleRepository)
+        .summaryRepository(summaryRepository)
+        .build();
   }
 
   @Bean
@@ -135,10 +150,16 @@ public class AppConfig {
   @Primary
   @Bean
   public CompositeAttemptSolver compositeAttemptSolver(
-      BacktrackingAttemptSolver backtrackingSolver, GreedyAttemptSolver greedySolver) {
-    int maxPasses = 5;
-    // TODO configure max passes or store max passes and current passes against attempt
-    return new CompositeAttemptSolver(backtrackingSolver, greedySolver, maxPasses);
+      BacktrackingAttemptSolver backtrackingSolver,
+      GreedyAttemptSolver greedySolver,
+      AttemptRepository repository) {
+    return CompositeAttemptSolver.builder()
+        .backtrackingSolver(backtrackingSolver)
+        .greedySolver(greedySolver)
+        .repository(repository)
+        // TODO configure max passes or store max passes and current passes against attempt
+        .maxPasses(5)
+        .build();
   }
 
   @Bean

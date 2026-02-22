@@ -10,8 +10,13 @@ import uk.co.mruoc.cws.entity.Clues;
 import uk.co.mruoc.cws.entity.Grid;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.entity.Puzzle;
+import uk.co.mruoc.cws.entity.PuzzleSummary;
 
 public class ApiPuzzleConverter {
+
+  public Collection<ApiPuzzleSummary> toApiSummaries(Collection<PuzzleSummary> summaries) {
+    return summaries.stream().map(this::toApiSummary).toList();
+  }
 
   public ApiPuzzle toApiPuzzle(Attempt attempt) {
     var puzzle = attempt.puzzle();
@@ -20,6 +25,8 @@ public class ApiPuzzleConverter {
         .id(puzzle.getId())
         .name(puzzle.getName())
         .hash(puzzle.getHash())
+        .createdAt(puzzle.getCreatedAt())
+        .attemptCount(puzzle.getAttemptCount())
         .clues(addAnswers(toApiClues(puzzle.getClues()), answers))
         .grid(toApiGrid(attempt.getGrid()))
         .build();
@@ -30,6 +37,8 @@ public class ApiPuzzleConverter {
         .id(puzzle.getId())
         .name(puzzle.getName())
         .hash(puzzle.getHash())
+        .createdAt(puzzle.getCreatedAt())
+        .attemptCount(puzzle.getAttemptCount())
         .clues(toApiClues(puzzle.getClues()))
         .grid(toApiGrid(puzzle.getGrid()))
         .build();
@@ -47,8 +56,17 @@ public class ApiPuzzleConverter {
   }
 
   private ApiClue addAnswer(ApiClue clue, Answers answers) {
-    var id = new Id(clue.getId(), clue.getDirection());
+    var id = new Id(clue.getId());
     return answers.findById(id).map(answer -> clue.withAnswer(answer.value())).orElse(clue);
+  }
+
+  private ApiPuzzleSummary toApiSummary(PuzzleSummary summary) {
+    return ApiPuzzleSummary.builder()
+        .id(summary.getId())
+        .name(summary.getName())
+        .createdAt(summary.getCreatedAt())
+        .attemptCount(summary.getAttemptCount())
+        .build();
   }
 
   private ApiClues toApiClues(Clues clues) {
@@ -60,8 +78,7 @@ public class ApiPuzzleConverter {
 
   private ApiClue toApiClue(Clue clue) {
     return ApiClue.builder()
-        .id(clue.numericId())
-        .direction(clue.direction())
+        .id(clue.id().toString())
         .text(clue.text())
         .lengths(clue.lengths())
         .build();
@@ -70,8 +87,8 @@ public class ApiPuzzleConverter {
   private ApiGrid toApiGrid(Grid grid) {
     return ApiGrid.builder()
         .cells(toApiCells(grid.cells()))
-        .columnWidth(grid.columnWidth())
-        .rowHeight(grid.rowHeight())
+        .rowCount(grid.numberOfRows())
+        .columnCount(grid.numberOfColumns())
         .build();
   }
 

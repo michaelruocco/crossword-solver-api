@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.repository;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,6 +18,11 @@ public class StubPuzzleRepository implements PuzzleRepository {
 
   public StubPuzzleRepository() {
     this(new ConcurrentHashMap<>());
+  }
+
+  @Override
+  public Collection<Puzzle> findAll() {
+    return values.values();
   }
 
   @Override

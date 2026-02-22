@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.repository;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,11 @@ public class PostgresPuzzleRepository implements PuzzleRepository {
 
   public PostgresPuzzleRepository(PostgresJpaPuzzleRepository jpaRepository) {
     this(jpaRepository, new PuzzleEntityConverter());
+  }
+
+  @Override
+  public Collection<Puzzle> findAll() {
+    return entityConverter.toPuzzles(jpaRepository.findAll());
   }
 
   @Transactional(readOnly = true)

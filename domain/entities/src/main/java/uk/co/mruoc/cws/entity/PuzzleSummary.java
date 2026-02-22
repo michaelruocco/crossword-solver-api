@@ -1,4 +1,4 @@
-package uk.co.mruoc.cws.api;
+package uk.co.mruoc.cws.entity;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -7,12 +7,9 @@ import lombok.Data;
 
 @Builder
 @Data
-public class ApiPuzzle {
+public class PuzzleSummary {
   private final UUID id;
   private final String name;
-  private final String hash;
   private final Instant createdAt;
   private final long attemptCount;
-  private final ApiClues clues;
-  private final ApiGrid grid;
 }

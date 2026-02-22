@@ -9,4 +9,6 @@ public interface AttemptRepository {
   Optional<Attempt> findById(UUID id);
 
   void save(Attempt attempt);
+
+  long getAttemptCount(UUID puzzleId);
 }
