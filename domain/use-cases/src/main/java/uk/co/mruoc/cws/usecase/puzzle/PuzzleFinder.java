@@ -1,15 +1,22 @@
 package uk.co.mruoc.cws.usecase.puzzle;
 
+import java.util.Collection;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 import uk.co.mruoc.cws.entity.Puzzle;
+import uk.co.mruoc.cws.entity.PuzzleSummary;
 
-@RequiredArgsConstructor
+@Builder
 public class PuzzleFinder {
 
-  private final PuzzleRepository repository;
+  private final PuzzleSummaryRepository summaryRepository;
+  private final PuzzleRepository puzzleRepository;
+
+  public Collection<PuzzleSummary> findAllSummaries() {
+    return summaryRepository.findAllSummaries();
+  }
 
   public Puzzle findById(UUID id) {
-    return repository.findById(id).orElseThrow(() -> new PuzzleNotFoundByIdException(id));
+    return puzzleRepository.findById(id).orElseThrow(() -> new PuzzleNotFoundByIdException(id));
   }
 }

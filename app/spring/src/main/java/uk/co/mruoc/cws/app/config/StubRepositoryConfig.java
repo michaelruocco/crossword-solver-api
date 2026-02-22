@@ -10,9 +10,11 @@ import org.springframework.context.annotation.Configuration;
 import uk.co.mruoc.cws.repository.StubAttemptRepository;
 import uk.co.mruoc.cws.repository.StubCandidateRepository;
 import uk.co.mruoc.cws.repository.StubPuzzleRepository;
+import uk.co.mruoc.cws.repository.StubPuzzleSummaryRepository;
 import uk.co.mruoc.cws.usecase.CandidateRepository;
 import uk.co.mruoc.cws.usecase.attempt.AttemptRepository;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleRepository;
+import uk.co.mruoc.cws.usecase.puzzle.PuzzleSummaryRepository;
 
 @Configuration
 @EnableAutoConfiguration(
@@ -40,5 +42,15 @@ public class StubRepositoryConfig {
   public AttemptRepository stubAttemptRepository() {
     log.warn("creating stub attempt repository");
     return new StubAttemptRepository();
+  }
+
+  @Bean
+  public PuzzleSummaryRepository stubPuzzleSummaryRepository(
+      PuzzleRepository puzzleRepository, AttemptRepository attemptRepository) {
+    log.warn("creating stub puzzle summary repository");
+    return StubPuzzleSummaryRepository.builder()
+        .puzzleRepository(puzzleRepository)
+        .attemptRepository(attemptRepository)
+        .build();
   }
 }

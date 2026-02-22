@@ -11,6 +11,8 @@ import uk.co.mruoc.cws.repository.PostgresJpaAttemptRepository;
 import uk.co.mruoc.cws.repository.PostgresJpaCandidateRepository;
 import uk.co.mruoc.cws.repository.PostgresJpaPuzzleRepository;
 import uk.co.mruoc.cws.repository.PostgresPuzzleRepository;
+import uk.co.mruoc.cws.repository.PostgresPuzzleSummaryRepository;
+import uk.co.mruoc.cws.usecase.puzzle.PuzzleSummaryRepository;
 
 @Configuration
 @EnableJpaRepositories(basePackages = "uk.co.mruoc.cws.repository")
@@ -34,5 +36,11 @@ public class JpaRepositoryConfig {
   public PostgresAttemptRepository postgresAttemptRepository(
       PostgresJpaAttemptRepository jpaRepository) {
     return new PostgresAttemptRepository(jpaRepository);
+  }
+
+  @Bean
+  public PuzzleSummaryRepository postgresPuzzleSummaryRepository(
+      PostgresJpaPuzzleRepository jpaRepository) {
+    return new PostgresPuzzleSummaryRepository(jpaRepository);
   }
 }

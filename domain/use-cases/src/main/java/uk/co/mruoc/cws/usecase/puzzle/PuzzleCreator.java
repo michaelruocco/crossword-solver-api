@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.usecase.puzzle;
 
+import java.time.Clock;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -23,6 +24,7 @@ public class PuzzleCreator {
   private final GridExtractor gridExtractor;
   private final PuzzleRepository repository;
   private final WordsFactory wordsFactory;
+  private final Clock clock;
 
   public UUID create(String imageUrl) {
     var image = imageDownloader.downloadImage(imageUrl);
@@ -61,6 +63,7 @@ public class PuzzleCreator {
         .clues(clues)
         .grid(grid)
         .words(wordsFactory.toWords(clues, grid.cells()))
+        .createdAt(clock.instant())
         .build();
   }
 }

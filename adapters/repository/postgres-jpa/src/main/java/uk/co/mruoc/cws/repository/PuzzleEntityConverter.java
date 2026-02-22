@@ -10,10 +10,12 @@ import uk.co.mruoc.cws.entity.Coordinates;
 import uk.co.mruoc.cws.entity.Grid;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.entity.Puzzle;
+import uk.co.mruoc.cws.entity.PuzzleSummary;
 import uk.co.mruoc.cws.entity.WordsFactory;
 import uk.co.mruoc.cws.repository.entity.CellEntity;
 import uk.co.mruoc.cws.repository.entity.ClueEntity;
 import uk.co.mruoc.cws.repository.entity.PuzzleEntity;
+import uk.co.mruoc.cws.repository.entity.PuzzleSummaryProjection;
 
 @RequiredArgsConstructor
 public class PuzzleEntityConverter {
@@ -24,6 +26,23 @@ public class PuzzleEntityConverter {
     this(new WordsFactory());
   }
 
+  public Collection<PuzzleSummary> toPuzzleSummaries(Collection<PuzzleSummaryProjection> entities) {
+    return entities.stream().map(this::toPuzzleSummary).toList();
+  }
+
+  public PuzzleSummary toPuzzleSummary(PuzzleSummaryProjection entity) {
+    return PuzzleSummary.builder()
+        .id(entity.getId())
+        .name(entity.getName())
+        .createdAt(entity.getCreatedAt())
+        .attemptCount(entity.getAttemptCount())
+        .build();
+  }
+
+  public Collection<Puzzle> toPuzzles(Collection<PuzzleEntity> entities) {
+    return entities.stream().map(this::toPuzzle).toList();
+  }
+
   public Puzzle toPuzzle(PuzzleEntity entity) {
     var clues = toClues(entity.getClues());
     var cells = toCells(entity.getCells());
@@ -32,6 +51,8 @@ public class PuzzleEntityConverter {
         .name(entity.getName())
         .format(entity.getFormat())
         .hash(entity.getHash())
+        .createdAt(entity.getCreatedAt())
+        .attemptCount(entity.getAttemptCount())
         .clues(clues)
         .grid(new Grid(cells, entity.getColumnWidth(), entity.getRowHeight()))
         .words(wordsFactory.toWords(clues, cells))
@@ -44,6 +65,7 @@ public class PuzzleEntityConverter {
     entity.setName(puzzle.getName());
     entity.setFormat(puzzle.getFormat());
     entity.setHash(puzzle.getHash());
+    entity.setCreatedAt(puzzle.getCreatedAt());
     entity.setClues(toClueEntities(puzzle));
     entity.setCells(toCellEntities(puzzle));
     var grid = puzzle.getGrid();

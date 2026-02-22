@@ -9,7 +9,7 @@ public class ApiAnswerConverter {
 
   public Answer toAnswer(ApiAnswer apiAnswer) {
     return Answer.builder()
-        .id(new Id(apiAnswer.getId(), apiAnswer.getDirection()))
+        .id(new Id(apiAnswer.getId()))
         .value(apiAnswer.getValue())
         .confidenceScore(100)
         .confirmed(true)
@@ -22,8 +22,7 @@ public class ApiAnswerConverter {
 
   private ApiAnswer toApiAnswer(Answer answer) {
     var apiAnswer = new ApiAnswer();
-    apiAnswer.setId(answer.numericId());
-    apiAnswer.setDirection(answer.direction());
+    apiAnswer.setId(answer.id().toString());
     apiAnswer.setValue(answer.value());
     return apiAnswer;
   }

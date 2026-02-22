@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.app.controller;
 
+import java.util.Collection;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +21,12 @@ import uk.co.mruoc.cws.api.ApiAttempt;
 import uk.co.mruoc.cws.api.ApiConverter;
 import uk.co.mruoc.cws.api.ApiCreatePuzzleRequest;
 import uk.co.mruoc.cws.api.ApiPuzzle;
+import uk.co.mruoc.cws.api.ApiPuzzleSummary;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
 
 @RestController
-@RequestMapping("/v1/puzzles")
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 @Slf4j
 public class PuzzleController {
@@ -39,14 +41,20 @@ public class PuzzleController {
     this(facade, new ApiConverter(), new MultipartFileConverter(), new ImageResponseFactory());
   }
 
-  @PostMapping
+  @GetMapping("/puzzle-summaries")
+  public Collection<ApiPuzzleSummary> getPuzzleSummaries() {
+    var summaries = facade.findPuzzleSummaries();
+    return apiConverter.toApiSummaries(summaries);
+  }
+
+  @PostMapping("/puzzles")
   public ApiPuzzle createPuzzle(@RequestBody ApiCreatePuzzleRequest request) {
     var puzzleId = facade.createPuzzle(request.getImageUrl());
     var puzzle = facade.findPuzzleById(puzzleId);
     return apiConverter.toApiPuzzle(puzzle);
   }
 
-  @PostMapping(path = "/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(path = "/puzzle-files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ApiPuzzle createPuzzle(@RequestParam("file") MultipartFile file) {
     var image = multipartFileConverter.toImage(file);
     var puzzleId = facade.createPuzzle(image);
@@ -54,26 +62,26 @@ public class PuzzleController {
     return apiConverter.toApiPuzzle(puzzle);
   }
 
-  @GetMapping("/{puzzleId}")
+  @GetMapping("/puzzles/{puzzleId}")
   public ApiPuzzle getPuzzle(@PathVariable UUID puzzleId) {
     var puzzle = facade.findPuzzleById(puzzleId);
     return apiConverter.toApiPuzzle(puzzle);
   }
 
-  @GetMapping("/{puzzleId}/grid-images")
+  @GetMapping("/puzzles/{puzzleId}/grid-images")
   public ResponseEntity<byte[]> getPuzzleGridImage(@PathVariable UUID puzzleId) {
     log.info("getting grid image of puzzle {}", puzzleId);
     var gridImage = facade.findPuzzleGridImage(puzzleId);
     return imageResponseFactory.toResponse(gridImage);
   }
 
-  @PostMapping("/{puzzleId}/attempts")
+  @PostMapping("/puzzles/{puzzleId}/attempts")
   public ApiAttempt createAttempt(@PathVariable UUID puzzleId) {
     var attemptId = facade.createPuzzleAttempt(puzzleId);
     return getAttempt(puzzleId, attemptId);
   }
 
-  @PostMapping("/{puzzleId}/attempts/{attemptId}/answers")
+  @PostMapping("/puzzles/{puzzleId}/attempts/{attemptId}/answers")
   public ApiAttempt updateAttemptAnswer(
       @PathVariable UUID puzzleId, @PathVariable UUID attemptId, @RequestBody ApiAnswer apiAnswer) {
     log.info(
@@ -83,7 +91,7 @@ public class PuzzleController {
     return getAttempt(puzzleId, attemptId);
   }
 
-  @DeleteMapping("/{puzzleId}/attempts/{attemptId}/answers/{answerId}")
+  @DeleteMapping("/puzzles/{puzzleId}/attempts/{attemptId}/answers/{answerId}")
   public ApiAttempt deleteAttemptAnswer(
       @PathVariable UUID puzzleId, @PathVariable UUID attemptId, @PathVariable String answerId) {
     log.info("deleting answer for attempt {} on puzzle {}", attemptId, puzzleId);
@@ -91,7 +99,7 @@ public class PuzzleController {
     return getAttempt(puzzleId, attemptId);
   }
 
-  @PostMapping("/{puzzleId}/attempts/{attemptId}/automatic-answers")
+  @PostMapping("/puzzles/{puzzleId}/attempts/{attemptId}/automatic-answers")
   public ApiAttempt updateAttemptAutomaticAnswers(
       @PathVariable UUID puzzleId, @PathVariable UUID attemptId) {
     log.info("auto solving attempt {} on puzzle {}", attemptId, puzzleId);
@@ -99,14 +107,14 @@ public class PuzzleController {
     return getAttempt(puzzleId, attemptId);
   }
 
-  @GetMapping("/{puzzleId}/attempts/{attemptId}")
+  @GetMapping("/puzzles/{puzzleId}/attempts/{attemptId}")
   public ApiAttempt getAttempt(@PathVariable UUID puzzleId, @PathVariable UUID attemptId) {
     log.info("getting attempt {} for puzzle {}", attemptId, puzzleId);
     var attempt = facade.findAttemptById(attemptId);
     return apiConverter.toApiAttempt(attempt);
   }
 
-  @GetMapping("/{puzzleId}/attempts/{attemptId}/grid-images")
+  @GetMapping("/puzzles/{puzzleId}/attempts/{attemptId}/grid-images")
   public ResponseEntity<byte[]> getAttemptGridImage(
       @PathVariable UUID puzzleId, @PathVariable UUID attemptId) {
     log.info("getting grid image of attempt {} for puzzle {}", attemptId, puzzleId);
