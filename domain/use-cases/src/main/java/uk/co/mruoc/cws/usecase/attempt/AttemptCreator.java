@@ -23,6 +23,11 @@ public class AttemptCreator {
   }
 
   private Attempt toAttempt(Puzzle puzzle) {
-    return Attempt.builder().id(idSupplier.get()).puzzle(puzzle).answers(new Answers()).build();
+    return Attempt.builder()
+        .id(idSupplier.get())
+        .puzzle(puzzle)
+        .solving(false)
+        .answers(new Answers())
+        .build();
   }
 }

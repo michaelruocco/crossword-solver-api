@@ -7,13 +7,22 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.With;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Builder
-public record Attempt(UUID id, @With Puzzle puzzle, @With Answers answers) {
+public record Attempt(
+    UUID id,
+    @With Puzzle puzzle,
+    @With Answers answers,
+    @With(AccessLevel.PRIVATE) boolean solving) {
+
+  public Attempt(UUID id, Puzzle puzzle, Answers answers) {
+    this(id, puzzle, answers, false);
+  }
 
   public UUID puzzleId() {
     return puzzle.getId();
@@ -61,7 +70,7 @@ public record Attempt(UUID id, @With Puzzle puzzle, @With Answers answers) {
     return answers.findById(id);
   }
 
-  public boolean isComplete() {
+  public boolean allCluesAnswered() {
     return puzzle.getClues().stream().map(Clue::id).allMatch(answers::isConfirmed);
   }
 
@@ -153,6 +162,14 @@ public record Attempt(UUID id, @With Puzzle puzzle, @With Answers answers) {
   public Grid getGrid() {
     var grid = puzzle.getGrid();
     return grid.withCells(populateCells());
+  }
+
+  public Attempt startSolve() {
+    return withSolving(true);
+  }
+
+  public Attempt endSolve() {
+    return withSolving(false);
   }
 
   private Cells populateCells() {

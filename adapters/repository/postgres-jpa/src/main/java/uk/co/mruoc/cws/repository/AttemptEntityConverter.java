@@ -21,6 +21,7 @@ public class AttemptEntityConverter {
   public Attempt toAttempt(AttemptEntity entity) {
     return Attempt.builder()
         .id(entity.getId())
+        .solving(entity.isSolving())
         .puzzle(puzzleConverter.toPuzzle(entity.getPuzzle()))
         .answers(toAnswers(entity.getAnswers()))
         .build();
@@ -29,6 +30,7 @@ public class AttemptEntityConverter {
   public AttemptEntity toEntity(Attempt attempt) {
     var entity = new AttemptEntity();
     entity.setId(attempt.id());
+    entity.setSolving(attempt.solving());
     entity.setPuzzle(puzzleConverter.toEntity(attempt.puzzle()));
     entity.setAnswers(toAnswerEntities(attempt));
     return entity;

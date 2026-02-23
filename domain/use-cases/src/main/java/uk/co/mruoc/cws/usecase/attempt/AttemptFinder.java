@@ -9,6 +9,12 @@ public class AttemptFinder {
 
   private final AttemptRepository repository;
 
+  public void validateExistsById(UUID id) {
+    if (!repository.existsById(id)) {
+      throw new AttemptNotFoundByIdException(id);
+    }
+  }
+
   public Attempt findById(UUID id) {
     return forceFindById(id);
   }

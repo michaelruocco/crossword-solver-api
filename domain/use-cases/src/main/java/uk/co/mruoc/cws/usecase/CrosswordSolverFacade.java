@@ -69,4 +69,8 @@ public class CrosswordSolverFacade {
   public void deleteAttemptAnswer(UUID attemptId, Id id) {
     answerDeleter.deleteAnswer(attemptId, id);
   }
+
+  public void deleteAllPuzzleAttempts(UUID puzzleId) {
+    attemptService.deleteAllAttempts(puzzleId);
+  }
 }

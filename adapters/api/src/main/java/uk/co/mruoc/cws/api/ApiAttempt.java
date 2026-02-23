@@ -8,5 +8,6 @@ import lombok.Data;
 @Data
 public class ApiAttempt {
   private final UUID id;
+  private final boolean solving;
   private final ApiPuzzle puzzle;
 }

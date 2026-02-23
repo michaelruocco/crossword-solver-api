@@ -26,6 +26,7 @@ import uk.co.mruoc.cws.usecase.GridExtractor;
 import uk.co.mruoc.cws.usecase.UUIDSupplier;
 import uk.co.mruoc.cws.usecase.attempt.AsyncAttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.AttemptCreator;
+import uk.co.mruoc.cws.usecase.attempt.AttemptDeleter;
 import uk.co.mruoc.cws.usecase.attempt.AttemptFinder;
 import uk.co.mruoc.cws.usecase.attempt.AttemptRepository;
 import uk.co.mruoc.cws.usecase.attempt.AttemptService;
@@ -99,11 +100,13 @@ public class AppConfig {
       AttemptCreator creator,
       AttemptFinder finder,
       AttemptUpdater updater,
+      AttemptDeleter deleter,
       AsyncAttemptSolver solver) {
     return AttemptService.builder()
         .creator(creator)
         .finder(finder)
         .updater(updater)
+        .deleter(deleter)
         .asyncSolver(solver)
         .build();
   }
@@ -120,6 +123,11 @@ public class AppConfig {
   @Bean
   public AttemptUpdater attemptUpdater(AttemptFinder finder, AttemptRepository repository) {
     return AttemptUpdater.builder().finder(finder).repository(repository).build();
+  }
+
+  @Bean
+  public AttemptDeleter attemptDeleter(AttemptRepository repository) {
+    return new AttemptDeleter(repository);
   }
 
   @Bean
@@ -164,18 +172,22 @@ public class AppConfig {
 
   @Bean
   public AttemptSolverRunnableFactory attemptSolverRunnableFactory(
-      AttemptFinder finder, AttemptSolver solver, AttemptRepository repository) {
+      AttemptFinder finder, AttemptSolver solver, AttemptUpdater updater) {
     return AttemptSolverRunnableFactory.builder()
         .finder(finder)
         .solver(solver)
-        .repository(repository)
+        .updater(updater)
         .build();
   }
 
   @Bean
   public AsyncAttemptSolver asyncAttemptSolver(
-      AttemptSolverRunnableFactory runnableFactory, Executor executor) {
-    return AsyncAttemptSolver.builder().runnableFactory(runnableFactory).executor(executor).build();
+      AttemptUpdater updater, AttemptSolverRunnableFactory runnableFactory, Executor executor) {
+    return AsyncAttemptSolver.builder()
+        .updater(updater)
+        .runnableFactory(runnableFactory)
+        .executor(executor)
+        .build();
   }
 
   @Bean

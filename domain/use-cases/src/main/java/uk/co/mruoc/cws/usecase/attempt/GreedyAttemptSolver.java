@@ -37,7 +37,7 @@ public class GreedyAttemptSolver implements AttemptSolver {
   public Attempt solve(Attempt attempt) {
     int pass = 1;
     var maxPasses = attempt.getNumberOfClues() + maxPassesBuffer;
-    while (!attempt.isComplete() && pass <= maxPasses) {
+    while (!attempt.allCluesAnswered() && pass <= maxPasses) {
       attempt = performPass(attempt, pass);
       pass++;
     }

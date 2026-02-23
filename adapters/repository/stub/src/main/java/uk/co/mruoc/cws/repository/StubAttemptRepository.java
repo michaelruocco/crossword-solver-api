@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Attempt;
@@ -20,6 +21,11 @@ public class StubAttemptRepository implements AttemptRepository {
   }
 
   @Override
+  public boolean existsById(UUID id) {
+    return values.containsKey(id);
+  }
+
+  @Override
   public Optional<Attempt> findById(UUID id) {
     return Optional.ofNullable(values.get(id));
   }
@@ -32,5 +38,15 @@ public class StubAttemptRepository implements AttemptRepository {
   @Override
   public long getAttemptCount(UUID puzzleId) {
     return values.values().stream().filter(attempt -> attempt.puzzleId().equals(puzzleId)).count();
+  }
+
+  @Override
+  public void deleteAllByPuzzleId(UUID puzzleId) {
+    var attemptIds =
+        values.values().stream()
+            .filter(attempt -> attempt.puzzleId().equals(puzzleId))
+            .map(Attempt::id)
+            .collect(Collectors.toSet());
+    values.keySet().removeAll(attemptIds);
   }
 }

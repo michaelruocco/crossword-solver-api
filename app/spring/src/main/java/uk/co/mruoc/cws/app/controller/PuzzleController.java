@@ -81,6 +81,12 @@ public class PuzzleController {
     return getAttempt(puzzleId, attemptId);
   }
 
+  @DeleteMapping("/puzzles/{puzzleId}/attempts")
+  public ResponseEntity<Void> deleteAllPuzzleAttempts(@PathVariable UUID puzzleId) {
+    facade.deleteAllPuzzleAttempts(puzzleId);
+    return ResponseEntity.noContent().build();
+  }
+
   @PostMapping("/puzzles/{puzzleId}/attempts/{attemptId}/answers")
   public ApiAttempt updateAttemptAnswer(
       @PathVariable UUID puzzleId, @PathVariable UUID attemptId, @RequestBody ApiAnswer apiAnswer) {

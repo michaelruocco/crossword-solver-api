@@ -19,6 +19,8 @@ import lombok.Setter;
 public class AttemptEntity {
   @Id private UUID id;
 
+  private boolean solving;
+
   @ManyToOne
   @JoinColumn(name = "puzzleId")
   private PuzzleEntity puzzle;

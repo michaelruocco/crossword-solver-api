@@ -6,9 +6,13 @@ import uk.co.mruoc.cws.entity.Attempt;
 
 public interface AttemptRepository {
 
+  boolean existsById(UUID id);
+
   Optional<Attempt> findById(UUID id);
 
   void save(Attempt attempt);
 
   long getAttemptCount(UUID puzzleId);
+
+  void deleteAllByPuzzleId(UUID puzzleId);
 }

@@ -9,15 +9,19 @@ import lombok.extern.slf4j.Slf4j;
 public class AttemptSolverRunnable implements Runnable {
 
   private final AttemptFinder finder;
+  private final AttemptUpdater updater;
   private final AttemptSolver solver;
-  private final AttemptRepository repository;
   private final UUID attemptId;
 
   @Override
   public void run() {
-    var attempt = finder.findById(attemptId);
-    var solvedAttempt = solver.solve(attempt);
-    log.info("solved attempt {}", solvedAttempt.asString());
-    repository.save(solvedAttempt);
+    try {
+      updater.recordSolveStart(attemptId);
+      var attempt = finder.findById(attemptId);
+      var solvedAttempt = solver.solve(attempt);
+      log.info("solve attempt ended with {}", solvedAttempt.asString());
+    } finally {
+      updater.recordSolveEnd(attemptId);
+    }
   }
 }
