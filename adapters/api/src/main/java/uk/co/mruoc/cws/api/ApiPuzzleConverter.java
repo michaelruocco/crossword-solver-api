@@ -18,6 +18,16 @@ public class ApiPuzzleConverter {
     return summaries.stream().map(this::toApiSummary).toList();
   }
 
+  public ApiPuzzleSummary toApiSummary(PuzzleSummary summary) {
+    return ApiPuzzleSummary.builder()
+        .id(summary.getId())
+        .name(summary.getName())
+        .createdAt(summary.getCreatedAt())
+        .attemptCount(summary.getAttemptCount())
+        .clueCount(summary.getClueCount())
+        .build();
+  }
+
   public ApiPuzzle toApiPuzzle(Attempt attempt) {
     var puzzle = attempt.puzzle();
     var answers = attempt.getConfirmedAnswers();
@@ -58,15 +68,6 @@ public class ApiPuzzleConverter {
   private ApiClue addAnswer(ApiClue clue, Answers answers) {
     var id = new Id(clue.getId());
     return answers.findById(id).map(answer -> clue.withAnswer(answer.value())).orElse(clue);
-  }
-
-  private ApiPuzzleSummary toApiSummary(PuzzleSummary summary) {
-    return ApiPuzzleSummary.builder()
-        .id(summary.getId())
-        .name(summary.getName())
-        .createdAt(summary.getCreatedAt())
-        .attemptCount(summary.getAttemptCount())
-        .build();
   }
 
   private ApiClues toApiClues(Clues clues) {

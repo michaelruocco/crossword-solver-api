@@ -1,16 +1,19 @@
 package uk.co.mruoc.cws.usecase.attempt;
 
+import java.util.Collection;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 import uk.co.mruoc.cws.entity.Attempt;
+import uk.co.mruoc.cws.entity.AttemptSummary;
 
-@RequiredArgsConstructor
+@Builder
 public class AttemptFinder {
 
-  private final AttemptRepository repository;
+  private final AttemptRepository attemptRepository;
+  private final AttemptSummaryRepository summaryRepository;
 
   public void validateExistsById(UUID id) {
-    if (!repository.existsById(id)) {
+    if (!attemptRepository.existsById(id)) {
       throw new AttemptNotFoundByIdException(id);
     }
   }
@@ -20,6 +23,11 @@ public class AttemptFinder {
   }
 
   private Attempt forceFindById(UUID id) {
-    return repository.findById(id).orElseThrow(() -> new AttemptNotFoundByIdException(id));
+    return attemptRepository.findById(id).orElseThrow(() -> new AttemptNotFoundByIdException(id));
+  }
+
+  public Collection<AttemptSummary> findSummariesByPuzzleId(UUID puzzleId) {
+
+    return summaryRepository.findSummariesByPuzzleId(puzzleId);
   }
 }

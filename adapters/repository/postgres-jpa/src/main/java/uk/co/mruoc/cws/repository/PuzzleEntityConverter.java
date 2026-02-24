@@ -36,6 +36,7 @@ public class PuzzleEntityConverter {
         .name(entity.getName())
         .createdAt(entity.getCreatedAt())
         .attemptCount(entity.getAttemptCount())
+        .clueCount(entity.getClueCount())
         .build();
   }
 

@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.repository;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,5 +49,10 @@ public class StubAttemptRepository implements AttemptRepository {
             .map(Attempt::id)
             .collect(Collectors.toSet());
     values.keySet().removeAll(attemptIds);
+  }
+
+  @Override
+  public Collection<Attempt> findAll() {
+    return values.values();
   }
 }

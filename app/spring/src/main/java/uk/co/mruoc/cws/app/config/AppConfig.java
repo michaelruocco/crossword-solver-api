@@ -32,6 +32,7 @@ import uk.co.mruoc.cws.usecase.attempt.AttemptRepository;
 import uk.co.mruoc.cws.usecase.attempt.AttemptService;
 import uk.co.mruoc.cws.usecase.attempt.AttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.AttemptSolverRunnableFactory;
+import uk.co.mruoc.cws.usecase.attempt.AttemptSummaryRepository;
 import uk.co.mruoc.cws.usecase.attempt.AttemptUpdater;
 import uk.co.mruoc.cws.usecase.attempt.BacktrackingAttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.CompositeAttemptSolver;
@@ -112,11 +113,13 @@ public class AppConfig {
   }
 
   @Bean
-  public AttemptCreator attemptCreator(PuzzleFinder finder, AttemptRepository repository) {
+  public AttemptCreator attemptCreator(
+      PuzzleFinder finder, AttemptRepository repository, Clock clock) {
     return AttemptCreator.builder()
         .puzzleFinder(finder)
         .repository(repository)
         .idSupplier(new UUIDSupplier())
+        .clock(clock)
         .build();
   }
 
@@ -131,8 +134,12 @@ public class AppConfig {
   }
 
   @Bean
-  public AttemptFinder attemptFinder(AttemptRepository repository) {
-    return new AttemptFinder(repository);
+  public AttemptFinder attemptFinder(
+      AttemptRepository attemptRepository, AttemptSummaryRepository summaryRepository) {
+    return AttemptFinder.builder()
+        .attemptRepository(attemptRepository)
+        .summaryRepository(summaryRepository)
+        .build();
   }
 
   @Bean

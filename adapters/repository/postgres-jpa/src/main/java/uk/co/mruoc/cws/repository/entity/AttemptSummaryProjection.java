@@ -3,15 +3,15 @@ package uk.co.mruoc.cws.repository.entity;
 import java.time.Instant;
 import java.util.UUID;
 
-public interface PuzzleSummaryProjection {
+public interface AttemptSummaryProjection {
 
   UUID getId();
 
-  String getName();
-
   Instant getCreatedAt();
 
-  long getAttemptCount();
+  boolean isSolving();
+
+  long getAnswerCount();
 
   long getClueCount();
 }

@@ -6,6 +6,7 @@ import java.util.UUID;
 import lombok.Builder;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Attempt;
+import uk.co.mruoc.cws.entity.AttemptSummary;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.entity.Puzzle;
 import uk.co.mruoc.cws.entity.PuzzleSummary;
@@ -39,6 +40,10 @@ public class CrosswordSolverFacade {
   public BufferedImage findPuzzleGridImage(UUID puzzleId) {
     var puzzle = findPuzzleById(puzzleId);
     return gridImageFactory.toImage(puzzle.getGrid());
+  }
+
+  public Collection<AttemptSummary> findAttemptSummaries(UUID puzzleId) {
+    return attemptService.findSummariesByPuzzleId(puzzleId);
   }
 
   public UUID createPuzzleAttempt(UUID puzzleId) {

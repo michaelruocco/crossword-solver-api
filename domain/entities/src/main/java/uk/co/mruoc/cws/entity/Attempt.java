@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.entity;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -16,12 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 public record Attempt(
     UUID id,
+    Instant createdAt,
     @With Puzzle puzzle,
     @With Answers answers,
     @With(AccessLevel.PRIVATE) boolean solving) {
 
-  public Attempt(UUID id, Puzzle puzzle, Answers answers) {
-    this(id, puzzle, answers, false);
+  public Attempt(UUID id, Instant createdAt, Puzzle puzzle, Answers answers) {
+    this(id, createdAt, puzzle, answers, false);
   }
 
   public UUID puzzleId() {
@@ -56,6 +58,10 @@ public record Attempt(
 
   public Answers getConfirmedValidAnswers() {
     return answers.confirmedAnswers().validAnswers(puzzle.getClues());
+  }
+
+  public long getConfirmedAnswerCount() {
+    return answers.confirmedAnswers().stream().count();
   }
 
   public Answers getConfirmedAnswers() {
@@ -152,7 +158,7 @@ public record Attempt(
   }
 
   public int getNumberOfClues() {
-    return puzzle.numberOfClues();
+    return puzzle.clueCount();
   }
 
   public Attempt removeUnconfirmedAnswers() {

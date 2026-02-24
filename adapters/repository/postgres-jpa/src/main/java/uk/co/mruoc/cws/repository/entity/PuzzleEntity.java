@@ -46,6 +46,9 @@ public class PuzzleEntity {
   @Formula("(select count(a.id) from attempt a where a.puzzle_id = id)")
   private long attemptCount;
 
+  @Formula("(select count(c.clue_id) from clue c where c.puzzle_id = id)")
+  private long clueCount;
+
   private int columnWidth;
   private int rowHeight;
 }

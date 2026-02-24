@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import uk.co.mruoc.cws.api.ApiAnswer;
 import uk.co.mruoc.cws.api.ApiAttempt;
+import uk.co.mruoc.cws.api.ApiAttemptSummary;
 import uk.co.mruoc.cws.api.ApiConverter;
 import uk.co.mruoc.cws.api.ApiCreatePuzzleRequest;
 import uk.co.mruoc.cws.api.ApiPuzzle;
@@ -44,7 +45,7 @@ public class PuzzleController {
   @GetMapping("/puzzle-summaries")
   public Collection<ApiPuzzleSummary> getPuzzleSummaries() {
     var summaries = facade.findPuzzleSummaries();
-    return apiConverter.toApiSummaries(summaries);
+    return apiConverter.toApiPuzzleSummaries(summaries);
   }
 
   @PostMapping("/puzzles")
@@ -73,6 +74,12 @@ public class PuzzleController {
     log.info("getting grid image of puzzle {}", puzzleId);
     var gridImage = facade.findPuzzleGridImage(puzzleId);
     return imageResponseFactory.toResponse(gridImage);
+  }
+
+  @GetMapping("/puzzles/{puzzleId}/attempt-summaries")
+  public Collection<ApiAttemptSummary> getAttemptSummaries(@PathVariable UUID puzzleId) {
+    var summaries = facade.findAttemptSummaries(puzzleId);
+    return apiConverter.toApiAttemptSummaries(summaries);
   }
 
   @PostMapping("/puzzles/{puzzleId}/attempts")

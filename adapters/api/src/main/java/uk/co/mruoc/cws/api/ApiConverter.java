@@ -4,6 +4,7 @@ import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Attempt;
+import uk.co.mruoc.cws.entity.AttemptSummary;
 import uk.co.mruoc.cws.entity.Puzzle;
 import uk.co.mruoc.cws.entity.PuzzleSummary;
 import uk.co.mruoc.cws.entity.Result;
@@ -24,7 +25,7 @@ public class ApiConverter {
         new ApiResultConverter());
   }
 
-  public Collection<ApiPuzzleSummary> toApiSummaries(Collection<PuzzleSummary> summaries) {
+  public Collection<ApiPuzzleSummary> toApiPuzzleSummaries(Collection<PuzzleSummary> summaries) {
     return puzzleConverter.toApiSummaries(summaries);
   }
 
@@ -34,6 +35,10 @@ public class ApiConverter {
 
   public Answer toAnswer(ApiAnswer apiAnswer) {
     return answerConverter.toAnswer(apiAnswer);
+  }
+
+  public Collection<ApiAttemptSummary> toApiAttemptSummaries(Collection<AttemptSummary> summaries) {
+    return attemptConverter.toApiSummaries(summaries);
   }
 
   public ApiAttempt toApiAttempt(Attempt attempt) {

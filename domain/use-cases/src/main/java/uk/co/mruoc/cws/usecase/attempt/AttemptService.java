@@ -1,9 +1,11 @@
 package uk.co.mruoc.cws.usecase.attempt;
 
+import java.util.Collection;
 import java.util.UUID;
 import lombok.Builder;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Attempt;
+import uk.co.mruoc.cws.entity.AttemptSummary;
 
 @Builder
 public class AttemptService {
@@ -16,6 +18,10 @@ public class AttemptService {
 
   public UUID createAttempt(UUID puzzleId) {
     return creator.create(puzzleId);
+  }
+
+  public Collection<AttemptSummary> findSummariesByPuzzleId(UUID puzzleId) {
+    return finder.findSummariesByPuzzleId(puzzleId);
   }
 
   public void asyncSolveAttempt(UUID attemptId) {

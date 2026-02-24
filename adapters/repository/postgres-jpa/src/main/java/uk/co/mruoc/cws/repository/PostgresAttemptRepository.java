@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.repository;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +42,10 @@ public class PostgresAttemptRepository implements AttemptRepository {
   @Override
   public void deleteAllByPuzzleId(UUID puzzleId) {
     jpaRepository.deleteByPuzzle_Id(puzzleId);
+  }
+
+  @Override
+  public Collection<Attempt> findAll() {
+    return jpaRepository.findAll().stream().map(entityConverter::toAttempt).toList();
   }
 }
