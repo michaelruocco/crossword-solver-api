@@ -101,8 +101,12 @@ public record Attempt(
   }
 
   public Answer forceGetConfirmedAnswer(Id id) {
-    return getAnswer(id).filter(Answer::confirmed).orElseThrow();
+    return getConfirmedAnswer(id).orElseThrow();
   }
+
+  public Optional<Answer> getConfirmedAnswer(Id id) {
+        return getAnswer(id).filter(Answer::confirmed);
+    }
 
   public Attempt removeInconsistentAnswers() {
     var updatedAttempt = this;

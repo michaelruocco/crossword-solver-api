@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.NonNull;
@@ -84,7 +85,7 @@ public class Candidates implements Iterable<Answer> {
   }
 
   public Candidates validAnswers(Clue clue) {
-    return new Candidates(clue, values.stream().filter(new ValidAnswerPredicate(clue)).toList());
+    return filter(new ValidAnswerPredicate(clue));
   }
 
   public boolean isEmpty() {
@@ -100,4 +101,8 @@ public class Candidates implements Iterable<Answer> {
   public String valuesAsString() {
     return values.stream().map(Answer::value).collect(Collectors.joining(", "));
   }
+
+    public Candidates filter(Predicate<Answer> predicate) {
+       return new Candidates(clue, values.stream().filter(predicate).toList());
+    }
 }

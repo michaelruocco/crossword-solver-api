@@ -34,6 +34,10 @@ public class CandidateLoader {
         .collect(Collectors.toMap(Candidates::id, Function.identity()));
   }
 
+  public Candidates loadCandidates(Clue clue) {
+      return loadCandidates(clue, 5);
+  }
+
   private CompletableFuture<Candidates> asyncLoadCandidates(Clue clue, int candidatesPerClue) {
     return CompletableFuture.supplyAsync(() -> loadCandidates(clue, candidatesPerClue), executor)
         .orTimeout(30, TimeUnit.SECONDS)
