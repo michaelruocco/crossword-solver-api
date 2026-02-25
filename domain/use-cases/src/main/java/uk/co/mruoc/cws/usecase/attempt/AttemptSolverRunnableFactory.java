@@ -1,8 +1,8 @@
 package uk.co.mruoc.cws.usecase.attempt;
 
+import java.util.UUID;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
-import uk.co.mruoc.cws.entity.Attempt;
 
 @Builder
 @Slf4j
@@ -10,14 +10,14 @@ public class AttemptSolverRunnableFactory {
 
   private final AttemptFinder finder;
   private final AttemptSolver solver;
-  private final AttemptRepository repository;
+  private final AttemptUpdater updater;
 
-  public Runnable build(Attempt attempt) {
+  public Runnable build(UUID attemptId) {
     return AttemptSolverRunnable.builder()
         .finder(finder)
         .solver(solver)
-        .repository(repository)
-        .attemptId(attempt.id())
+        .updater(updater)
+        .attemptId(attemptId)
         .build();
   }
 }

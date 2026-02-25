@@ -29,7 +29,7 @@ public class BacktrackingAttemptSolver implements AttemptSolver {
 
   @Override
   public Attempt solve(Attempt inputAttempt) {
-    if (inputAttempt.isComplete()) {
+    if (inputAttempt.allCluesAnswered()) {
       return inputAttempt;
     }
 

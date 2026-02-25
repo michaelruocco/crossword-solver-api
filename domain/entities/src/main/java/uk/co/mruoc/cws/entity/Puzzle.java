@@ -36,7 +36,7 @@ public class Puzzle {
     return words.getIntersections(id);
   }
 
-  public int numberOfClues() {
+  public int clueCount() {
     return clues.size();
   }
 

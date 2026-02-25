@@ -7,10 +7,10 @@ import lombok.Data;
 
 @Builder
 @Data
-public class ApiPuzzleSummary {
+public class ApiAttemptSummary {
   private final UUID id;
-  private final String name;
   private final Instant createdAt;
-  private final long attemptCount;
+  private final boolean solving;
+  private final long answerCount;
   private final long clueCount;
 }

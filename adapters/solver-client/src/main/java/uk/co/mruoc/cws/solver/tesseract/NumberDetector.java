@@ -30,7 +30,7 @@ public class NumberDetector {
       var image = converter.toBufferedImage(cell);
       var raw = tesseract.doOCR(image);
       var text = raw.trim();
-      log.info("text {}", text);
+      log.debug("text {}", text);
       if (text.isEmpty()) {
         return Optional.empty();
       }

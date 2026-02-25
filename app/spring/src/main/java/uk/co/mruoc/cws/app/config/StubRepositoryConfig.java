@@ -8,11 +8,14 @@ import org.springframework.boot.jdbc.autoconfigure.DataSourceTransactionManagerA
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.co.mruoc.cws.repository.StubAttemptRepository;
+import uk.co.mruoc.cws.repository.StubAttemptSummaryRepository;
 import uk.co.mruoc.cws.repository.StubCandidateRepository;
 import uk.co.mruoc.cws.repository.StubPuzzleRepository;
 import uk.co.mruoc.cws.repository.StubPuzzleSummaryRepository;
+import uk.co.mruoc.cws.repository.StubRepositoryPuzzleConverter;
 import uk.co.mruoc.cws.usecase.CandidateRepository;
 import uk.co.mruoc.cws.usecase.attempt.AttemptRepository;
+import uk.co.mruoc.cws.usecase.attempt.AttemptSummaryRepository;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleRepository;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleSummaryRepository;
 
@@ -45,12 +48,26 @@ public class StubRepositoryConfig {
   }
 
   @Bean
+  public StubRepositoryPuzzleConverter stubRepositoryPuzzleConverter(AttemptRepository repository) {
+    return new StubRepositoryPuzzleConverter(repository);
+  }
+
+  @Bean
   public PuzzleSummaryRepository stubPuzzleSummaryRepository(
-      PuzzleRepository puzzleRepository, AttemptRepository attemptRepository) {
+      PuzzleRepository puzzleRepository, StubRepositoryPuzzleConverter puzzleConverter) {
     log.warn("creating stub puzzle summary repository");
     return StubPuzzleSummaryRepository.builder()
         .puzzleRepository(puzzleRepository)
-        .attemptRepository(attemptRepository)
+        .puzzleConverter(puzzleConverter)
+        .build();
+  }
+
+  @Bean
+  public AttemptSummaryRepository stubAttemptSummaryRepository(
+      AttemptRepository repository, StubRepositoryPuzzleConverter puzzleConverter) {
+    return StubAttemptSummaryRepository.builder()
+        .attemptRepository(repository)
+        .puzzleConverter(puzzleConverter)
         .build();
   }
 }

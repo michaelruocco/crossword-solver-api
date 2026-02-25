@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.usecase.attempt;
 
+import java.time.Clock;
 import java.util.UUID;
 import java.util.function.Supplier;
 import lombok.Builder;
@@ -14,6 +15,7 @@ public class AttemptCreator {
   private final PuzzleFinder puzzleFinder;
   private final AttemptRepository repository;
   private final Supplier<UUID> idSupplier;
+  private final Clock clock;
 
   public UUID create(UUID puzzleId) {
     var puzzle = puzzleFinder.findById(puzzleId);
@@ -23,6 +25,12 @@ public class AttemptCreator {
   }
 
   private Attempt toAttempt(Puzzle puzzle) {
-    return Attempt.builder().id(idSupplier.get()).puzzle(puzzle).answers(new Answers()).build();
+    return Attempt.builder()
+        .id(idSupplier.get())
+        .createdAt(clock.instant())
+        .puzzle(puzzle)
+        .solving(false)
+        .answers(new Answers())
+        .build();
   }
 }

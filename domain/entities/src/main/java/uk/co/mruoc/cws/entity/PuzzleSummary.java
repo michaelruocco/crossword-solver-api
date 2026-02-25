@@ -12,4 +12,5 @@ public class PuzzleSummary {
   private final String name;
   private final Instant createdAt;
   private final long attemptCount;
+  private final long clueCount;
 }

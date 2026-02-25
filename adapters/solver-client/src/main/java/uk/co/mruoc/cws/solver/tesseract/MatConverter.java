@@ -196,7 +196,7 @@ public class MatConverter {
                         || hasAreaLessThanOrEqualTo(contour, minArea))
             .toList();
     fillBlack(cleaned, contoursToFill);
-    log.info("filled {} of {} contours", contoursToFill.size(), contours.size());
+    log.debug("filled {} of {} contours", contoursToFill.size(), contours.size());
     MatLogger.debug(cleaned, "noise-removed");
     return cleaned;
   }

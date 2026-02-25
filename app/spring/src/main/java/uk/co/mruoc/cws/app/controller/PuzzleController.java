@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import uk.co.mruoc.cws.api.ApiAnswer;
 import uk.co.mruoc.cws.api.ApiAttempt;
+import uk.co.mruoc.cws.api.ApiAttemptSummary;
 import uk.co.mruoc.cws.api.ApiConverter;
 import uk.co.mruoc.cws.api.ApiCreatePuzzleRequest;
 import uk.co.mruoc.cws.api.ApiPuzzle;
@@ -44,7 +45,7 @@ public class PuzzleController {
   @GetMapping("/puzzle-summaries")
   public Collection<ApiPuzzleSummary> getPuzzleSummaries() {
     var summaries = facade.findPuzzleSummaries();
-    return apiConverter.toApiSummaries(summaries);
+    return apiConverter.toApiPuzzleSummaries(summaries);
   }
 
   @PostMapping("/puzzles")
@@ -75,10 +76,22 @@ public class PuzzleController {
     return imageResponseFactory.toResponse(gridImage);
   }
 
+  @GetMapping("/puzzles/{puzzleId}/attempt-summaries")
+  public Collection<ApiAttemptSummary> getAttemptSummaries(@PathVariable UUID puzzleId) {
+    var summaries = facade.findAttemptSummaries(puzzleId);
+    return apiConverter.toApiAttemptSummaries(summaries);
+  }
+
   @PostMapping("/puzzles/{puzzleId}/attempts")
   public ApiAttempt createAttempt(@PathVariable UUID puzzleId) {
     var attemptId = facade.createPuzzleAttempt(puzzleId);
     return getAttempt(puzzleId, attemptId);
+  }
+
+  @DeleteMapping("/puzzles/{puzzleId}/attempts")
+  public ResponseEntity<Void> deleteAllPuzzleAttempts(@PathVariable UUID puzzleId) {
+    facade.deleteAllPuzzleAttempts(puzzleId);
+    return ResponseEntity.noContent().build();
   }
 
   @PostMapping("/puzzles/{puzzleId}/attempts/{attemptId}/answers")

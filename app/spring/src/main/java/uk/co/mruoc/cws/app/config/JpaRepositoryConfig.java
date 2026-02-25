@@ -6,12 +6,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import uk.co.mruoc.cws.repository.PostgresAttemptRepository;
+import uk.co.mruoc.cws.repository.PostgresAttemptSummaryRepository;
 import uk.co.mruoc.cws.repository.PostgresCandidateRepository;
 import uk.co.mruoc.cws.repository.PostgresJpaAttemptRepository;
 import uk.co.mruoc.cws.repository.PostgresJpaCandidateRepository;
 import uk.co.mruoc.cws.repository.PostgresJpaPuzzleRepository;
 import uk.co.mruoc.cws.repository.PostgresPuzzleRepository;
 import uk.co.mruoc.cws.repository.PostgresPuzzleSummaryRepository;
+import uk.co.mruoc.cws.usecase.attempt.AttemptSummaryRepository;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleSummaryRepository;
 
 @Configuration
@@ -42,5 +44,11 @@ public class JpaRepositoryConfig {
   public PuzzleSummaryRepository postgresPuzzleSummaryRepository(
       PostgresJpaPuzzleRepository jpaRepository) {
     return new PostgresPuzzleSummaryRepository(jpaRepository);
+  }
+
+  @Bean
+  public AttemptSummaryRepository postgresAttemptSummaryRepository(
+      PostgresJpaAttemptRepository jpaRepository) {
+    return new PostgresAttemptSummaryRepository(jpaRepository);
   }
 }

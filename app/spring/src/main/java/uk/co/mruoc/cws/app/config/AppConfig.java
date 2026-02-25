@@ -26,11 +26,13 @@ import uk.co.mruoc.cws.usecase.GridExtractor;
 import uk.co.mruoc.cws.usecase.UUIDSupplier;
 import uk.co.mruoc.cws.usecase.attempt.AsyncAttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.AttemptCreator;
+import uk.co.mruoc.cws.usecase.attempt.AttemptDeleter;
 import uk.co.mruoc.cws.usecase.attempt.AttemptFinder;
 import uk.co.mruoc.cws.usecase.attempt.AttemptRepository;
 import uk.co.mruoc.cws.usecase.attempt.AttemptService;
 import uk.co.mruoc.cws.usecase.attempt.AttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.AttemptSolverRunnableFactory;
+import uk.co.mruoc.cws.usecase.attempt.AttemptSummaryRepository;
 import uk.co.mruoc.cws.usecase.attempt.AttemptUpdater;
 import uk.co.mruoc.cws.usecase.attempt.BacktrackingAttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.CompositeAttemptSolver;
@@ -99,21 +101,25 @@ public class AppConfig {
       AttemptCreator creator,
       AttemptFinder finder,
       AttemptUpdater updater,
+      AttemptDeleter deleter,
       AsyncAttemptSolver solver) {
     return AttemptService.builder()
         .creator(creator)
         .finder(finder)
         .updater(updater)
+        .deleter(deleter)
         .asyncSolver(solver)
         .build();
   }
 
   @Bean
-  public AttemptCreator attemptCreator(PuzzleFinder finder, AttemptRepository repository) {
+  public AttemptCreator attemptCreator(
+      PuzzleFinder finder, AttemptRepository repository, Clock clock) {
     return AttemptCreator.builder()
         .puzzleFinder(finder)
         .repository(repository)
         .idSupplier(new UUIDSupplier())
+        .clock(clock)
         .build();
   }
 
@@ -123,8 +129,17 @@ public class AppConfig {
   }
 
   @Bean
-  public AttemptFinder attemptFinder(AttemptRepository repository) {
-    return new AttemptFinder(repository);
+  public AttemptDeleter attemptDeleter(AttemptRepository repository) {
+    return new AttemptDeleter(repository);
+  }
+
+  @Bean
+  public AttemptFinder attemptFinder(
+      AttemptRepository attemptRepository, AttemptSummaryRepository summaryRepository) {
+    return AttemptFinder.builder()
+        .attemptRepository(attemptRepository)
+        .summaryRepository(summaryRepository)
+        .build();
   }
 
   @Bean
@@ -164,18 +179,22 @@ public class AppConfig {
 
   @Bean
   public AttemptSolverRunnableFactory attemptSolverRunnableFactory(
-      AttemptFinder finder, AttemptSolver solver, AttemptRepository repository) {
+      AttemptFinder finder, AttemptSolver solver, AttemptUpdater updater) {
     return AttemptSolverRunnableFactory.builder()
         .finder(finder)
         .solver(solver)
-        .repository(repository)
+        .updater(updater)
         .build();
   }
 
   @Bean
   public AsyncAttemptSolver asyncAttemptSolver(
-      AttemptSolverRunnableFactory runnableFactory, Executor executor) {
-    return AsyncAttemptSolver.builder().runnableFactory(runnableFactory).executor(executor).build();
+      AttemptUpdater updater, AttemptSolverRunnableFactory runnableFactory, Executor executor) {
+    return AsyncAttemptSolver.builder()
+        .updater(updater)
+        .runnableFactory(runnableFactory)
+        .executor(executor)
+        .build();
   }
 
   @Bean

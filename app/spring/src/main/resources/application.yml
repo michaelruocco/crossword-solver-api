@@ -15,7 +15,7 @@ spring:
     show-sql: false
     properties:
       hibernate:
-        format_sql: false
+        format_sql: true
 
 bedrock:
   client:

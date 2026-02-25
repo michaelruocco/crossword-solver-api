@@ -1,16 +1,17 @@
-package uk.co.mruoc.cws.api;
+package uk.co.mruoc.cws.entity;
 
 import java.time.Instant;
 import java.util.UUID;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
+@Getter
 @Builder
-@Data
-public class ApiPuzzleSummary {
+public class AttemptSummary {
+
   private final UUID id;
-  private final String name;
   private final Instant createdAt;
-  private final long attemptCount;
   private final long clueCount;
+  private final long answerCount;
+  private final boolean solving;
 }

@@ -16,23 +16,27 @@ public class CompositeAttemptSolver implements AttemptSolver {
   @Override
   public Attempt solve(Attempt attempt) {
     var passAttempt = attempt;
-    int pass = 0;
-    while (!passAttempt.isComplete() && pass < maxPasses) {
-      passAttempt = performPass(passAttempt, pass);
-      pass += 1;
+    try {
+      int pass = 0;
+      while (!passAttempt.allCluesAnswered() && pass < maxPasses) {
+        passAttempt = performPass(passAttempt, pass);
+        pass += 1;
+      }
+      return passAttempt;
+    } finally {
+      repository.save(passAttempt.endSolve());
     }
-    return passAttempt;
   }
 
   public Attempt performPass(Attempt attempt, int pass) {
     var passAttempt = backtrackingSolver.solve(attempt);
-    if (passAttempt.isComplete()) {
+    if (passAttempt.allCluesAnswered()) {
       return passAttempt;
     }
     repository.save(passAttempt);
     log.info("pass {} backtracking attempt incomplete {}", pass, passAttempt.asString());
     passAttempt = greedySolver.solve(passAttempt);
-    if (passAttempt.isComplete()) {
+    if (passAttempt.allCluesAnswered()) {
       return passAttempt;
     }
     log.info("pass {} greedy attempt incomplete {}", pass, passAttempt.asString());
