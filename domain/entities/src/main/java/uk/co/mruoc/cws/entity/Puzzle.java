@@ -55,4 +55,8 @@ public class Puzzle {
   public String getNameAndFormat() {
     return String.format("%s%s", name, format);
   }
+
+  public long getClueCount() {
+    return clues.size();
+  }
 }

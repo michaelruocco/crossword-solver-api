@@ -1,6 +1,7 @@
 package uk.co.mruoc.cws.entity;
 
 import java.util.Collection;
+import java.util.Optional;
 import lombok.Builder;
 import lombok.With;
 import org.apache.commons.lang3.StringUtils;
@@ -45,6 +46,10 @@ public record Clue(
 
   public boolean isConstrainedByAtLeastNChars(int n) {
     return patternCharCount() >= n;
+  }
+
+  public String pattern() {
+    return Optional.ofNullable(pattern).orElseGet(() -> UNKNOWN.repeat(totalLength()));
   }
 
   public int patternCharCount() {

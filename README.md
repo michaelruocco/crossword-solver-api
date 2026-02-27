@@ -88,6 +88,7 @@ the values in the `docker-compose.yml` file directly, but be careful not to try 
 
 ## TODO
 
+* Return patterns against clues when returning an attempt so that UI can show crossing letters
 * Update solvers to save attempt more frequently so that UI polling is updated more often
 * Clean up tesseract / grid extractor by splitting into its own module
 * Fix sonar issues

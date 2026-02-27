@@ -106,8 +106,8 @@
   },
   {
     "id": 32,
-    "direction": "LIGHT",
-    "value": "DEMO",
+    "direction": "ACROSS",
+    "value": "LIGHT",
     "confidenceScore": 78,
     "confirmed": false
   },

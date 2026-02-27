@@ -105,8 +105,8 @@ public record Attempt(
   }
 
   public Optional<Answer> getConfirmedAnswer(Id id) {
-        return getAnswer(id).filter(Answer::confirmed);
-    }
+    return getAnswer(id).filter(Answer::confirmed);
+  }
 
   public Attempt removeInconsistentAnswers() {
     var updatedAttempt = this;
@@ -207,6 +207,21 @@ public record Attempt(
         .filter(Objects::nonNull)
         .map(String::valueOf)
         .collect(Collectors.joining());
+  }
+
+  public int calculateIntersectingCharsPopulatedPercentage(Clue clue) {
+    var intersections = getIntersections(clue.id());
+    var numberOfIntersections = intersections.size();
+    var intersectingCharCount = 0;
+    for (var intersection : intersections) {
+      var index = intersection.toIndex(clue.direction());
+      var intersectionChar = clue.pattern().charAt(index);
+      if (intersectionChar != '?') {
+        intersectingCharCount++;
+      }
+    }
+    double percentage = (double) intersectingCharCount / numberOfIntersections;
+    return (int) (percentage * 100);
   }
 
   private Cells toWordCells(Id id) {

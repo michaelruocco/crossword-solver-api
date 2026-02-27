@@ -22,9 +22,11 @@ public class BacktrackingAttemptSolver implements AttemptSolver {
   private final CandidateLoader candidateLoader;
   private final PatternFactory patternFactory;
   private final Queue<Id> parked;
+  private final AttemptRepository attemptRepository;
 
-  public BacktrackingAttemptSolver(CandidateLoader candidateLoader) {
-    this(candidateLoader, new PatternFactory(), new ArrayDeque<>());
+  public BacktrackingAttemptSolver(
+      CandidateLoader candidateLoader, AttemptRepository attemptRepository) {
+    this(candidateLoader, new PatternFactory(), new ArrayDeque<>(), attemptRepository);
   }
 
   @Override
@@ -82,6 +84,7 @@ public class BacktrackingAttemptSolver implements AttemptSolver {
             confirmed.asString(),
             candidates.get().clue().asString());
       } else {
+        attemptRepository.save(candidateAttempt);
         return solve(candidateAttempt);
       }
     }

@@ -12,4 +12,5 @@ public class ApiAttempt {
   private final Instant createdAt;
   private final boolean solving;
   private final ApiPuzzle puzzle;
+  private final long answerCount;
 }

@@ -113,6 +113,10 @@ public class Clues implements Iterable<Clue> {
     return new Clues(stream().map(clue -> clue.withType(type)).toList());
   }
 
+  public boolean isEmpty() {
+    return values.isEmpty();
+  }
+
   private Map<Id, Clue> copyValues() {
     return new LinkedHashMap<>(values);
   }

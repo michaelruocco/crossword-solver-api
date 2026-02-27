@@ -39,6 +39,7 @@ public class ApiPuzzleConverter {
         .attemptCount(puzzle.getAttemptCount())
         .clues(addAnswers(toApiClues(puzzle.getClues()), answers))
         .grid(toApiGrid(attempt.getGrid()))
+        .clueCount(puzzle.getClueCount())
         .build();
   }
 
@@ -51,6 +52,7 @@ public class ApiPuzzleConverter {
         .attemptCount(puzzle.getAttemptCount())
         .clues(toApiClues(puzzle.getClues()))
         .grid(toApiGrid(puzzle.getGrid()))
+        .clueCount(puzzle.getClueCount())
         .build();
   }
 

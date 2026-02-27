@@ -153,13 +153,15 @@ public class AppConfig {
   }
 
   @Bean
-  public GreedyAttemptSolver greedyAttemptSolver(AnswerFinder answerFinder, ClueRanker clueRanker) {
-    return new GreedyAttemptSolver(answerFinder, clueRanker);
+  public GreedyAttemptSolver greedyAttemptSolver(
+      AnswerFinder answerFinder, ClueRanker clueRanker, AttemptRepository attemptRepository) {
+    return new GreedyAttemptSolver(answerFinder, clueRanker, attemptRepository);
   }
 
   @Bean
-  public BacktrackingAttemptSolver backtrackingAttemptSolver(CandidateLoader candidateLoader) {
-    return new BacktrackingAttemptSolver(candidateLoader);
+  public BacktrackingAttemptSolver backtrackingAttemptSolver(
+      CandidateLoader candidateLoader, AttemptRepository attemptRepository) {
+    return new BacktrackingAttemptSolver(candidateLoader, attemptRepository);
   }
 
   @Primary

@@ -35,7 +35,7 @@ public class CandidateLoader {
   }
 
   public Candidates loadCandidates(Clue clue) {
-      return loadCandidates(clue, 5);
+    return loadCandidates(clue, 5);
   }
 
   private CompletableFuture<Candidates> asyncLoadCandidates(Clue clue, int candidatesPerClue) {
@@ -54,14 +54,15 @@ public class CandidateLoader {
   }
 
   private Optional<Candidates> loadCandidatesFromDatabase(Clue clue) {
-    return repository.get(clue);
+    return repository.get(clue).filter(c -> !c.isEmpty());
   }
 
   private Candidates loadCandidatesFromApi(Clue clue, int candidatesPerClue) {
-    log.info("loading candidates from api for clue {}", clue.asString());
+    log.debug("loading candidates from api for clue {}", clue.asString());
     var candidates = answerFinder.findCandidates(clue, candidatesPerClue).validAnswers(clue);
-    // TODO don't save if no candidates returned at all
-    repository.save(candidates);
+    if (!candidates.isEmpty()) {
+      repository.save(candidates);
+    }
     return candidates;
   }
 

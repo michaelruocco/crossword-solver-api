@@ -27,10 +27,12 @@ public class GreedyAttemptSolver implements AttemptSolver {
   private final PatternFactory patternFactory;
   private final int maxPassesBuffer;
   private final int maxCluesOnPass;
+  private final AttemptRepository attemptRepository;
 
-  public GreedyAttemptSolver(AnswerFinder answerFinder, ClueRanker clueRanker) {
+  public GreedyAttemptSolver(
+      AnswerFinder answerFinder, ClueRanker clueRanker, AttemptRepository attemptRepository) {
     // TODO configure max attempts buffer and max clues on pass externally
-    this(answerFinder, clueRanker, new PatternFactory(), 10, 10);
+    this(answerFinder, clueRanker, new PatternFactory(), 10, 10, attemptRepository);
   }
 
   @Override

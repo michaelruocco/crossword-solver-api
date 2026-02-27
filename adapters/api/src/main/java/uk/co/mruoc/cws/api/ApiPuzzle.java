@@ -15,4 +15,5 @@ public class ApiPuzzle {
   private final long attemptCount;
   private final ApiClues clues;
   private final ApiGrid grid;
+  private final long clueCount;
 }

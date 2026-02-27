@@ -34,6 +34,7 @@ public class ApiAttemptConverter {
         .createdAt(attempt.createdAt())
         .solving(attempt.solving())
         .puzzle(puzzleConverter.toApiPuzzle(attempt))
+        .answerCount(attempt.getConfirmedAnswerCount())
         .build();
   }
 }

@@ -102,7 +102,11 @@ public class Candidates implements Iterable<Answer> {
     return values.stream().map(Answer::value).collect(Collectors.joining(", "));
   }
 
-    public Candidates filter(Predicate<Answer> predicate) {
-       return new Candidates(clue, values.stream().filter(predicate).toList());
-    }
+  public Candidates filterAcceptable(Attempt attempt) {
+    return filter(attempt::accepts);
+  }
+
+  public Candidates filter(Predicate<Answer> predicate) {
+    return new Candidates(clue, values.stream().filter(predicate).toList());
+  }
 }

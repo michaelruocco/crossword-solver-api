@@ -40,7 +40,12 @@ public class BedrockAnswerFinder implements AnswerFinder {
   public Candidates findCandidates(Clue clue, int numberOfCandidates) {
     var promptText = promptTextFactory.toPromptText(clue, numberOfCandidates);
     var responseText = promptTextExecutor.execute(promptText);
-    return new Candidates(clue, responseConverter.toCandidates(responseText)).validAnswers(clue);
+    var candidates =
+        new Candidates(clue, responseConverter.toCandidates(responseText)).validAnswers(clue);
+    if (candidates.isEmpty()) {
+      return new Candidates(clue, findAnswer(clue)).validAnswers(clue);
+    }
+    return candidates;
   }
 
   @Override
