@@ -6,5 +6,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ModelId {
 
-  public static final String DEFAULT = "eu.anthropic.claude-3-7-sonnet-20250219-v1:0";
+  public static final String DEFAULT = "eu.anthropic.claude-sonnet-4-6";
 }

@@ -20,7 +20,7 @@ public class BedrockClueExtractorIT {
 
   @Test
   void shouldExtractCluesFromPuzzleImage() {
-    var imageUrl = "https://hackathon.caci.co.uk/images/puzzle24.jpg";
+    var imageUrl = "https://hackathon.caci.co.uk/images/puzzle14.jpg";
     var image = downloader.downloadImage(imageUrl);
 
     var clues = extractor.extractClues(image);

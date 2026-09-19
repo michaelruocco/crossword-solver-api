@@ -41,7 +41,10 @@ public class FindAnswerResponseConverter {
   }
 
   private Answer convert(String line) {
-    var parts = line.split("\\|");
+    String lastLine = line.lines()
+            .reduce((first, last) -> last)
+            .orElse(line);
+    var parts = lastLine.split("\\|");
     var id = new Id(parts[0]);
     try {
       return Answer.builder()

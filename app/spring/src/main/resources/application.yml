@@ -4,7 +4,7 @@ spring:
       max-file-size: 17MB
       max-request-size: 17MB
   datasource:
-    url: jdbc:postgresql://localhost:5432/crossword-solver-db
+    url: jdbc:postgresql://localhost:5433/crossword-solver-db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -25,7 +25,7 @@ bedrock:
     apiCallAttemptTimeout: 2m
     apiCallTimeout: 4m
   conversation:
-    modelId: eu.anthropic.claude-3-7-sonnet-20250219-v1:0
+    modelId: eu.anthropic.claude-sonnet-4-6
     temperature: 0.2
     maxTokens: 2024
 

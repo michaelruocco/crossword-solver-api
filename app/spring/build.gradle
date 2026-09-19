@@ -43,7 +43,7 @@ dependencies {
 
     integrationTestImplementation testFixtures(project(":api"))
     integrationTestImplementation project(":rest-client")
-    integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:5.1.0"
+    integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:6.2.0"
     integrationTestImplementation "org.awaitility:awaitility:${awaitilityVersion}"
 
     testFixturesImplementation project(":api")

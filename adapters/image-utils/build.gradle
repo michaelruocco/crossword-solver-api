@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     implementation project(":use-cases")
-    implementation "com.drewnoakes:metadata-extractor:2.19.0"
+    implementation "com.drewnoakes:metadata-extractor:2.21.0"
 }
