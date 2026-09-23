@@ -19,6 +19,8 @@ import uk.co.mruoc.cws.usecase.ImageCompressor;
 @Slf4j
 public class BedrockClueExtractor implements ClueExtractor {
 
+  private static final String DEFAULT_MODEL_ID = "eu.anthropic.claude-opus-4-6-v1";
+
   private final BedrockRuntimeClient client;
   private final String modelId;
   private final ClueExtractorRequestBodyFactory requestBodyFactory;
@@ -26,7 +28,7 @@ public class BedrockClueExtractor implements ClueExtractor {
   private final CrosswordJsonMapper mapper;
 
   public BedrockClueExtractor(BedrockRuntimeClient client) {
-    this(client, ModelId.DEFAULT);
+    this(client, DEFAULT_MODEL_ID);
   }
 
   public BedrockClueExtractor(BedrockRuntimeClient client, String modelId) {

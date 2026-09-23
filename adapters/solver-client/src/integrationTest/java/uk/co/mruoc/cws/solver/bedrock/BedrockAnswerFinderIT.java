@@ -49,7 +49,6 @@ public class BedrockAnswerFinderIT {
     assertThat(answer.value()).isEqualTo(correctAnswer);
   }
 
-  @Disabled
   @ParameterizedTest
   @MethodSource("trickyCluesAndCorrectAnswers")
   void shouldFindCandidateAnswersForTrickyClues(Clue clue, String correctAnswer) {

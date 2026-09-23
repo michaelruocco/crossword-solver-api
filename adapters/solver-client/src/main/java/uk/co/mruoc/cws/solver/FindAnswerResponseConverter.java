@@ -41,9 +41,7 @@ public class FindAnswerResponseConverter {
   }
 
   private Answer convert(String line) {
-    String lastLine = line.lines()
-            .reduce((first, last) -> last)
-            .orElse(line);
+    String lastLine = line.lines().reduce((first, last) -> last).orElse(line);
     var parts = lastLine.split("\\|");
     var id = new Id(parts[0]);
     try {

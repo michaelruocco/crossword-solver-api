@@ -17,7 +17,7 @@ import uk.co.mruoc.cws.usecase.ImageCompressor;
 public class DefaultImageCompressor implements ImageCompressor {
 
   private static final long DEFAULT_MAX_SIZE_BYTES = 4L * 1024 * 1024;
-  private static final float DEFAULT_QUALITY = 1f;
+  private static final float DEFAULT_QUALITY = 0.8f;
   private static final int DEFAULT_MIN_SIZE = 100;
   private static final String DEFAULT_TARGET_FORMAT = "jpg";
 
@@ -46,13 +46,18 @@ public class DefaultImageCompressor implements ImageCompressor {
     var quality = initialQuality;
 
     byte[] imageData = compressToBytes(rgbImage, quality);
-    log.info("initial image data size {} vs max size {}", imageData.length, maxSizeBytes);
+    log.info(
+        "initial {}x{} image data size {} vs max size {}",
+        width,
+        height,
+        imageData.length,
+        maxSizeBytes);
 
     while (imageData.length > maxSizeBytes && (width > minWidth || height > minHeight)) {
       width = (int) (width * 0.9);
       height = (int) (height * 0.9);
-      image = resize(image, width, height);
-      imageData = compressToBytes(image, quality);
+      rgbImage = resize(image, width, height);
+      imageData = compressToBytes(rgbImage, quality);
       log.info(
           "compressed to {} bytes using quality {} and size {}x{}",
           imageData.length,

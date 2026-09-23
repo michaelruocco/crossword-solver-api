@@ -31,12 +31,7 @@ public record Clue(
   }
 
   public Clue normalizeHyphens() {
-    var updatedText =
-        StringUtils.replaceEach(
-            text,
-            new String[] {"–", "—", "‐", "‑", "−", "⁃", "‒"},
-            new String[] {"-", "-", "-", "-", "-", "-", "-"});
-    return withText(updatedText);
+    return withText(HyphenNormalizer.normalizeHyphens(text));
   }
 
   public int totalLength() {
