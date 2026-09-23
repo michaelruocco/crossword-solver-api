@@ -1,5 +1,6 @@
 package uk.co.mruoc.cws.app.config;
 
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -44,29 +45,38 @@ public class BedrockSolverClientConfig {
   }
 
   @Bean
-  public PromptTextExecutor promptTextExecutor(BedrockRuntimeClient client) {
-    var conversationProperties = properties.conversation();
-    return new PromptTextExecutor(client, conversationProperties);
-  }
-
-  @Bean
   public ClueExtractor bedrockClueExtractor(BedrockRuntimeClient client) {
-    var conversationProperties = properties.conversation();
-    return new BedrockClueExtractor(client, conversationProperties.modelId());
+    return new BedrockClueExtractor(client, properties.clueExtractorId());
   }
 
   @Bean
-  public AnswerFinder bedrockAnswerFinder(PromptTextExecutor promptTextExecutor) {
+  public AnswerFinder bedrockAnswerFinder(BedrockRuntimeClient client) {
+    var promptTextExecutor =
+        buildTextExecutor(client, BedrockSolverClientConfigProperties::answerFinderId);
     return new BedrockAnswerFinder(promptTextExecutor);
   }
 
   @Bean
-  public ClueRanker bedrockClueRanker(PromptTextExecutor promptTextExecutor) {
+  public ClueRanker bedrockClueRanker(BedrockRuntimeClient client) {
+    var promptTextExecutor =
+        buildTextExecutor(client, BedrockSolverClientConfigProperties::clueRankerId);
     return new BedrockClueRanker(promptTextExecutor);
   }
 
   @Bean
-  public ClueTypePolicy bedrockClueTypePolicy(PromptTextExecutor promptTextExecutor) {
+  public ClueTypePolicy bedrockClueTypePolicy(BedrockRuntimeClient client) {
+    var promptTextExecutor =
+        buildTextExecutor(client, BedrockSolverClientConfigProperties::clueTypePolicyId);
     return new BedrockClueTypePolicy(promptTextExecutor);
+  }
+
+  private PromptTextExecutor buildTextExecutor(
+      BedrockRuntimeClient client,
+      Function<BedrockSolverClientConfigProperties, String> modelIdProvider) {
+    return PromptTextExecutor.builder()
+        .client(client)
+        .conversationConfig(properties.conversation())
+        .modelId(modelIdProvider.apply(properties))
+        .build();
   }
 }

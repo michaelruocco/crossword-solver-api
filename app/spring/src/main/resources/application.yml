@@ -25,9 +25,13 @@ bedrock:
     apiCallAttemptTimeout: 2m
     apiCallTimeout: 4m
   conversation:
-    modelId: eu.anthropic.claude-sonnet-4-6
     temperature: 0.2
     maxTokens: 2024
+  model:
+    answerFinder: eu.anthropic.claude-opus-4-6-v1
+    clueExtractor: eu.anthropic.claude-opus-4-6-v1
+    clueRanker: eu.anthropic.claude-opus-4-6-v1
+    clueTypePolicy: eu.anthropic.claude-sonnet-4-6
 
 hackathon.base-url: https://hackathon.caci.co.uk/api
 

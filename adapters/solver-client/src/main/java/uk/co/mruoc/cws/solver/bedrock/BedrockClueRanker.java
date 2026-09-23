@@ -17,12 +17,15 @@ public class BedrockClueRanker implements ClueRanker {
   private final ClueListConverter clueListConverter;
 
   public BedrockClueRanker(BedrockRuntimeClient client) {
-    this(client, new DefaultBedrockConversationConfig());
+    this(
+        client,
+        new DefaultBedrockConversationConfig(),
+        new DefaultBedrockModelConfig().clueRankerId());
   }
 
   public BedrockClueRanker(
-      BedrockRuntimeClient client, BedrockConversationConfig conversationConfig) {
-    this(new PromptTextExecutor(client, conversationConfig));
+      BedrockRuntimeClient client, BedrockConversationConfig conversationConfig, String modelId) {
+    this(new PromptTextExecutor(client, conversationConfig, modelId));
   }
 
   public BedrockClueRanker(PromptTextExecutor promptTextExecutor) {

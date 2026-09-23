@@ -16,12 +16,15 @@ public class BedrockClueTypePolicy implements ClueTypePolicy {
   private final DeterminePuzzleTypePromptTextFactory promptTextFactory;
 
   public BedrockClueTypePolicy(BedrockRuntimeClient client) {
-    this(client, new DefaultBedrockConversationConfig());
+    this(
+        client,
+        new DefaultBedrockConversationConfig(),
+        new DefaultBedrockModelConfig().clueTypePolicyId());
   }
 
   public BedrockClueTypePolicy(
-      BedrockRuntimeClient client, BedrockConversationConfig conversationConfig) {
-    this(new PromptTextExecutor(client, conversationConfig));
+      BedrockRuntimeClient client, BedrockConversationConfig conversationConfig, String modelId) {
+    this(new PromptTextExecutor(client, conversationConfig, modelId));
   }
 
   public BedrockClueTypePolicy(PromptTextExecutor promptTextExecutor) {
