@@ -1,5 +1,7 @@
 package uk.co.mruoc.cws.solver.tesseract;
 
+import static org.opencv.core.Core.BORDER_CONSTANT;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -8,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
-
-import static org.opencv.core.Core.BORDER_CONSTANT;
 
 @RequiredArgsConstructor
 public class MatConcatenator {

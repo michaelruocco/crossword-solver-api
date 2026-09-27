@@ -1,5 +1,8 @@
 package uk.co.mruoc.cws.solver.tesseract;
 
+import static org.opencv.core.Core.BORDER_REPLICATE;
+import static org.opencv.imgproc.Imgproc.INTER_LINEAR;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -11,9 +14,6 @@ import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-
-import static org.opencv.core.Core.BORDER_REPLICATE;
-import static org.opencv.imgproc.Imgproc.INTER_LINEAR;
 
 @Builder
 @Data

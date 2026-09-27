@@ -1,14 +1,14 @@
 package uk.co.mruoc.cws.entity;
 
+import static uk.co.mruoc.cws.entity.Direction.ACROSS;
+import static uk.co.mruoc.cws.entity.Direction.DOWN;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import lombok.Builder;
 import org.apache.commons.collections4.CollectionUtils;
-
-import static uk.co.mruoc.cws.entity.Direction.ACROSS;
-import static uk.co.mruoc.cws.entity.Direction.DOWN;
 
 @Builder(toBuilder = true)
 public record Word(Id id, int length, Coordinates coordinates) {
