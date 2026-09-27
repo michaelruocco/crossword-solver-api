@@ -11,12 +11,10 @@ import software.amazon.awssdk.http.urlconnection.UrlConnectionHttpClient;
 import software.amazon.awssdk.services.bedrockruntime.BedrockRuntimeClient;
 import uk.co.mruoc.cws.solver.bedrock.BedrockAnswerFinder;
 import uk.co.mruoc.cws.solver.bedrock.BedrockClueExtractor;
-import uk.co.mruoc.cws.solver.bedrock.BedrockClueRanker;
 import uk.co.mruoc.cws.solver.bedrock.BedrockClueTypePolicy;
 import uk.co.mruoc.cws.solver.bedrock.PromptTextExecutor;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
-import uk.co.mruoc.cws.usecase.ClueRanker;
 import uk.co.mruoc.cws.usecase.ClueTypePolicy;
 
 @RequiredArgsConstructor
@@ -54,13 +52,6 @@ public class BedrockSolverClientConfig {
     var promptTextExecutor =
         buildTextExecutor(client, BedrockSolverClientConfigProperties::answerFinderId);
     return new BedrockAnswerFinder(promptTextExecutor);
-  }
-
-  @Bean
-  public ClueRanker bedrockClueRanker(BedrockRuntimeClient client) {
-    var promptTextExecutor =
-        buildTextExecutor(client, BedrockSolverClientConfigProperties::clueRankerId);
-    return new BedrockClueRanker(promptTextExecutor);
   }
 
   @Bean

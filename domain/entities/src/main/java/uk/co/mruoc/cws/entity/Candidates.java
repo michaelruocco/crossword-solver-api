@@ -83,6 +83,26 @@ public class Candidates implements Iterable<Answer> {
     return new Candidates(clue, values.stream().limit(n).toList());
   }
 
+  public int secondBestScore() {
+    return stream()
+        .map(Answer::confidenceScore)
+        .sorted(Comparator.reverseOrder())
+        .skip(1)
+        .findFirst()
+        .orElse(0);
+  }
+
+  public Optional<Answer> getBestAnswerIfConfidenceGapGreaterThan(int minConfidenceGap) {
+    if (!isEmpty() && confidenceGap() > minConfidenceGap) {
+      return best();
+    }
+    return Optional.empty();
+  }
+
+  public int confidenceGap() {
+    return bestScore() - secondBestScore();
+  }
+
   public Candidates validAnswers(Clue clue) {
     return new Candidates(clue, values.stream().filter(new ValidAnswerPredicate(clue)).toList());
   }

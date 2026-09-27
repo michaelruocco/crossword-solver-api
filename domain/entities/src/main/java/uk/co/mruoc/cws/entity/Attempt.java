@@ -30,15 +30,6 @@ public record Attempt(
     return puzzle.getId();
   }
 
-  public boolean hasConfirmedAnswers() {
-    return !getConfirmedAnswers().isEmpty();
-  }
-
-  public Attempt saveAnswers(Answers otherAnswers) {
-    otherAnswers.forEach(this::validateClueExistsForAnswer);
-    return withAnswers(answers.save(otherAnswers));
-  }
-
   public Attempt saveAnswer(Answer answer) {
     validateClueExistsForAnswer(answer);
     return withAnswers(answers.save(answer));

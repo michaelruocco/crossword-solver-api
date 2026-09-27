@@ -6,11 +6,11 @@ import static uk.co.mruoc.cws.solver.bedrock.BedrockRuntimeClientFactory.buildCl
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import uk.co.mruoc.cws.entity.Clue;
+import uk.co.mruoc.cws.entity.ClueType;
 import uk.co.mruoc.cws.entity.Id;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.junit.EnvVarsPresent;
@@ -23,15 +23,6 @@ public class BedrockAnswerFinderIT {
 
   @ParameterizedTest
   @MethodSource("easyCluesAndCorrectAnswers")
-  void shouldFindAnswerToEasyClues(Clue clue, String correctAnswer) {
-    var answer = finder.findAnswer(clue);
-
-    log.info(answer.toString());
-    assertThat(answer.value()).isEqualTo(correctAnswer);
-  }
-
-  @ParameterizedTest
-  @MethodSource("easyCluesAndCorrectAnswers")
   void shouldFindCandidateAnswersForEasyClues(Clue clue, String correctAnswer) {
     var candidates = finder.findCandidates(clue, 5);
 
@@ -39,19 +30,18 @@ public class BedrockAnswerFinderIT {
     assertThat(candidates.valuesAsString()).contains(correctAnswer);
   }
 
-  @Disabled
   @ParameterizedTest
-  @MethodSource("trickyCluesAndCorrectAnswers")
-  void shouldFindAnswerToTrickyClues(Clue clue, String correctAnswer) {
-    var answer = finder.findAnswer(clue);
+  @MethodSource("trickyStandardCluesAndCorrectAnswers")
+  void shouldFindCandidateAnswersForTrickyStandardClues(Clue clue, String correctAnswer) {
+    var candidates = finder.findCandidates(clue, 5);
 
-    log.info(answer.toString());
-    assertThat(answer.value()).isEqualTo(correctAnswer);
+    log.info(candidates.asString());
+    assertThat(candidates.valuesAsString()).contains(correctAnswer);
   }
 
   @ParameterizedTest
-  @MethodSource("trickyCluesAndCorrectAnswers")
-  void shouldFindCandidateAnswersForTrickyClues(Clue clue, String correctAnswer) {
+  @MethodSource("crypticCluesAndCorrectAnswers")
+  void shouldFindCandidateAnswersForCrypticClues(Clue clue, String correctAnswer) {
     var candidates = finder.findCandidates(clue, 5);
 
     log.info(candidates.asString());
@@ -69,7 +59,7 @@ public class BedrockAnswerFinderIT {
     return Stream.of(Arguments.of(clue1, "RATATOUILLE"));
   }
 
-  private static Stream<Arguments> trickyCluesAndCorrectAnswers() {
+  private static Stream<Arguments> trickyStandardCluesAndCorrectAnswers() {
     var clue1 =
         Clue.builder()
             .id(new Id("27D"))
@@ -93,10 +83,49 @@ public class BedrockAnswerFinderIT {
             .lengths(List.of(3))
             .pattern("Y?P")
             .build();
+    var clue5 =
+        Clue.builder()
+            .id(new Id("15D"))
+            .text("Obvious (7)")
+            .lengths(List.of(7))
+            .pattern("???????")
+            .build();
     return Stream.of(
         Arguments.of(clue1, "AMY"),
         Arguments.of(clue2, "OFFCUT"),
         Arguments.of(clue3, "TUP"),
-        Arguments.of(clue4, "YAP"));
+        Arguments.of(clue4, "YAP"),
+        Arguments.of(clue5, "BLATANT"));
+  }
+
+  private static Stream<Arguments> crypticCluesAndCorrectAnswers() {
+    var clue1 =
+        Clue.builder()
+            .type(ClueType.CRYPTIC)
+            .id(new Id("3A"))
+            .text("Prophet comes back into house someday (5)")
+            .lengths(List.of(5))
+            .pattern("M?S?S")
+            .build();
+    var clue2 =
+        Clue.builder()
+            .type(ClueType.CRYPTIC)
+            .id(new Id("21A"))
+            .text("Possibly train as singer (7)")
+            .lengths(List.of(7))
+            .pattern("????T??")
+            .build();
+    var clue3 =
+        Clue.builder()
+            .type(ClueType.CRYPTIC)
+            .id(new Id("12D"))
+            .text("Madman left girl with twitch (7)")
+            .lengths(List.of(7))
+            .pattern("???????")
+            .build();
+    return Stream.of(
+        Arguments.of(clue1, "MOSES"),
+        Arguments.of(clue2, "SINATRA"),
+        Arguments.of(clue3, "LUNATIC"));
   }
 }

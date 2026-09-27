@@ -12,6 +12,7 @@ public class PuzzleService {
 
   private final PuzzleCreator creator;
   private final PuzzleFinder finder;
+  private final PuzzleDeleter deleter;
 
   public UUID create(String imageUrl) {
     return creator.create(imageUrl);
@@ -27,5 +28,9 @@ public class PuzzleService {
 
   public Puzzle findById(UUID id) {
     return finder.findById(id);
+  }
+
+  public void deleteById(UUID puzzleId) {
+    deleter.delete(puzzleId);
   }
 }

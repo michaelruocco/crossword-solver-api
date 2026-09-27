@@ -1,13 +1,11 @@
 package uk.co.mruoc.cws.app.config;
 
 import java.time.Clock;
-import java.util.Collection;
 import java.util.concurrent.Executor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.task.ThreadPoolTaskExecutorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import uk.co.mruoc.cws.entity.WordsFactory;
 import uk.co.mruoc.cws.image.DefaultImageDownloader;
@@ -17,12 +15,11 @@ import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.cws.usecase.CandidateLoader;
 import uk.co.mruoc.cws.usecase.CandidateRepository;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
-import uk.co.mruoc.cws.usecase.ClueRanker;
 import uk.co.mruoc.cws.usecase.ClueTypePolicy;
 import uk.co.mruoc.cws.usecase.CluesFactory;
-import uk.co.mruoc.cws.usecase.CompositeAnswerFinder;
 import uk.co.mruoc.cws.usecase.CrosswordSolverFacade;
 import uk.co.mruoc.cws.usecase.GridExtractor;
+import uk.co.mruoc.cws.usecase.PatternFactory;
 import uk.co.mruoc.cws.usecase.UUIDSupplier;
 import uk.co.mruoc.cws.usecase.attempt.AsyncAttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.AttemptCreator;
@@ -34,11 +31,10 @@ import uk.co.mruoc.cws.usecase.attempt.AttemptSolver;
 import uk.co.mruoc.cws.usecase.attempt.AttemptSolverRunnableFactory;
 import uk.co.mruoc.cws.usecase.attempt.AttemptSummaryRepository;
 import uk.co.mruoc.cws.usecase.attempt.AttemptUpdater;
-import uk.co.mruoc.cws.usecase.attempt.BacktrackingAttemptSolver;
-import uk.co.mruoc.cws.usecase.attempt.CompositeAttemptSolver;
-import uk.co.mruoc.cws.usecase.attempt.GreedyAttemptSolver;
+import uk.co.mruoc.cws.usecase.attempt.DefaultAttemptSolver;
 import uk.co.mruoc.cws.usecase.puzzle.ImageValidator;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleCreator;
+import uk.co.mruoc.cws.usecase.puzzle.PuzzleDeleter;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleFinder;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleRepository;
 import uk.co.mruoc.cws.usecase.puzzle.PuzzleService;
@@ -65,8 +61,9 @@ public class AppConfig {
   }
 
   @Bean
-  public PuzzleService puzzleService(PuzzleCreator creator, PuzzleFinder finder) {
-    return PuzzleService.builder().creator(creator).finder(finder).build();
+  public PuzzleService puzzleService(
+      PuzzleCreator creator, PuzzleFinder finder, PuzzleDeleter deleter) {
+    return PuzzleService.builder().creator(creator).finder(finder).deleter(deleter).build();
   }
 
   @Bean
@@ -94,6 +91,11 @@ public class AppConfig {
         .puzzleRepository(puzzleRepository)
         .summaryRepository(summaryRepository)
         .build();
+  }
+
+  @Bean
+  public PuzzleDeleter puzzleDeleter(PuzzleRepository repository) {
+    return new PuzzleDeleter(repository);
   }
 
   @Bean
@@ -153,27 +155,12 @@ public class AppConfig {
   }
 
   @Bean
-  public GreedyAttemptSolver greedyAttemptSolver(AnswerFinder answerFinder, ClueRanker clueRanker) {
-    return new GreedyAttemptSolver(answerFinder, clueRanker);
-  }
-
-  @Bean
-  public BacktrackingAttemptSolver backtrackingAttemptSolver(CandidateLoader candidateLoader) {
-    return new BacktrackingAttemptSolver(candidateLoader);
-  }
-
-  @Primary
-  @Bean
-  public CompositeAttemptSolver compositeAttemptSolver(
-      BacktrackingAttemptSolver backtrackingSolver,
-      GreedyAttemptSolver greedySolver,
-      AttemptRepository repository) {
-    return CompositeAttemptSolver.builder()
-        .backtrackingSolver(backtrackingSolver)
-        .greedySolver(greedySolver)
+  public AttemptSolver attemptSolver(
+      CandidateLoader candidateLoader, AttemptRepository repository) {
+    return DefaultAttemptSolver.builder()
+        .candidateLoader(candidateLoader)
+        .patternFactory(new PatternFactory())
         .repository(repository)
-        // TODO configure max passes or store max passes and current passes against attempt
-        .maxPasses(5)
         .build();
   }
 
@@ -205,13 +192,6 @@ public class AppConfig {
   @Bean
   public AnswerDeleter answerDeleter(AttemptFinder finder, AttemptRepository repository) {
     return AnswerDeleter.builder().finder(finder).repository(repository).build();
-  }
-
-  @Primary
-  @Bean
-  public AnswerFinder compositeAnswerFinder(Collection<AnswerFinder> finders) {
-    log.info("creating composite answer finder with child finders {}", finders);
-    return new CompositeAnswerFinder(finders);
   }
 
   @Bean

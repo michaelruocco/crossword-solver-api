@@ -4,7 +4,6 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -33,12 +32,10 @@ public class PuzzleEntity {
   @Column(unique = true)
   private String hash;
 
-  @OneToMany(cascade = CascadeType.ALL)
-  @JoinColumn(name = "puzzleId")
+  @OneToMany(mappedBy = "puzzle", cascade = CascadeType.ALL, orphanRemoval = true)
   private Collection<ClueEntity> clues;
 
-  @OneToMany(cascade = CascadeType.ALL)
-  @JoinColumn(name = "puzzleId")
+  @OneToMany(mappedBy = "puzzle", cascade = CascadeType.ALL, orphanRemoval = true)
   private Collection<CellEntity> cells;
 
   private Instant createdAt;

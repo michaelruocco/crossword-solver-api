@@ -43,10 +43,7 @@ public record Clue(
   }
 
   public int patternCharCount() {
-    if (StringUtils.isEmpty(pattern)) {
-      return 0;
-    }
-    return pattern.replace(UNKNOWN, "").length();
+    return pattern().replace(UNKNOWN, "").length();
   }
 
   public String asString() {
@@ -54,5 +51,12 @@ public record Clue(
       return String.format("%s %s %s", id, text, pattern);
     }
     return String.format("%s %s", id, text);
+  }
+
+  public String pattern() {
+    if (StringUtils.isEmpty(pattern)) {
+      return StringUtils.repeat(UNKNOWN, totalLength());
+    }
+    return pattern;
   }
 }

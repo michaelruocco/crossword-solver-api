@@ -3,8 +3,8 @@ package uk.co.mruoc.cws.solver.stub;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.cws.entity.Answer;
 import uk.co.mruoc.cws.entity.Answers;
+import uk.co.mruoc.cws.entity.Candidates;
 import uk.co.mruoc.cws.entity.Clue;
-import uk.co.mruoc.cws.entity.Clues;
 import uk.co.mruoc.cws.solver.CrosswordJsonMapper;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 import uk.co.mruoc.file.FileLoader;
@@ -23,12 +23,11 @@ public class StubAnswerFinder implements AnswerFinder {
   }
 
   @Override
-  public Answers findAnswers(Clues clues) {
-    return new Answers(clues.stream().map(this::findAnswer).toList());
+  public Candidates findCandidates(Clue clue, int numberOfCandidates) {
+    return new Candidates(clue, findAnswer(clue));
   }
 
-  @Override
-  public Answer findAnswer(Clue clue) {
+  private Answer findAnswer(Clue clue) {
     return answers.findById(clue.id()).orElse(Answer.noMatch(clue));
   }
 

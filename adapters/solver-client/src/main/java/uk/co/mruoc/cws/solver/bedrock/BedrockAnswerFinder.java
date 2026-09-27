@@ -1,18 +1,16 @@
 package uk.co.mruoc.cws.solver.bedrock;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.IterableUtils;
+import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.services.bedrockruntime.BedrockRuntimeClient;
-import uk.co.mruoc.cws.entity.Answer;
-import uk.co.mruoc.cws.entity.Answers;
 import uk.co.mruoc.cws.entity.Candidates;
 import uk.co.mruoc.cws.entity.Clue;
-import uk.co.mruoc.cws.entity.Clues;
 import uk.co.mruoc.cws.solver.DelegatingFindAnswerPromptTextFactory;
 import uk.co.mruoc.cws.solver.FindAnswerPromptTextFactory;
 import uk.co.mruoc.cws.solver.FindAnswerResponseConverter;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
 
+@Slf4j
 @RequiredArgsConstructor
 public class BedrockAnswerFinder implements AnswerFinder {
 
@@ -44,22 +42,5 @@ public class BedrockAnswerFinder implements AnswerFinder {
     var promptText = promptTextFactory.toPromptText(clue, numberOfCandidates);
     var responseText = promptTextExecutor.execute(promptText);
     return new Candidates(clue, responseConverter.toCandidates(responseText)).validAnswers(clue);
-  }
-
-  @Override
-  public Answers findAnswers(Clues clues) {
-    if (clues.size() == 1) {
-      return new Answers(findAnswer(IterableUtils.get(clues, 0)));
-    }
-    var promptText = promptTextFactory.toPromptText(clues);
-    var responseText = promptTextExecutor.execute(promptText);
-    return new Answers(responseConverter.toAnswers(responseText)).validAnswers(clues);
-  }
-
-  @Override
-  public Answer findAnswer(Clue clue) {
-    var promptText = promptTextFactory.toPromptText(clue);
-    var responseText = promptTextExecutor.execute(promptText);
-    return responseConverter.toAnswer(responseText);
   }
 }

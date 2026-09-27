@@ -15,11 +15,6 @@ public class DefaultBedrockModelConfig implements BedrockModelConfig {
   }
 
   @Override
-  public String clueRankerId() {
-    return OPUS_ID;
-  }
-
-  @Override
   public String clueTypePolicyId() {
     return "eu.anthropic.claude-sonnet-4-6";
   }

@@ -37,6 +37,10 @@ public class CrosswordSolverFacade {
     return puzzleService.findById(puzzleId);
   }
 
+  public void deletePuzzleById(UUID puzzleId) {
+    puzzleService.deleteById(puzzleId);
+  }
+
   public BufferedImage findPuzzleGridImage(UUID puzzleId) {
     var puzzle = findPuzzleById(puzzleId);
     return gridImageFactory.toImage(puzzle.getGrid());

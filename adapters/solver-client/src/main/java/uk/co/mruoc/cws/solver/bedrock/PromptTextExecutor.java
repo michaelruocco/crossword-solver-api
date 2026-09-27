@@ -1,6 +1,7 @@
 package uk.co.mruoc.cws.solver.bedrock;
 
 import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.services.bedrockruntime.BedrockRuntimeClient;
 import software.amazon.awssdk.services.bedrockruntime.model.ContentBlock;
 import software.amazon.awssdk.services.bedrockruntime.model.ConversationRole;
@@ -8,6 +9,7 @@ import software.amazon.awssdk.services.bedrockruntime.model.ConverseRequest;
 import software.amazon.awssdk.services.bedrockruntime.model.InferenceConfiguration;
 import software.amazon.awssdk.services.bedrockruntime.model.Message;
 
+@Slf4j
 @Builder
 public class PromptTextExecutor {
 
@@ -16,10 +18,13 @@ public class PromptTextExecutor {
   private final String modelId;
 
   public String execute(String promptText) {
+    log.debug("promptText: {}", promptText);
     var message = toUserMessage(promptText);
     var request = toConversationRequest(message);
     var response = client.converse(request);
-    return response.output().message().content().getFirst().text();
+    var responseText = response.output().message().content().getFirst().text();
+    log.debug("responseText: {}", responseText);
+    return responseText;
   }
 
   private Message toUserMessage(String promptText) {

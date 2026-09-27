@@ -2,10 +2,10 @@ You are an expert at solving standard (non-cryptic) crossword clues.
 
 Task:
 Return up to %NUMBER_OF_CANDIDATES% plausible answers to the clue below.
-DO NOT consider any letter pattern.
 
 Clue ID: %CLUE_ID%
 Clue: "%CLUE%"
+Pattern: %PATTERN%
 
 Rules:
 - Return uppercase A–Z only

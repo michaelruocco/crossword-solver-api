@@ -14,4 +14,6 @@ public interface PuzzleRepository {
   Optional<Puzzle> findByHash(String hash);
 
   void save(Puzzle puzzle);
+
+  void deleteById(UUID id);
 }

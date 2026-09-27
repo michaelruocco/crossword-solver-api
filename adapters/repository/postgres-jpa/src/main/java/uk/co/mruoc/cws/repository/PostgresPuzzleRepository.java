@@ -39,4 +39,9 @@ public class PostgresPuzzleRepository implements PuzzleRepository {
   public void save(Puzzle puzzle) {
     jpaRepository.save(entityConverter.toEntity(puzzle));
   }
+
+  @Override
+  public void deleteById(UUID id) {
+    jpaRepository.deleteById(id);
+  }
 }

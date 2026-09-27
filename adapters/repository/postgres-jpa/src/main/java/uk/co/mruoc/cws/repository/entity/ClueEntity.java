@@ -6,9 +6,11 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.UUID;
@@ -38,4 +40,8 @@ public class ClueEntity {
       })
   @Column(name = "length")
   private Collection<Integer> lengths;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "puzzleId", referencedColumnName = "id", insertable = false, updatable = false)
+  private PuzzleEntity puzzle;
 }

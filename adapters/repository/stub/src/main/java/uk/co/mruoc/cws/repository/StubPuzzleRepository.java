@@ -39,4 +39,9 @@ public class StubPuzzleRepository implements PuzzleRepository {
   public void save(Puzzle puzzle) {
     values.put(puzzle.getId(), puzzle);
   }
+
+  @Override
+  public void deleteById(UUID id) {
+    values.remove(id);
+  }
 }

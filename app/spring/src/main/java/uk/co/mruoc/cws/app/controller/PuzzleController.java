@@ -88,6 +88,12 @@ public class PuzzleController {
     return getAttempt(puzzleId, attemptId);
   }
 
+  @DeleteMapping("/puzzles/{puzzleId}")
+  public ResponseEntity<Void> deletePuzzle(@PathVariable UUID puzzleId) {
+    facade.deletePuzzleById(puzzleId);
+    return ResponseEntity.noContent().build();
+  }
+
   @DeleteMapping("/puzzles/{puzzleId}/attempts")
   public ResponseEntity<Void> deleteAllPuzzleAttempts(@PathVariable UUID puzzleId) {
     facade.deleteAllPuzzleAttempts(puzzleId);

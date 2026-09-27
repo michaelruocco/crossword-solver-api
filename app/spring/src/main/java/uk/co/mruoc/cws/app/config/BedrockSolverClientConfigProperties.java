@@ -22,11 +22,6 @@ public record BedrockSolverClientConfigProperties(
   }
 
   @Override
-  public String clueRankerId() {
-    return model.clueRankerId;
-  }
-
-  @Override
   public String clueTypePolicyId() {
     return model.clueTypePolicyId;
   }
@@ -46,8 +41,7 @@ public record BedrockSolverClientConfigProperties(
     // intentionally blank
   }
 
-  public record Model(
-      String answerFinderId, String clueExtractorId, String clueRankerId, String clueTypePolicyId)
+  public record Model(String answerFinderId, String clueExtractorId, String clueTypePolicyId)
       implements BedrockModelConfig {
     // intentionally blank
   }

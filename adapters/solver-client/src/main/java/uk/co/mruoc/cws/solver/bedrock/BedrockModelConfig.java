@@ -6,7 +6,5 @@ public interface BedrockModelConfig {
 
   String clueExtractorId();
 
-  String clueRankerId();
-
   String clueTypePolicyId();
 }

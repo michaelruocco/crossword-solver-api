@@ -5,4 +5,5 @@ plugins {
 dependencies {
     implementation project(":entities")
     implementation "tools.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
 }

@@ -29,10 +29,10 @@ class CandidateComparatorTest {
   void shouldSortByPatternCharDescendingIfSameSize() {
     var c1 = mock(Candidates.class);
     when(c1.size()).thenReturn(1);
-    when(c1.cluePatternCharCount()).thenReturn(2);
+    when(c1.cluePatternCharCount()).thenReturn(1);
     var c2 = mock(Candidates.class);
     when(c2.size()).thenReturn(1);
-    when(c2.cluePatternCharCount()).thenReturn(1);
+    when(c2.cluePatternCharCount()).thenReturn(2);
 
     var sorted = Stream.of(c1, c2).sorted(comparator).toList();
 
@@ -40,14 +40,32 @@ class CandidateComparatorTest {
   }
 
   @Test
-  void shouldSortByBestScoreDescendingIfSizeAndPatternCharCountSame() {
+  void shouldSortByConfidenceGapDescendingIfSizeAndPatternCharCountSame() {
     var c1 = mock(Candidates.class);
     when(c1.size()).thenReturn(1);
     when(c1.cluePatternCharCount()).thenReturn(1);
+    when(c1.confidenceGap()).thenReturn(1);
+    var c2 = mock(Candidates.class);
+    when(c2.size()).thenReturn(1);
+    when(c2.cluePatternCharCount()).thenReturn(1);
+    when(c2.confidenceGap()).thenReturn(2);
+
+    var sorted = Stream.of(c1, c2).sorted(comparator).toList();
+
+    assertThat(sorted).containsExactly(c2, c1);
+  }
+
+  @Test
+  void shouldSortByBestScoreDescendingIfSizeAndPatternCharCountAndConfidenceGapSame() {
+    var c1 = mock(Candidates.class);
+    when(c1.size()).thenReturn(1);
+    when(c1.cluePatternCharCount()).thenReturn(1);
+    when(c1.confidenceGap()).thenReturn(1);
     when(c1.bestScore()).thenReturn(80);
     var c2 = mock(Candidates.class);
     when(c2.size()).thenReturn(1);
     when(c2.cluePatternCharCount()).thenReturn(1);
+    when(c2.confidenceGap()).thenReturn(1);
     when(c2.bestScore()).thenReturn(90);
 
     var sorted = Stream.of(c1, c2).sorted(comparator).toList();

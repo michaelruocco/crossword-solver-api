@@ -56,8 +56,9 @@ public class CandidateLoader {
   private Candidates loadCandidatesFromApi(Clue clue, int candidatesPerClue) {
     log.info("loading candidates from api for clue {}", clue.asString());
     var candidates = answerFinder.findCandidates(clue, candidatesPerClue).validAnswers(clue);
-    // TODO don't save if no candidates returned at all
-    repository.save(candidates);
+    if (!candidates.isEmpty()) {
+      repository.save(candidates);
+    }
     return candidates;
   }
 

@@ -15,4 +15,8 @@ public class ApiPuzzle {
   private final long attemptCount;
   private final ApiClues clues;
   private final ApiGrid grid;
+
+  public int getClueCount() {
+    return clues.getCount();
+  }
 }
