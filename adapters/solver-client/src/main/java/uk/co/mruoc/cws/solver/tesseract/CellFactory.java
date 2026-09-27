@@ -1,10 +1,5 @@
 package uk.co.mruoc.cws.solver.tesseract;
 
-import static org.opencv.core.CvType.CV_8UC3;
-import static org.opencv.imgproc.Imgproc.INTER_NEAREST;
-import static org.opencv.imgproc.Imgproc.RETR_LIST;
-import static uk.co.mruoc.cws.solver.tesseract.RectUtils.removeDuplicates;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Optional;
@@ -19,6 +14,11 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import uk.co.mruoc.cws.entity.Cell;
 import uk.co.mruoc.cws.entity.Coordinates;
+
+import static org.opencv.core.CvType.CV_8UC3;
+import static org.opencv.imgproc.Imgproc.INTER_NEAREST;
+import static org.opencv.imgproc.Imgproc.RETR_LIST;
+import static uk.co.mruoc.cws.solver.tesseract.RectUtils.removeDuplicates;
 
 @RequiredArgsConstructor
 @Slf4j

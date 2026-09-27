@@ -1,8 +1,5 @@
 package uk.co.mruoc.cws.hackathon;
 
-import static uk.co.mruoc.cws.entity.Direction.ACROSS;
-import static uk.co.mruoc.cws.entity.Direction.DOWN;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import tools.jackson.databind.ObjectMapper;
 import uk.co.mruoc.cws.entity.Attempt;
 import uk.co.mruoc.cws.entity.Direction;
+
+import static uk.co.mruoc.cws.entity.Direction.ACROSS;
+import static uk.co.mruoc.cws.entity.Direction.DOWN;
 
 @RequiredArgsConstructor
 public class HackathonSolveAttemptFactory {

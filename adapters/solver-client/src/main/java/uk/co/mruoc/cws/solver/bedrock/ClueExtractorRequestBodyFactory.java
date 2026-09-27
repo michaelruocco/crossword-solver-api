@@ -1,8 +1,8 @@
 package uk.co.mruoc.cws.solver.bedrock;
 
-import static uk.co.mruoc.file.FileLoader.loadContentFromClasspath;
-
 import uk.co.mruoc.cws.solver.CrosswordJsonMapper;
+
+import static uk.co.mruoc.file.FileLoader.loadContentFromClasspath;
 
 public class ClueExtractorRequestBodyFactory extends InvokeModelRequestBodyFactory {
 

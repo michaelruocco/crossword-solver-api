@@ -1,7 +1,5 @@
 package uk.co.mruoc.cws.solver.bedrock;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.core.SdkBytes;
@@ -14,6 +12,8 @@ import uk.co.mruoc.cws.solver.CrosswordJsonMapper;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
 import uk.co.mruoc.cws.usecase.Image;
 import uk.co.mruoc.cws.usecase.ImageCompressor;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @RequiredArgsConstructor
 @Slf4j

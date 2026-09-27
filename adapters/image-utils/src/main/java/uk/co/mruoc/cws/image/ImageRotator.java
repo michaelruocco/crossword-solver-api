@@ -1,7 +1,5 @@
 package uk.co.mruoc.cws.image;
 
-import static com.drew.metadata.exif.ExifDirectoryBase.TAG_ORIENTATION;
-
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.MetadataException;
@@ -10,6 +8,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+
+import static com.drew.metadata.exif.ExifDirectoryBase.TAG_ORIENTATION;
 
 public class ImageRotator {
 

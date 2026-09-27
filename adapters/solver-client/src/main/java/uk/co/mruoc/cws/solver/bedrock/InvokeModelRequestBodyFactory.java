@@ -1,10 +1,10 @@
 package uk.co.mruoc.cws.solver.bedrock;
 
-import static uk.co.mruoc.file.FileLoader.loadContentFromClasspath;
-
 import java.util.Base64;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static uk.co.mruoc.file.FileLoader.loadContentFromClasspath;
 
 @RequiredArgsConstructor
 @Slf4j

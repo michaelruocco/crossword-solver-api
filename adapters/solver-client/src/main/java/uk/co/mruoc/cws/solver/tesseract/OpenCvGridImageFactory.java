@@ -1,8 +1,5 @@
 package uk.co.mruoc.cws.solver.tesseract;
 
-import static org.opencv.core.Core.BORDER_CONSTANT;
-import static org.opencv.core.CvType.CV_8UC1;
-
 import java.awt.image.BufferedImage;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +12,9 @@ import uk.co.mruoc.cws.entity.Cell;
 import uk.co.mruoc.cws.entity.Coordinates;
 import uk.co.mruoc.cws.entity.Grid;
 import uk.co.mruoc.cws.usecase.GridImageFactory;
+
+import static org.opencv.core.Core.BORDER_CONSTANT;
+import static org.opencv.core.CvType.CV_8UC1;
 
 @RequiredArgsConstructor
 public class OpenCvGridImageFactory implements GridImageFactory {
