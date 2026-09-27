@@ -121,7 +121,7 @@ public class BedrockAnswerFinderIT {
             .id(new Id("12D"))
             .text("Madman left girl with twitch (7)")
             .lengths(List.of(7))
-            .pattern("???????")
+            .pattern("L??????")
             .build();
     return Stream.of(
         Arguments.of(clue1, "MOSES"),
