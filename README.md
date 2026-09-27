@@ -91,7 +91,3 @@ the values in the `docker-compose.yml` file directly, but be careful not to try 
 * Update solvers to save attempt more frequently so that UI polling is updated more often
 * Clean up tesseract / grid extractor by splitting into its own module
 * Fix sonar issues
-* Improve solver algorithm to try and produce correct results more consistently
-* Try to figure out how to ensure tricky clues get answered correctly:
-    * Ram (3) -> TAP/TOP -> TUP
-    * Sharp bark (3) -> YIP -> YAP
