@@ -79,13 +79,13 @@ public class Clues implements Iterable<Clue> {
   }
 
   public Clues withLongestPattern() {
-    var highestPatternCharCount = values.values().stream().mapToInt(Clue::patternCharCount).max();
+    var highestPatternCharCount = values.values().stream().mapToInt(Clue::knownLetterCount).max();
     if (highestPatternCharCount.isEmpty()) {
       return this;
     }
     return new Clues(
         values.values().stream()
-            .filter(clue -> clue.patternCharCount() == highestPatternCharCount.getAsInt())
+            .filter(clue -> clue.knownLetterCount() == highestPatternCharCount.getAsInt())
             .toList());
   }
 

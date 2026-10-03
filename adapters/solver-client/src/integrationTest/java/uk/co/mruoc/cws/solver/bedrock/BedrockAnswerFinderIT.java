@@ -88,14 +88,30 @@ public class BedrockAnswerFinderIT {
             .id(new Id("15D"))
             .text("Obvious (7)")
             .lengths(List.of(7))
-            .pattern("???????")
+            .pattern("B???A?T")
+            .build();
+    var clue6 =
+        Clue.builder()
+            .id(new Id("19D"))
+            .text("Rugby Union team (5)")
+            .lengths(List.of(5))
+            .pattern("L?O?S")
+            .build();
+    var clue7 =
+        Clue.builder()
+            .id(new Id("18A"))
+            .text("Bawl (4)")
+            .lengths(List.of(4))
+            .pattern("?A??")
             .build();
     return Stream.of(
         Arguments.of(clue1, "AMY"),
         Arguments.of(clue2, "OFFCUT"),
         Arguments.of(clue3, "TUP"),
         Arguments.of(clue4, "YAP"),
-        Arguments.of(clue5, "BLATANT"));
+        Arguments.of(clue5, "BLATANT"),
+        Arguments.of(clue6, "LIONS"),
+        Arguments.of(clue7, "WAIL"));
   }
 
   private static Stream<Arguments> crypticCluesAndCorrectAnswers() {
@@ -123,9 +139,18 @@ public class BedrockAnswerFinderIT {
             .lengths(List.of(7))
             .pattern("L??????")
             .build();
+    var clue4 =
+        Clue.builder()
+            .type(ClueType.CRYPTIC)
+            .id(new Id("7D"))
+            .text("Nag keen to go round river (4, 2)")
+            .lengths(List.of(4, 2))
+            .pattern("K?E??N")
+            .build();
     return Stream.of(
         Arguments.of(clue1, "MOSES"),
         Arguments.of(clue2, "SINATRA"),
-        Arguments.of(clue3, "LUNATIC"));
+        Arguments.of(clue3, "LUNATIC"),
+        Arguments.of(clue4, "KEEPON"));
   }
 }

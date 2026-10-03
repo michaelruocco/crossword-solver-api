@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import uk.co.mruoc.cws.entity.Candidates;
 import uk.co.mruoc.cws.entity.Clue;
+import uk.co.mruoc.cws.entity.ClueCandidateId;
 import uk.co.mruoc.cws.usecase.CandidateClueHashFactory;
 import uk.co.mruoc.cws.usecase.CandidateRepository;
 
@@ -31,8 +32,19 @@ public class PostgresCandidateRepository implements CandidateRepository {
   @Transactional(readOnly = true)
   @Override
   public Optional<Candidates> get(Clue clue) {
-    var id = idFactory.toId(clue);
-    var entity = jpaRepository.findById(id);
+    var hash = idFactory.toHash(clue);
+    var entity = jpaRepository.findById(hash);
     return entity.map(converter::toCandidates).map(candidates -> candidates.withClue(clue));
+  }
+
+  @Override
+  public void deleteAll() {
+    jpaRepository.deleteAll();
+  }
+
+  @Override
+  public void delete(ClueCandidateId id) {
+    var hash = idFactory.toHash(id);
+    jpaRepository.deleteById(hash);
   }
 }

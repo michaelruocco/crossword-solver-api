@@ -12,6 +12,7 @@ import uk.co.mruoc.cws.image.DefaultImageDownloader;
 import uk.co.mruoc.cws.solver.tesseract.OpenCvGridImageFactory;
 import uk.co.mruoc.cws.usecase.AnswerDeleter;
 import uk.co.mruoc.cws.usecase.AnswerFinder;
+import uk.co.mruoc.cws.usecase.CandidateDeleter;
 import uk.co.mruoc.cws.usecase.CandidateLoader;
 import uk.co.mruoc.cws.usecase.CandidateRepository;
 import uk.co.mruoc.cws.usecase.ClueExtractor;
@@ -192,6 +193,11 @@ public class AppConfig {
   @Bean
   public AnswerDeleter answerDeleter(AttemptFinder finder, AttemptRepository repository) {
     return AnswerDeleter.builder().finder(finder).repository(repository).build();
+  }
+
+  @Bean
+  public CandidateDeleter candidateDeleter(CandidateRepository repository) {
+    return new CandidateDeleter(repository);
   }
 
   @Bean

@@ -30,7 +30,7 @@ public class CandidateEntityConverter {
 
   public CandidateClueEntity toEntity(Candidates candidates) {
     var clue = candidates.clue();
-    var id = idFactory.toId(clue);
+    var id = idFactory.toHash(clue);
     var entity = new CandidateClueEntity();
     entity.setClueId(id);
     entity.setText(clue.text());

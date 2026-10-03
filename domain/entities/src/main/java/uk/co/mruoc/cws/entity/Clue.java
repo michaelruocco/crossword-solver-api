@@ -39,15 +39,15 @@ public record Clue(
   }
 
   public boolean isConstrainedByAtLeastNChars(int n) {
-    return patternCharCount() >= n;
+    return knownLetterCount() >= n;
   }
 
-  public int patternCharCount() {
+  public int knownLetterCount() {
     return pattern().replace(UNKNOWN, "").length();
   }
 
   public String asString() {
-    if (patternCharCount() > 0) {
+    if (knownLetterCount() > 0) {
       return String.format("%s %s %s", id, text, pattern);
     }
     return String.format("%s %s", id, text);

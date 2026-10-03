@@ -21,7 +21,7 @@ public class ClueSelector {
         .max(
             Comparator.comparingInt((Clue c) -> attempt.getIntersectingIds(c.id()).size())
                 .reversed()
-                .thenComparingInt(Clue::patternCharCount))
+                .thenComparingInt(Clue::knownLetterCount))
         .orElseThrow();
   }
 }

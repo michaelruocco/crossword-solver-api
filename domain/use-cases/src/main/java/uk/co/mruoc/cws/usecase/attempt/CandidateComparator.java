@@ -6,10 +6,6 @@ import uk.co.mruoc.cws.entity.Candidates;
 public class CandidateComparator implements Comparator<Candidates> {
   @Override
   public int compare(Candidates c1, Candidates c2) {
-    return Comparator.comparingInt(Candidates::size)
-        .thenComparing(Comparator.comparingInt(Candidates::cluePatternCharCount).reversed())
-        .thenComparing(Comparator.comparingInt(Candidates::confidenceGap).reversed())
-        .thenComparing(Comparator.comparingInt(Candidates::bestScore).reversed())
-        .compare(c1, c2);
+    return Comparator.comparingDouble(Candidates::overallScore).reversed().compare(c1, c2);
   }
 }

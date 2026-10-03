@@ -55,18 +55,6 @@ public class Candidates implements Iterable<Answer> {
     return values.stream();
   }
 
-  public int cluePatternCharCount() {
-    return clue.patternCharCount();
-  }
-
-  public Candidates sortByScore() {
-    return new Candidates(
-        clue,
-        values.stream()
-            .sorted(Comparator.comparingInt(Answer::confidenceScore).reversed())
-            .toList());
-  }
-
   public int size() {
     return values.size();
   }
@@ -75,32 +63,22 @@ public class Candidates implements Iterable<Answer> {
     return best().map(Answer::confidenceScore).orElse(0);
   }
 
+  public Collection<Integer> alternativeScores() {
+    return values.stream().skip(1).mapToInt(Answer::confidenceScore).boxed().toList();
+  }
+
   public Optional<Answer> best() {
     return values.stream().max(Comparator.comparingInt(Answer::confidenceScore));
   }
 
-  public Candidates first(int n) {
-    return new Candidates(clue, values.stream().limit(n).toList());
-  }
-
-  public int secondBestScore() {
-    return stream()
-        .map(Answer::confidenceScore)
-        .sorted(Comparator.reverseOrder())
-        .skip(1)
-        .findFirst()
-        .orElse(0);
-  }
-
-  public Optional<Answer> getBestAnswerIfConfidenceGapGreaterThan(int minConfidenceGap) {
-    if (!isEmpty() && confidenceGap() > minConfidenceGap) {
-      return best();
+  public Optional<Answer> getBestAnswerIfOverallScoreGreaterThan(double minOverallScore) {
+    if (isEmpty()) {
+      return Optional.empty();
     }
-    return Optional.empty();
-  }
-
-  public int confidenceGap() {
-    return bestScore() - secondBestScore();
+    if (overallScore() <= minOverallScore) {
+      return Optional.empty();
+    }
+    return best();
   }
 
   public Candidates validAnswers(Clue clue) {
@@ -119,5 +97,19 @@ public class Candidates implements Iterable<Answer> {
 
   public String valuesAsString() {
     return values.stream().map(Answer::value).collect(Collectors.joining(", "));
+  }
+
+  public double overallScore() {
+    return score().overallScore();
+  }
+
+  public CandidatesScore score() {
+    return CandidatesScore.builder()
+        .knownLetterCount(clue.knownLetterCount())
+        .totalLetterCount(clue.totalLength())
+        .numberOfCandidates(values.size())
+        .bestScore(bestScore())
+        .alternativeScores(alternativeScores())
+        .build();
   }
 }

@@ -21,23 +21,54 @@ public class DefaultAttemptSolver implements AttemptSolver {
   @Override
   public Attempt solve(Attempt attempt) {
     var passAttempt = attempt;
-    int passes = 0;
-    while (!passAttempt.allCluesAnswered() && passes < 5) {
+    var passes = 0;
+    var previousConfirmedAnswers = -1L;
+    while (shouldContinueSolving(passAttempt, passes, previousConfirmedAnswers)) {
+      previousConfirmedAnswers = passAttempt.getConfirmedAnswerCount();
       passAttempt = pass(passAttempt);
       passes++;
     }
     return passAttempt;
   }
 
+  private boolean shouldContinueSolving(
+      Attempt passAttempt, int passes, long previousConfirmedAnswerCount) {
+    if (passAttempt.allCluesAnswered()) {
+      log.info("attempt complete, all clues answered");
+      return false;
+    }
+    if (passes >= 5) {
+      log.info("{} surpasses max passes of 5", passAttempt);
+      return false;
+    }
+    var moreCluesConfirmed = previousConfirmedAnswerCount < passAttempt.getConfirmedAnswerCount();
+    log.info(
+        "previous pass confirmed answers {} current pass confirmed answers {} more clues confirmed {}",
+        previousConfirmedAnswerCount,
+        passAttempt.getConfirmedAnswerCount(),
+        moreCluesConfirmed);
+    return moreCluesConfirmed;
+  }
+
   private Attempt pass(Attempt attempt) {
     var passAttempt = patternFactory.addPatternsToClues(attempt);
     var clues = passAttempt.getCluesWithUnconfirmedAnswer();
     var candidates = sort(candidateLoader.loadCandidates(clues));
+    System.out.println(candidates);
     for (var clueCandidates : candidates) {
-      var bestAnswer = clueCandidates.getBestAnswerIfConfidenceGapGreaterThan(10);
+      // var bestAnswer = clueCandidates.getBestAnswerIfConfidenceGapGreaterThan(10);
+      var bestAnswer = clueCandidates.getBestAnswerIfOverallScoreGreaterThan(0.2);
+      System.out.println("best answer " + bestAnswer);
+      if (candidates.size() == 1 && bestAnswer.isEmpty()) {
+        bestAnswer = clueCandidates.best();
+      }
       if (bestAnswer.isPresent() && passAttempt.accepts(bestAnswer.get())) {
         var confirmed = bestAnswer.get().confirm();
-        log.info("confirmed answer {}", confirmed);
+        log.info(
+            "confirmed answer {} from candidates score {} for candidates {}",
+            confirmed,
+            clueCandidates.overallScore(),
+            clueCandidates.asString());
         passAttempt = passAttempt.saveAnswer(confirmed);
         repository.save(passAttempt);
       }

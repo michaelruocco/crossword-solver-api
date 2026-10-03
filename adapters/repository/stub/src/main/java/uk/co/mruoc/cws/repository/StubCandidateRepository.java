@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Candidates;
 import uk.co.mruoc.cws.entity.Clue;
+import uk.co.mruoc.cws.entity.ClueCandidateId;
 import uk.co.mruoc.cws.usecase.CandidateClueHashFactory;
 import uk.co.mruoc.cws.usecase.CandidateRepository;
 
@@ -24,7 +25,7 @@ public class StubCandidateRepository implements CandidateRepository {
   @Override
   public void save(Candidates candidates) {
     var clue = candidates.clue();
-    var id = idFactory.toId(clue);
+    var id = idFactory.toHash(clue);
     var updated =
         Optional.ofNullable(values.get(id))
             .map(existing -> existing.addAll(candidates))
@@ -34,7 +35,18 @@ public class StubCandidateRepository implements CandidateRepository {
 
   @Override
   public Optional<Candidates> get(Clue clue) {
-    var id = idFactory.toId(clue);
-    return Optional.ofNullable(values.get(id));
+    var hash = idFactory.toHash(clue);
+    return Optional.ofNullable(values.get(hash));
+  }
+
+  @Override
+  public void deleteAll() {
+    values.clear();
+  }
+
+  @Override
+  public void delete(ClueCandidateId id) {
+    var hash = idFactory.toHash(id);
+    values.remove(hash);
   }
 }
