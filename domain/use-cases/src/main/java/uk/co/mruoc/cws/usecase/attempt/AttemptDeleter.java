@@ -8,7 +8,11 @@ public class AttemptDeleter {
 
   private final AttemptRepository repository;
 
-  public void deleteAllAttempts(UUID puzzleId) {
+  public void deleteAllPuzzleAttempts(UUID puzzleId) {
     repository.deleteAllByPuzzleId(puzzleId);
+  }
+
+  public void deleteAllAttempts() {
+    repository.deleteAll();
   }
 }

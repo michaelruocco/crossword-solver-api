@@ -43,7 +43,6 @@ public class GridDimensionsCalculator {
     var blurred = matConverter.blur(grayCropped);
     var binary = matConverter.toBinary(blurred);
     var smoothed = matConverter.smooth(binary);
-    // min area 35 to preserve all numbers if needed
     var cleaned = matConverter.removeNoiseSmallerThan(smoothed, 1500);
 
     var horizontal = matConverter.toHorizontalGridLines(cleaned);

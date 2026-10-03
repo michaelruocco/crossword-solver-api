@@ -25,7 +25,7 @@ public class HackathonFacade {
     log.info("created attempt {} for puzzle {}", attemptId, puzzleId);
     solverFacade.syncSolvePuzzleAttempt(attemptId);
     var result = recordAnswers(attemptId);
-    log.info("result {}", result);
+    log.info("result {} percent correct", result.percentageCorrect());
   }
 
   public Result recordAnswers(UUID attemptId) {

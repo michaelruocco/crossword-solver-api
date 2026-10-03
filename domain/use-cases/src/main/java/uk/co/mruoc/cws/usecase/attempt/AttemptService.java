@@ -42,7 +42,11 @@ public class AttemptService {
     updater.saveAnswer(attemptId, answer);
   }
 
-  public void deleteAllAttempts(UUID puzzleId) {
-    deleter.deleteAllAttempts(puzzleId);
+  public void deleteAllPuzzleAttempts(UUID puzzleId) {
+    deleter.deleteAllPuzzleAttempts(puzzleId);
+  }
+
+  public void deleteAll() {
+    deleter.deleteAllAttempts();
   }
 }

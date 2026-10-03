@@ -1,12 +1,10 @@
 package uk.co.mruoc.cws.entity;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -37,20 +35,12 @@ public class Clues implements Iterable<Clue> {
     return values.values().iterator();
   }
 
-  public Collection<Id> ids() {
-    return values.keySet();
-  }
-
   public boolean hasClue(Id id) {
     return find(id).isPresent();
   }
 
   public Clue forceFind(Id id) {
     return find(id).orElseThrow(() -> new ClueNotFoundForIdException(id));
-  }
-
-  public ClueType forceGetType() {
-    return stream().map(Clue::type).filter(Objects::nonNull).findFirst().orElseThrow();
   }
 
   public Clues normalizeTextHyphens() {
@@ -78,35 +68,12 @@ public class Clues implements Iterable<Clue> {
     return new Clues(updatedClues);
   }
 
-  public Clues withLongestPattern() {
-    var highestPatternCharCount = values.values().stream().mapToInt(Clue::knownLetterCount).max();
-    if (highestPatternCharCount.isEmpty()) {
-      return this;
-    }
-    return new Clues(
-        values.values().stream()
-            .filter(clue -> clue.knownLetterCount() == highestPatternCharCount.getAsInt())
-            .toList());
-  }
-
   public Clues getDown() {
     return ofDirection(Direction.DOWN);
   }
 
   public Clues getAcross() {
     return ofDirection(Direction.ACROSS);
-  }
-
-  public Clues sortByIds(Collection<Id> ids) {
-    return new Clues(ids.stream().map(values::get).toList());
-  }
-
-  public Clues sortByIds() {
-    return new Clues(stream().sorted(Comparator.comparingInt(Clue::numericId)).toList());
-  }
-
-  public Clues first(int n) {
-    return new Clues(stream().limit(n).toList());
   }
 
   public Clues withType(ClueType type) {

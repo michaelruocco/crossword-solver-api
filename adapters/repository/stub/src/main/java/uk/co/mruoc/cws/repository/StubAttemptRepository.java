@@ -55,4 +55,9 @@ public class StubAttemptRepository implements AttemptRepository {
   public Collection<Attempt> findAll() {
     return values.values();
   }
+
+  @Override
+  public void deleteAll() {
+    values.clear();
+  }
 }

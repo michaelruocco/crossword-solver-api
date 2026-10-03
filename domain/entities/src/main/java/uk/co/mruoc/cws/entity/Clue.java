@@ -38,10 +38,6 @@ public record Clue(
     return lengths.stream().mapToInt(Integer::intValue).sum();
   }
 
-  public boolean isConstrainedByAtLeastNChars(int n) {
-    return knownLetterCount() >= n;
-  }
-
   public int knownLetterCount() {
     return pattern().replace(UNKNOWN, "").length();
   }

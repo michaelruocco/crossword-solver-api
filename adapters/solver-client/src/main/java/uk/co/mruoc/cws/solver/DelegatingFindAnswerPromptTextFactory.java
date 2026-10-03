@@ -34,10 +34,7 @@ public class DelegatingFindAnswerPromptTextFactory implements FindAnswerPromptTe
   }
 
   public static FindAnswerPromptTextFactory build(ClueType type) {
-    return DefaultFindAnswerPromptTextFactory.builder()
-        .clueListConverter(new ClueListConverter())
-        .findCandidatesPromptTemplate(loadTemplate(type))
-        .build();
+    return new DefaultFindAnswerPromptTextFactory(loadTemplate(type));
   }
 
   private static String loadTemplate(ClueType type) {

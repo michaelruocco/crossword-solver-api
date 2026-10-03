@@ -54,11 +54,8 @@ public class DefaultAttemptSolver implements AttemptSolver {
     var passAttempt = patternFactory.addPatternsToClues(attempt);
     var clues = passAttempt.getCluesWithUnconfirmedAnswer();
     var candidates = sort(candidateLoader.loadCandidates(clues));
-    System.out.println(candidates);
     for (var clueCandidates : candidates) {
-      // var bestAnswer = clueCandidates.getBestAnswerIfConfidenceGapGreaterThan(10);
       var bestAnswer = clueCandidates.getBestAnswerIfOverallScoreGreaterThan(0.2);
-      System.out.println("best answer " + bestAnswer);
       if (candidates.size() == 1 && bestAnswer.isEmpty()) {
         bestAnswer = clueCandidates.best();
       }

@@ -80,6 +80,10 @@ public class CrosswordSolverFacade {
   }
 
   public void deleteAllPuzzleAttempts(UUID puzzleId) {
-    attemptService.deleteAllAttempts(puzzleId);
+    attemptService.deleteAllPuzzleAttempts(puzzleId);
+  }
+
+  public void deleteAllAttempts() {
+    attemptService.deleteAll();
   }
 }

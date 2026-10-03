@@ -48,4 +48,9 @@ public class PostgresAttemptRepository implements AttemptRepository {
   public Collection<Attempt> findAll() {
     return jpaRepository.findAll().stream().map(entityConverter::toAttempt).toList();
   }
+
+  @Override
+  public void deleteAll() {
+    jpaRepository.deleteAll();
+  }
 }

@@ -14,11 +14,6 @@ import uk.co.mruoc.cws.entity.Id;
 @Slf4j
 public class FindAnswerResponseConverter {
 
-  public Collection<Answer> toAnswers(String answersAndScores) {
-    log.debug("got answers and scores {}", answersAndScores);
-    return toCollection(answersAndScores);
-  }
-
   public Answer toAnswer(String answerAndScore) {
     log.debug("got answer and score {}", answerAndScore);
     return convert(answerAndScore);

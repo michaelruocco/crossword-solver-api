@@ -18,4 +18,6 @@ public interface AttemptRepository {
   void deleteAllByPuzzleId(UUID puzzleId);
 
   Collection<Attempt> findAll();
+
+  void deleteAll();
 }

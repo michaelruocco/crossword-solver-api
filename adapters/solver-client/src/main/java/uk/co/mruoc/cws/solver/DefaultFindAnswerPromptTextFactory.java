@@ -1,14 +1,14 @@
 package uk.co.mruoc.cws.solver;
 
 import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.cws.entity.Clue;
 
-@Builder
+@RequiredArgsConstructor
 @Slf4j
 public class DefaultFindAnswerPromptTextFactory implements FindAnswerPromptTextFactory {
 
-  private final ClueListConverter clueListConverter;
   private final String findCandidatesPromptTemplate;
 
   @Override
