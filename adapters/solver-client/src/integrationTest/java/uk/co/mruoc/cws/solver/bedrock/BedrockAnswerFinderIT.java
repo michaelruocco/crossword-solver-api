@@ -145,7 +145,7 @@ public class BedrockAnswerFinderIT {
             .id(new Id("7D"))
             .text("Nag keen to go round river (4, 2)")
             .lengths(List.of(4, 2))
-            .pattern("K?E??N")
+            .pattern("??EP?N")
             .build();
     return Stream.of(
         Arguments.of(clue1, "MOSES"),
