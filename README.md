@@ -31,12 +31,21 @@ brew install tesseract
 ### Using AWS Bedrock
 
 The application uses the standard AWS SDK for connection and requires the ability to access
-and AWS account with permissions to call AWS Bedrock and use it to call an AI model. The
-default configured is Claude 3.7 Sonnet, with model ID `eu.anthropic.claude-3-7-sonnet-20250219-v1:0`.
-You may need to log into your AWS console and use the model with the Chat / Text playground first, or
-apply some other adjustments to make the model (or any model of your choosing) available. You can
-configure the model ID that you want to use by setting an environment variable
-`BEDROCK_CONVERSATION_MODEL_ID` with the model ID of your choosing.
+and AWS account with permissions to call AWS Bedrock and use it to call an AI model.
+
+A different model can be configured for each of the following features:
+
+* Answer Finder -> Used to look up candidate answers for clues
+* Clue Extractor -> Used to perform OCR on crossword images to extract clue information
+* Clue Type Policy -> Used to determine the type of each clue (either standard or cryptic)
+
+The default model for answer finder and clue extractor is Claude Opus 4.6 (model ID 
+`eu.anthropic.claude-opus-4-6-v1`). The default model for clue type policy is
+Claude Sonnet 4.6 (model ID `eu.anthropic.claude-sonnet-4-6`)
+
+You may need to log into your AWS console and use the model with the Chat / Text
+playground first, or apply some other adjustments to make the model (or any model
+of your choosing) available for use.
 
 ### Using Postgres
 
@@ -88,6 +97,5 @@ the values in the `docker-compose.yml` file directly, but be careful not to try 
 
 ## TODO
 
-* Update solvers to save attempt more frequently so that UI polling is updated more often
 * Clean up tesseract / grid extractor by splitting into its own module
 * Fix sonar issues
