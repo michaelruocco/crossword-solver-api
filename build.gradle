@@ -38,7 +38,7 @@ subprojects {
         commonsText = "1.15.0"
         resilience4jVersion = "2.4.0"
         awaitilityVersion = "4.3.0"
-        awsSdkVersion = "2.55.6"
+        awsSdkVersion = "2.55.11"
         springBootVersion = "4.1.1"
         tesseractVersion = "5.20.0"
 
